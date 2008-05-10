@@ -1,0 +1,17 @@
+SEMICOLON=;
+PRINT=System\.out\.println
+CLASS=class
+PUBLIC=public
+STATIC=static
+VOID=void
+MAIN=main
+STRING=String
+LP=\(
+RP=\)
+LBRACKET=\[
+RBRACKET=\]
+LBRACE={
+RBRACE=}
+INTEGER=\d\d*
+ID=\w[\w\d]*
+WHITE=\s\s*
