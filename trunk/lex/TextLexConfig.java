@@ -25,7 +25,10 @@ public class TextLexConfig implements LexConfig {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String str = null;
         while ((str=reader.readLine()) != null) {
-            String[] afterSplit = str.split("\\s*=\\s*");
+            if (!str.contains("::=")
+                || str.charAt(0) == '#' )
+                    continue;
+            String[] afterSplit = str.split("\\s*::=\\s*");
             TokenType type = new TokenType(afterSplit[0]);
             //System.out.println(type);
             tokenType.add(type);
