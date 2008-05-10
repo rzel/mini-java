@@ -42,8 +42,9 @@ public class SyntaxConfig {
 
         String str = null;
         while ((str = reader.readLine()) != null) {
-            if (str.charAt(0) == '#') //for comments;
-                continue;
+            if (!str.contains("::=")
+                  || str.charAt(0) == '#') //for comments;
+                    continue;
 
             String[] leftAndRight = str.split("\\s*::=\\s*");
             String[] rightAfterSplit = leftAndRight[1].split(" ");

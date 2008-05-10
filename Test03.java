@@ -35,11 +35,11 @@ public class Test03 {
 
         // The first rule must be "START ::= Goal", should be fixed anyway
         Rule rule = new Rule(new NonTerminal("START"));
-        rule.addRhsToken(new NonTerminal("GOAL"));
+        rule.addRhsToken(new NonTerminal("Goal"));
         rules.add(0, rule);
         AnalysisTable drivingManual = Algorithm.closureSet(rules);
         //System.out.println(drivingManual);
-        //drivingManual.dump();
+        drivingManual.dump();
 
         //getSampleTokens();
         //for (TokenRevamped token : getSampleTokens()) {
@@ -68,7 +68,8 @@ public class Test03 {
         // I can't believe this! WHY I MUST ADD AN EXTRA CHAR TO
         // MAKE THIS TOKENIZER WORK?
         for (TokenRevamped token : newTokenizer.tokenize("class Main { public static void main(String[] args) { System.out.println(123);}}END")) {
-            if (!token.getType().equals(new TokenType("WHITE"))) {
+            if (!token.getType().equals(new TokenType("WHITESPACE"))
+                && !token.getType().equals(new TokenType("COMMENT"))) {
                 tokens.add(token);
             }
         }

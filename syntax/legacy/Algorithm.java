@@ -173,7 +173,10 @@ public class Algorithm {
                                                                     list.add(tok);
                                                             }
                                                     }
-                                                    continue;
+                                                    continue; //same as break...
+                                                } else {
+                                                    //TODO: What should we do here?
+                                                    break;
                                                 }
 					}
 
@@ -311,7 +314,8 @@ public class Algorithm {
 														 * stack
 														 */
 			List<TokenRevamped> input) {
-                //System.out.println(input);
+                System.out.println(input);
+                //analysisTbl.dump();
 
 		int idx = 0;
 
@@ -364,6 +368,9 @@ public class Algorithm {
                         //System.out.println("  FOUND ACTION: " + action);
 
 			if (action == null) {
+                                System.err.println("currentState: " + tos);
+                                System.err.println("currentToken: " + currentToken);
+                                System.err.println("currentSymbolType: " + currentSymbolType);
 				throw new RuntimeException("Parse Error (handling to be added)");
 			} else {
 				int actType = action.getType();
