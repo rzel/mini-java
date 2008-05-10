@@ -1,6 +1,7 @@
 import lex.LexConfig;
 import lex.TextLexConfig;
 import lex.TokenRevamped;
+import lex.TokenRevampedAdapter;
 import lex.TokenType;
 import lex.TokenizerIF;
 import lex.TokenizerAdapter;
@@ -17,11 +18,14 @@ import syntax.legacy.Pair;
 import syntax.legacy.Rule;
 import syntax.legacy.Algorithm;
 import syntax.legacy.AnalysisTable;
+import gui.TreeView;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.JFrame;
 
 import java.util.List;
 import java.util.LinkedList;
 
-public class Test03 {
+public class Test04 {
     public static void main(String[] args) throws Exception {
         List<Rule> rules = new LinkedList<Rule>();
         SyntaxConfig config = SyntaxConfig.getInstance();
@@ -48,7 +52,7 @@ public class Test03 {
         /*Symbol */Node<Pair<SymbolType, TokenRevamped>> root =
             Algorithm.parse(drivingManual, new State(0), getSampleTokens());
         root.dump();
-        //TreeView.fromNodeToTreeNode(root);
+        JFrame frame = new MiniViewer(TreeView.fromNodeToTreeNode(root));
     }
 
     public static List<TokenRevamped> getSampleTokens() throws Exception {
@@ -77,5 +81,20 @@ public class Test03 {
         //    System.out.println(token);
         //}
         return tokens;
+    }
+}
+
+class MiniViewer extends JFrame {
+    private TreeView treep = new TreeView();
+    public MiniViewer(DefaultMutableTreeNode node) {
+        treep.addTree(node);
+        treep.setBounds(0, 25, 200, 595);
+        this.add(treep);
+        this.setLayout(null);
+        this.setTitle("Mini Java");
+        this.setResizable(false);
+        this.setSize(1010,654);
+        this.setVisible(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }
