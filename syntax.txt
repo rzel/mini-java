@@ -1,0 +1,25 @@
+GOAL ::= MAINCLASS
+#Goal ::= Goal ClassDeclaration
+#MainClass ::= class Identifier { public static void main ( String [ ] Identifier ) { Statement } }
+MAINCLASS ::= CLASS ID { PUBLIC STATIC VOID MAIN ( STRING [ ] ID ) { } }
+MAINCLASS ::= CLASS ID { PUBLIC STATIC VOID MAIN ( STRING [ ] ID ) { STATEMENT } }
+#ClassDeclaration ::= class Identifier { VarDeclarations MethodDeclarations }
+#ClassDeclaration ::= class Identifier extends Identifier { VarDeclarations MethodDeclarations }
+#VarDeclaratoins ::= VarDeclaration
+#VarDeclarations ::= VarDeclarations VarDeclaration
+#VarDeclaration ::= Type Identifier ;
+#MethodDeclarations ::= MethodDeclaration
+#MethodDeclarations ::= MethodDeclarations MethodDeclaration
+#MethodDeclaration ::= public Type Identifier ( )
+#Type ::= int
+#
+STATEMENT ::= System.out.println ( EXPRESSION ) ;
+EXPRESSION ::= INTEGER
+{ ::= LBRACE
+} ::= RBRACE
+[ ::= LBRACKET
+] ::= RBRACKET
+( ::= LP
+) ::= RP
+; ::= SEMICOLON
+System.out.println ::= PRINT

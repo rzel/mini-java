@@ -1,0 +1,16 @@
+<project name="minijava" basedir="." default="compile">
+    <property name="src" value="."/>
+    <property name="dest" value="dest"/>
+    <target name="init">
+        <mkdir dir="dest"/>
+    </target>
+    <target name="compile" depends="init">
+        <javac debug="on" srcdir="${src}" destdir="${dest}">
+            <include name="fa/**/*.java"/>
+            <include name="lex/**/*.java"/>
+            <include name="syntax/**/*.java"/>
+            <include name="Test??.java"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+    </target>
+</project>
