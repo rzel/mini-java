@@ -9,6 +9,8 @@
             <include name="fa/**/*.java"/>
             <include name="lex/**/*.java"/>
             <include name="syntax/**/*.java"/>
+            <include name="misc/**/*.java"/>
+            <include name="gui/**/*.java"/>
             <include name="Test??.java"/>
             <compilerarg value="-Xlint:unchecked"/>
         </javac>
