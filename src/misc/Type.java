@@ -1,5 +1,6 @@
 package misc;
 
+// TODO: create a "base" package for Type
 public class Type {
     private String rep;
 
