@@ -2,6 +2,8 @@ package mini.java.fa.legacy;
 import java.util.Set;
 import java.util.HashSet;
 
+import mini.java.fa.State;
+
 public class SimpleFASimulator {
     private SimpleFA fa = null;
     private State currState = null;

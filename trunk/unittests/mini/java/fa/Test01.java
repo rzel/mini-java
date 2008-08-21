@@ -1,24 +1,24 @@
 package mini.java.fa;
 import mini.java.fa.legacy.SimpleFA;
-import mini.java.fa.legacy.State;
+import mini.java.fa.legacy.SimpleFAAdapter;
 
 public class Test01 {
     //TODO: use junit
     public static void main(String[] args) {
         SimpleFAAdapter fa = new SimpleFAAdapter(new SimpleFA());
-        State from = new State(0);
-        State to = new State(1);
+        State from = new State();
+        State to = new State();
         Integer input = new Integer(5);
 
         fa.addTransition(from, to, input);
         System.out.println("reachableStates[from]" +
-            fa.reachableStates(from, input));
+            fa.getStates(from, input));
         System.out.println("reachableStates[t]" +
-            fa.reachableStates(to, input));
+            fa.getStates(to, input));
         System.out.println("possibleInputs[from]" +
-            fa.possibleInputs(from));
+            fa.getInputs(from));
         System.out.println("possibleInputs[to]" +
-            fa.possibleInputs(to));
+            fa.getInputs(to));
     }
 /*
         s = fa.move(frm, input0);

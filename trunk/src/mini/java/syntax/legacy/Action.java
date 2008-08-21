@@ -1,6 +1,6 @@
 package mini.java.syntax.legacy;
 
-import mini.java.fa.legacy.State;
+import mini.java.fa.State;
 
 public class Action {
     public static final int ACTION_SHIFT = 0;
@@ -49,16 +49,16 @@ public class Action {
         return type;
     }
     
-    public String toString() {
-    	if(type == Action.ACTION_ACCT) {
-    		return "ACCEPT";
-    	} else if(type == Action.ACTION_GOTO) {
-    		return "GOTO " + state.getId();
-    	} else if(type == Action.ACTION_SHIFT) {
-    		return "SHIFT " + state.getId();
-    	} else {
-    		return "REDUCE " + rule.getLhs() + "->" + rule.getRhs();
-    	}
-    }
+//    public String toString() {
+//    	if(type == Action.ACTION_ACCT) {
+//    		return "ACCEPT";
+//    	} else if(type == Action.ACTION_GOTO) {
+//    		return "GOTO " + state.getId();
+//    	} else if(type == Action.ACTION_SHIFT) {
+//    		return "SHIFT " + state.getId();
+//    	} else {
+//    		return "REDUCE " + rule.getLhs() + "->" + rule.getRhs();
+//    	}
+//    }
 }
 

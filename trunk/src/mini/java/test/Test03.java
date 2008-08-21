@@ -1,6 +1,6 @@
 package mini.java.test;
+import mini.java.fa.State;
 import mini.java.fa.legacy.DFA;
-import mini.java.fa.legacy.State;
 import mini.java.lex.LexConfig;
 import mini.java.lex.TextLexConfig;
 import mini.java.lex.TokenRevamped;
@@ -46,9 +46,9 @@ public class Test03 {
         //for (TokenRevamped token : getSampleTokens()) {
         //    System.out.println(token);
         //}
-        /*Symbol */Node<Pair<SymbolType, TokenRevamped>> root =
-            Algorithm.parse(drivingManual, new State(0), getSampleTokens());
-        root.dump();
+        ///*Symbol */Node<Pair<SymbolType, TokenRevamped>> root =
+            //Algorithm.parse(drivingManual, new State(0), getSampleTokens());
+        //root.dump();
         //TreeView.fromNodeToTreeNode(root);
     }
 
@@ -58,8 +58,8 @@ public class Test03 {
         for (TokenType type : lexConfig.getTokenTypes()) {
             String tokenSpec = lexConfig.getTokenSpec(type);
             //try {
-                DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
-                tokenizer.addDFA(dfa, type.toString());
+                //DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
+                //tokenizer.addDFA(dfa, type.toString());
             //} catch (Exception e) {
             //    throw new RuntimeException(e);
             //}

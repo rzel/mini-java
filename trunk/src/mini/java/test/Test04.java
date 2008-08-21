@@ -48,8 +48,8 @@ public class Test04 {
         for (TokenType type : lexConfig.getTokenTypes()) {
             String tokenSpec = lexConfig.getTokenSpec(type);
             //try {
-                DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
-                tokenizer.addDFA(dfa, type.toString());
+                //DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
+                //tokenizer.addDFA(dfa, type.toString());
             //} catch (Exception e) {
             //    throw new RuntimeException(e);
             //}
