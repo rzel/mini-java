@@ -24,9 +24,9 @@ public class Test02 {
                 //System.out.println("********");
                 //fa.dump();
                 //System.out.println("********");
-                DFA dfa = fa.toDFA0();
+                //DFA dfa = fa.toDFA0();
                 
-                tokenizer.addDFA(dfa, type.toString());
+                //tokenizer.addDFA(dfa, type.toString());
             //} catch (Exception e) {
             //    throw new RuntimeException(e);
             //}

@@ -1,4 +1,4 @@
-package mini.java.fa;
+package mini.java.fa.legacy;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -6,8 +6,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import mini.java.fa.legacy.SimpleFA;
-import mini.java.fa.legacy.State;
+import mini.java.fa.AcceptableState;
+import mini.java.fa.NFiniteAutomaton;
+import mini.java.fa.State;
 
 /**
  * Adapter from a SimpleFA to the NFiniteAutomaton interface. SimpleFA is legacy
@@ -22,19 +23,48 @@ import mini.java.fa.legacy.State;
  */
 public class SimpleFAAdapter implements NFiniteAutomaton {
     // the underlying SimpleFA object
-    private SimpleFA               simpleFA          = null;
+    private SimpleFA               simpleFA;
 
     // mapping from NFiniteAutomaton input to SimpleFA input
-    private Map<Object, Character> objectToCharacter = new HashMap<Object, Character>();
+    private Map<Object, Character> objectToCharacter;
 
     // mapping from SimpleFA input to NFiniteAutomaton input
-    private Map<Character, Object> characterToObject = new HashMap<Character, Object>();
+    private Map<Character, Object> characterToObject;
 
     // used to track used characters by simpleFA
-    private char                   charValue         = '\000';
+    private char                   charValue;
+
+    // used to track added states; SimpleFA doesn't track states;
+    private Set<State>             states;
+
+    @Override
+    public Set<Object> getInputs() {
+        return objectToCharacter.keySet();
+    }
+
+    @Override
+    public Set<State> getStates() {
+        return states;
+    }
+
+    @Override
+    public Set<State> getStates(State from) {
+        Set<State> states = new HashSet<State>();
+        for (Object input : this.getInputs(from)) {
+            states.addAll(getStates(from, input));
+        }
+
+        // the behavior in NFA is slightly different than the DFA version, that
+        // NFA will also return any states reachable through an epsilon
+        // transition
+        states.addAll(this.simpleFA.e_closure(from));
+
+        return states;
+    }
 
     /**
      * Get the underlying SimpleFA
+     * 
      * @return
      */
     public SimpleFA getSimpleFA() {
@@ -43,22 +73,23 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
 
     /**
      * Constructor. SimpleFAAdapter should be an immutable object.
+     * 
      * @param simpleFA
      */
     public SimpleFAAdapter(SimpleFA simpleFA) {
         this.simpleFA = simpleFA;
+        this.objectToCharacter = new HashMap<Object, Character>();
+        this.characterToObject = new HashMap<Character, Object>();
+        this.states = new HashSet<State>();
+        this.charValue = '\000';
     }
-
-//    /**
-//     * Set the underlying SimpleFA
-//     * @param simpleFA
-//     */
-//    public void setSimpleFA(SimpleFA simpleFA) {
-//        this.simpleFA = simpleFA;
-//    }
 
     public void addTransition(State from, State to, Object input) {
         Character c = null;
+
+        // keep tracking states
+        states.add(from);
+        states.add(to);
 
         if (objectToCharacter.containsKey(input)) {
             // have seen this input before
@@ -82,12 +113,12 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
         // TODO: check out the specific behavior of SimpleFA in case the same
         // accepted state being added multiple times
         // TODO: also check "from" state
-        if (to instanceof AcceptedState) {
+        if (to instanceof AcceptableState) {
             simpleFA.addAcceptedState(to);
         }
     }
 
-    public Set<State> reachableStates(State from, Object input) {
+    public Set<State> getStates(State from, Object input) {
         // never return null for collection
         Set<State> states = new HashSet<State>();
 
@@ -95,15 +126,22 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
             Character c = objectToCharacter.get(input);
             Set<Character> newInput = new HashSet<Character>(
                     Collections.singleton(c));
-            states.addAll(simpleFA.e_closure(simpleFA.move(
-                    simpleFA.e_closure(from), newInput)));
+
+            // NOTE: SimpleFA.e_closure no long returns the source state. So we
+            // need to do three times, the first for "from" state itself, the
+            // second for "from" state's e_closure, and the last one, we do a
+            // e_closure on all states so far.
+            states.addAll(simpleFA.move(from, newInput));
+            states.addAll(simpleFA.move(simpleFA.e_closure(from), newInput));
+            states.addAll(simpleFA.e_closure(states));
         }
 
         return states;
     }
 
-    public Set<Object> possibleInputs(State from) {
-        // TODO: character inputs and object inputs should have one-to-one mapping
+    public Set<Object> getInputs(State from) {
+        // TODO: character inputs and object inputs should have one-to-one
+        // mapping
         // TODO: try to find such an one-to-one mapping implementation
         Set<Character> charInput = simpleFA.getInputMixed(from);
         Set<Object> objectInput = new HashSet<Object>();
@@ -120,12 +158,25 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
         simpleFA.addTransition(from, to);
 
         // TOOD: do the same thing for "from" state
-        if (to instanceof AcceptedState) {
+        if (to instanceof AcceptableState) {
             simpleFA.addAcceptedState(to);
         }
     }
 
-    public Set<State> reachableStates(State from) {
-        return simpleFA.e_closure(from);
+    @Override
+    public Set<AcceptableState> getAcceptableState() {
+        Set<AcceptableState> states = new HashSet<AcceptableState>();
+
+        for (State state : getStates()) {
+            if (state instanceof AcceptableState) {
+                states.add((AcceptableState) state);
+            }
+        }
+
+        return states;
     }
+
+    // public Set<State> reachableStates(State from) {
+    // return simpleFA.e_closure(from);
+    // }
 }

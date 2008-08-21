@@ -2,7 +2,6 @@ package mini.java.fa;
 
 import java.util.Set;
 
-import mini.java.fa.legacy.State;
 
 /**
  * Represents a non-deterministic finite automaton. NFA can contain epsilon
@@ -20,11 +19,11 @@ public interface NFiniteAutomaton extends FiniteAutomaton {
      */
     public void addTransition(State from, State to);
 
-    /**
-     * Return all states reachable through an epsilon transition
-     * 
-     * @param from
-     * @return reachable states. Empty set for null.
-     */
-    public Set<State> reachableStates(State from);
+//    /**
+//     * Return all states reachable through an epsilon transition
+//     * 
+//     * @param from
+//     * @return reachable states. Empty set for null.
+//     */
+//    public Set<State> reachableStates(State from);
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import mini.java.fa.legacy.State;
+import mini.java.fa.State;
 import mini.java.lex.TokenRevamped;
 import mini.java.lex.TokenType;
 import mini.java.syntax.NonTerminal;
@@ -60,7 +60,8 @@ public class Algorithm {
 					}
 				}else{
 					
-					State state = new State(num);		
+					//State state = new State(num);
+				    State state = new State();
 					//Pair<State, Token> reducePair = new Pair<State, Token>(state, Token.END_TOKEN);
 					// Hey, I don't know that this Token.END_TOKEN all about.., any ideas?
 					Pair<State, SymbolType> reducePair = new Pair<State, SymbolType>(state, new /*SymbolType*/Terminal("END"));
@@ -106,10 +107,12 @@ public class Algorithm {
 				}
 				//Token t = tmpList2.get(0).getPrevious();
 				SymbolType t = tmpList2.get(0).getPrevious();
-				State state = new State(gotoIdx);
+				//State state = new State(gotoIdx);
+				State state = new State();
 				
 				//Pair<State , Token> shiftpair = new Pair<State, Token>(new State(num), t);
-				Pair<State , SymbolType> shiftpair = new Pair<State, SymbolType>(new State(num), t);
+				//Pair<State , SymbolType> shiftpair = new Pair<State, SymbolType>(new State(num), t);
+				Pair<State, SymbolType> shiftpair = new Pair<State, SymbolType>(new State(), t);
 				
 				 //if(!t.getType().equals(Token.NON_TERMINAL_TYPE)){
 				 if(t instanceof Terminal) {

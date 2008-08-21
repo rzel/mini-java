@@ -1,7 +1,7 @@
 package mini.java.syntax.legacy;
 import java.util.*;
 
-import mini.java.fa.legacy.State;
+import mini.java.fa.State;
 import mini.java.syntax.SymbolType;
 
 
