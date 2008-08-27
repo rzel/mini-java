@@ -1,7 +1,7 @@
 package mini.java.fa;
 
 /**
- * Represents an accept state.
+ * Represents an acceptable state.
  * 
  * @author Alex
  */

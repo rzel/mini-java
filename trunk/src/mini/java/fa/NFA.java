@@ -8,9 +8,9 @@ import java.util.Set;
  * transitions, which don't need an input and can happen automatically.
  * 
  * @author Alex
- * 
  */
-public interface NFiniteAutomaton extends FiniteAutomaton {
+public interface NFA extends DFA {
+    // TODO: add "convert to DFA" functionality. And think about the way to test it
     /**
      * Add an epsilon transition to the finite automaton
      * 
