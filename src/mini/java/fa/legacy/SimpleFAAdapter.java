@@ -7,11 +7,12 @@ import java.util.Map;
 import java.util.Set;
 
 import mini.java.fa.AcceptableState;
-import mini.java.fa.NFiniteAutomaton;
+import mini.java.fa.InitialState;
+import mini.java.fa.NFA;
 import mini.java.fa.State;
 
 /**
- * Adapter from a SimpleFA to the NFiniteAutomaton interface. SimpleFA is legacy
+ * Adapter from a SimpleFA to the NFA interface. SimpleFA is legacy
  * implementation for NFA. It is hard to use because it can only take Character
  * as input. SimpleFAAdapter adds the ability for SimpleFA to accept arbitrary
  * objects as input by creating a mapping from objects to characters. This only
@@ -21,14 +22,14 @@ import mini.java.fa.State;
  * @author Alex
  * 
  */
-public class SimpleFAAdapter implements NFiniteAutomaton {
+public class SimpleFAAdapter implements NFA {
     // the underlying SimpleFA object
     private SimpleFA               simpleFA;
 
-    // mapping from NFiniteAutomaton input to SimpleFA input
+    // mapping from NFA input to SimpleFA input
     private Map<Object, Character> objectToCharacter;
 
-    // mapping from SimpleFA input to NFiniteAutomaton input
+    // mapping from SimpleFA input to NFA input
     private Map<Character, Object> characterToObject;
 
     // used to track used characters by simpleFA
@@ -37,17 +38,14 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
     // used to track added states; SimpleFA doesn't track states;
     private Set<State>             states;
 
-    @Override
     public Set<Object> getInputs() {
         return objectToCharacter.keySet();
     }
 
-    @Override
     public Set<State> getStates() {
         return states;
     }
 
-    @Override
     public Set<State> getStates(State from) {
         Set<State> states = new HashSet<State>();
         for (Object input : this.getInputs(from)) {
@@ -76,6 +74,8 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
      * 
      * @param simpleFA
      */
+    // TODO: enforce the presence of the initial state by adding a initialState
+    // parameter in this construtor
     public SimpleFAAdapter(SimpleFA simpleFA) {
         this.simpleFA = simpleFA;
         this.objectToCharacter = new HashMap<Object, Character>();
@@ -163,7 +163,6 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
         }
     }
 
-    @Override
     public Set<AcceptableState> getAcceptableState() {
         Set<AcceptableState> states = new HashSet<AcceptableState>();
 
@@ -174,6 +173,18 @@ public class SimpleFAAdapter implements NFiniteAutomaton {
         }
 
         return states;
+    }
+
+    @Override
+    public InitialState getInitialState() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public State getState(State from, Object input) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     // public Set<State> reachableStates(State from) {
