@@ -77,7 +77,7 @@ public final class ImmutableDFA implements DFA {
          * with a single input; new inputs will override previous ones.
          * 
          * InitialState and AcceptableState can be set be passing corresponding
-         * states as parameters. Note that A DFA can have no more than one
+         * states as parameters. Note that a DFA can have no more than one
          * InitialState. Invalid transitions will be ignored.
          * 
          * @param from -- source state
@@ -87,10 +87,18 @@ public final class ImmutableDFA implements DFA {
         public void addTransition(State from, State to, Object input) {
             Map<Object, State> targets;
             
+            // ignore invalid states
+            //if (from == null || to == null) { return; }
+            // Null source state will definitely lead to an invalid DFA;
+            if (to == null) { return; }
+            
+            // ignore invalid inputs
+            if (input == null) { return; }
+            
             // target state must not be initial state
             if (to instanceof InitialState) { return; }
             
-            // set the source state to be the initialState
+            // set the source state to be the initial state
             if (from instanceof InitialState && from != initialState) {
                 if (initialState == null) {
                     initialState = (InitialState)from;
@@ -118,6 +126,7 @@ public final class ImmutableDFA implements DFA {
          * can be called multiple times. Each call will return a different instance.
          * Through technically speaking, it's possible to return the same instance
          * if the underlying data haven't changed. We leave this out for simplicity.
+         * 
          * NOTE: each DFA must have one and only one initial state. If the initial
          * state haven't been provided yet, no DFA will be created.
          * 
