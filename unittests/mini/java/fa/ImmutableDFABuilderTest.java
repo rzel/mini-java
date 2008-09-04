@@ -7,13 +7,14 @@ import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
-public class TestImmutableDFABuilder {
+public class ImmutableDFABuilderTest {
 
     @Test
     public void testAddSingleTransition() {
         State from = new InitialState();
         State to = new State();
         Object input = new Object();
+        
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
         
@@ -23,7 +24,26 @@ public class TestImmutableDFABuilder {
     }
     
     @Test
-    public void testAddMultipleTransitionsForSameSource() {
+    public void testAddMultipleTransitionsWithInvalidInput() {
+        State s1 = new InitialState();
+        State s2 = new State();
+        State s3 = new State();
+        Object input1 = new Object();
+        Object input2 = null;
+        
+        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        builder.addTransition(s1, s2, input1);
+        builder.addTransition(s1, s3, input2);
+        
+        ImmutableDFA immutableDFA = builder.buildDFA();
+        assertNotNull(immutableDFA);
+        assertEquals(immutableDFA.getState(s1, input1), s2);
+        // the transition from s1 to s3 with null input should be ignored
+        assertNull(immutableDFA.getState(s1, input2));
+    }
+    
+    @Test
+    public void testAddMultipleTransitionsWithSameSource() {
         State from = new InitialState();
         State to = new State();
         State to1 = new State();
@@ -61,16 +81,16 @@ public class TestImmutableDFABuilder {
     }
     
     @Test
-    public void testOverridenTransition() {
+    public void testAddMultipleTransitionsWithSameInputs() {
         State from = new InitialState();
         State to = new State();
         State to1 = new State();
-        // same input for different target state
+        // same input for different target states
         Object input = new Object();
         
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
-        builder.addTransition(from, to1, input); // "from --> to" should be overriden
+        builder.addTransition(from, to1, input); // should override previous one
         
         ImmutableDFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
@@ -78,7 +98,7 @@ public class TestImmutableDFABuilder {
     }
     
     @Test
-    public void testOverridenInitialState() {
+    public void testAddMultipleInitialStates() {
         State s1 = new InitialState();
         State s2 = new InitialState();
         State s3 = new State();
@@ -95,7 +115,39 @@ public class TestImmutableDFABuilder {
     }
     
     @Test
-    public void testInvalidTargetState() {
+    public void testAddNullTargetState() {
+        State from = new InitialState();
+        State to = null; // invalid target state
+        Object input = new Object();
+        
+        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        builder.addTransition(from, to, input);
+        
+        ImmutableDFA immutableDFA = builder.buildDFA();
+        assertNull(immutableDFA);
+    }
+    
+    @Test
+    public void testAddNullSourceState() {
+        // Not needed. A source state is also a target state unless it's an
+        // initial state. Both cases have already been covered by other tests.
+    }
+    
+    @Test
+    public void testAddNullInput() {
+        State from = new InitialState();
+        State to = new State();
+        Object input = null; // null input should be ignored
+        
+        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        builder.addTransition(from, to, input);
+        
+        ImmutableDFA immutableDFA = builder.buildDFA();
+        assertNull(immutableDFA);
+    }
+    
+    @Test
+    public void testAddInvalidTargetState() {
         State from = new InitialState();
         // try to add an invalid target state
         State to = new InitialState();
@@ -163,7 +215,7 @@ public class TestImmutableDFABuilder {
         
         assertNotNull(immutableDFA);
         assertNotNull(immutableDFA1);
-        assertFalse(immutableDFA == immutableDFA1);
+        //assertFalse(immutableDFA == immutableDFA1);
         assertFalse(immutableDFA.equals(immutableDFA1));
     }
 }

@@ -22,7 +22,7 @@ import mini.java.fa.State;
  * @author Alex
  * 
  */
-public class SimpleFAAdapter implements NFA {
+public class SimpleFAAdapter {
     // the underlying SimpleFA object
     private SimpleFA               simpleFA;
 
@@ -175,13 +175,11 @@ public class SimpleFAAdapter implements NFA {
         return states;
     }
 
-    @Override
     public InitialState getInitialState() {
         // TODO Auto-generated method stub
         return null;
     }
 
-    @Override
     public State getState(State from, Object input) {
         // TODO Auto-generated method stub
         return null;

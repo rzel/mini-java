@@ -13,8 +13,8 @@ import java.util.Set;
 public interface DFA {
     /**
      * Get the target state from the source state through the given input.
-     * There should be no more than one such target state. And the input
-     * should not be null.
+     * There should be no more than one such target state. Null input should
+     * be seen as invalid input, and no state should be returned.
      * 
      * @return The target state. Null if there's no such state.
      */
