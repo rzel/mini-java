@@ -8,8 +8,8 @@ import java.util.Set;
 /**
  * ImmutableDFA is an implemetation of DFA which appreciates the immutable
  * aspect of the interface. ImmutableDFA includes a builder inner class which
- * can be used to construct ImmutableDFA objects. But once a object is created,
- * you won't be able to alter it.
+ * can be used to construct ImmutableDFA objects. Once an ImmutableDFA object is
+ * created, you won't be able to alter it.
  * 
  * @author Alex
  */
@@ -17,7 +17,7 @@ public final class ImmutableDFA implements DFA {
     // transition collection, formed by a mapping from source states to
     // input/target state pairs. In order to enforce that each source state
     // can reach a single target state through the same input object, the input
-    // is made the key in the target paris for that source state.
+    // is made the key in the target pair.
     private Map<State, Map<Object, State>> transitions;
     
     // keep track of the initial state
@@ -61,6 +61,9 @@ public final class ImmutableDFA implements DFA {
      * @author Alex
      */
     public static final class Builder {
+        // cached instance for implementation of "==" operation;
+        private ImmutableDFA _cachedInstance;
+        
         private Map<State, Map<Object, State>> transitions =
             new HashMap<State, Map<Object, State>>();
         
@@ -85,68 +88,91 @@ public final class ImmutableDFA implements DFA {
          * @param input -- input object
          */
         public void addTransition(State from, State to, Object input) {
-            Map<Object, State> targets;
             
-            // ignore invalid states
-            //if (from == null || to == null) { return; }
-            // Null source state will definitely lead to an invalid DFA;
-            if (to == null) { return; }
             
-            // ignore invalid inputs
-            if (input == null) { return; }
+//            // ignore invalid states
+//            //if (from == null || to == null) { return; }
+//            // Null source state will definitely lead to an invalid DFA;
+//            if (to == null) { return; }
+//            
+//            // ignore invalid inputs
+//            if (input == null) { return; }
             
-            // target state must not be initial state
-            if (to instanceof InitialState) { return; }
+            assert (from  != null);
+            assert (to    != null);
+            assert (input != null);
+    
+//            // set the source state to be the initial state
+//            if (from instanceof InitialState && from != initialState) {
+//                if (initialState == null) {
+//                    initialState = (InitialState)from;
+//                } else {
+//                    // A DFA cannot have more than one initial state;
+//                    // ignore this transition
+//                    return;
+//                }                
+//            }
             
-            // set the source state to be the initial state
-            if (from instanceof InitialState && from != initialState) {
+            // if the source state is an initial state, set it to be
+            // the only initial state of the DFA
+            if (from instanceof InitialState) {
                 if (initialState == null) {
                     initialState = (InitialState)from;
                 } else {
-                    // A DFA cannot have more than one initial state;
-                    // ignore this transition
-                    return;
-                }                
+                    assert (from == initialState);
+                }
             }
             
+            // the target state can be an initial state only after the
+            // initial state has been set and the target state is the
+            // same as the initial state
+            if (to instanceof InitialState) {
+                assert (to == initialState);
+            }
+            
+            Map<Object, State> targets;
             if (transitions.containsKey(from)) {
                 targets = transitions.get(from);
                 targets.put(input, to);
             } else {
-                // If we haven't seen this source state before, create a new
-                // target collection.
+                // if we haven't seen this source state before, create a new
+                // target collection for it
                 targets = new HashMap<Object, State>();
                 targets.put(input, to);
                 transitions.put(from, targets);
             }
+            
+            // clear the cache, so new instance will be created
+            _cachedInstance = null;
         }
 
         /**
          * Factory method which returns an ImmutableDFA instance. This method
-         * can be called multiple times. Each call will return a different instance.
-         * Through technically speaking, it's possible to return the same instance
-         * if the underlying data haven't changed. We leave this out for simplicity.
+         * can be called multiple times. Same instance will be returned if no
+         * transitions are added.
          * 
          * NOTE: each DFA must have one and only one initial state. If the initial
          * state haven't been provided yet, no DFA will be created.
          * 
-         * @return an instance of ImmutableDFA; null if the builder haven't got
-         * enough data to create a valid ImmutableDFA instance. 
+         * @return an instance of ImmutableDFA; null if no valid ImmutableDFA can
+         * be created. 
          */
         public ImmutableDFA buildDFA() {
-            ImmutableDFA instance = null;
-            
-            // create instance only if initialState is available;
-            if (initialState != null) {
-                instance = new ImmutableDFA();
-                // Defensive copy to protect the immutable instance
-                instance.transitions =
-                    new HashMap<State, Map<Object, State>>(transitions);
-                // initialState can be assigned directly since State is immutable
-                // object itself.
-                instance.initialState = initialState;
-            }            
-            return instance;
+            // a new instance needs to be created
+            if (_cachedInstance == null) {
+
+                // create an instance only if initialState is available;
+                if (initialState != null) {
+                    _cachedInstance = new ImmutableDFA();
+                    // Defensive copy to protect the immutable instance
+                    _cachedInstance.transitions = new HashMap<State, Map<Object, State>>(
+                            transitions);
+                    // initialState can be assigned directly since State is
+                    // immutable object itself.
+                    _cachedInstance.initialState = initialState;
+                }
+            }
+            return _cachedInstance;
         }
     }
 }
