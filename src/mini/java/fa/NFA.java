@@ -1,25 +1,57 @@
 package mini.java.fa;
 
+import java.util.Set;
 
 /**
  * Represents a non-deterministic finite automaton. NFA can contain epsilon
- * transition, which doesn't need an input and can happen automatically.
+ * transitions, transitions without input and can be triggered implicitly.
+ * This interface is an immutable one, similar as DFA, which is up to the
+ * implemetations to decide whether to use a builder or some other mechanism
+ * for adding transitions.
  * 
  * Theoretically speaking, states in an NFA can have multiple successive states
- * of the same inputs. But such behaviour is not implemented in our NFA class.
- * Since that can be achieved easily by using the epsilon transitions.
+ * of the same inputs. But such behaviour is not implemented in our NFA class
+ * since the same behaviour can be achieved easily by using an epsilon transition.
  * 
  * NOTE: NFA is not intended to be run by simulators. One could call buildDFA()
  * method to get an equivalent DFA representation of the NFA and run that DFA
- * instead. So NFA can be treated as a DFA builder, which just has a different
- * algorithm compared to the default DFA builder.
+ * instead.
  * 
  * @author Alex
  */
 public interface NFA {
-    public void addTransition(State from, State to);
+    /**
+     * Get the "closure" of the target states. A target state "closure" is all
+     * the target states and their closures from the source state's closure. An
+     * empty set will be returned if no such states.
+     * 
+     * NOTE: the source state itself will not be included in this kind of closure.
+     */
+    public Set<State> closure(State from, Object input);
+    
+    /**
+     * Get the "closure" of the source state. A source state "closure" is all
+     * states reachable from the source state through an epsilon transition.
+     * Empty set will be returned if no such states.
+     * 
+     * NOTE: the source state will be included in its only closure.
+     */
+    public Set<State> closure(State from);
+    
+    /**
+     * Get the initial state in this NFA. Each NFA can have one and only one such
+     * initial state.
+     */
+    public InitialState getInitialState();
 
-    public void addTransition(State from, State to, Object input);
+    /**
+     * Get valid inputs of the given source state and its closure
+     */
+    public Set<Object> getInputs(State from);
 
+    /**
+     * Convert the NFA to a DFA.
+     * @return an equivalent DFA representation
+     */
     public DFA buildDFA();
 }
