@@ -5,5 +5,5 @@ package mini.java.fa;
  * 
  * @author Alex
  */
-public class AcceptableState extends State {
+public class AcceptableState extends State implements Acceptable {
 }

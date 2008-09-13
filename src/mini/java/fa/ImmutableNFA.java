@@ -1,8 +1,10 @@
 package mini.java.fa;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -15,36 +17,151 @@ public final class ImmutableNFA implements NFA {
     // fake inputs used to represent epsilon transitions
     private Set<Object> _epsilons;
     private DFA _dfa;
+    
+
 
     @Override
     public DFA buildDFA() {
-        // TODO Auto-generated method stub
-        return null;
+        // mapping from set of NFA states (closures) to new DFA states
+        // NOTE: this also serves as the "flags" for checked states
+        Map<Set<State>, State> newStates = new HashMap<Set<State>, State>();
+        // the "todo" list, containing unchecked states
+        List<Set<State>> uncheckedStates = new LinkedList<Set<State>>();
+        
+        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        
+        // start from the initial state
+        InitialState initialState = getInitialState();
+        // get the closure for the initial state
+        Set<State> initialClosure = closure(initialState);
+        // create a new state for the initial closure
+        //newStates.put(initialClosure, createState(initialClosure));
+        newStates.put(initialClosure, isAcceptable(initialClosure)
+                ? new AcceptableInitialState() : new InitialState());
+        // add the initial closure to the "todo" list
+        uncheckedStates.add(initialClosure);
+        
+        while (!uncheckedStates.isEmpty()) {
+            Set<State> sourceClosure = uncheckedStates.remove(0);
+//            State newState = null;
+//            if (Helper.isInitial(sourceClosure) && Helper.isAcceptable(sourceClosure)) {
+//                newState = new AcceptableInitialState();
+//            } else if (Helper.isInitial(sourceClosure)) {
+//                newState = new InitialState();
+//            } else if (Helper.isAcceptable(sourceClosure)) {
+//                newState = new AcceptableState();
+//            }
+//            State newState = createState(sourceClosure);
+//            newStates.put(sourceClosure, newState);
+            State sourceState = newStates.get(sourceClosure);
+            
+            // first get all possible input
+//            Set<Object> inputs = new HashSet<Object>();
+//            for (State state : sourceClosure) {
+//                inputs.addAll(getInputs(state));
+//            }
+//            Set<Object> inputs = getInputs(sourceClosure);
+            
+            // walk through all possible inputs
+            for (Object input : getInputs(sourceClosure)) {
+                // get the target closure
+                Set<State> targetClosure = closure(sourceClosure, input);
+                // create new state for target closure if there isn't one
+                if (!newStates.containsKey(targetClosure)) {
+                    //newStates.put(targetClosure, createState(targetClosure));
+                    newStates.put(targetClosure, isAcceptable(targetClosure)
+                            ? new AcceptableState() : new State());
+                    uncheckedStates.add(targetClosure);
+                }
+                State targetState = newStates.get(targetClosure);
+                // add the corresponding transition in the DFA
+                builder.addTransition(sourceState, targetState, input);
+            }
+        }
+        
+        return builder.buildDFA();
     }
+    
+//    // helper function used to create new states based on the closures
+//    private final static State createState(Set<State> closure_) {
+//        State state = null;
+//        if (isInitial(closure_) && isAcceptable(closure_)) {
+//            state = new AcceptableInitialState();
+//        } else if (isInitial(closure_)) {
+//            state = new InitialState();
+//        } else if (isAcceptable(closure_)) {
+//            state = new AcceptableState();
+//        } else {
+//            state = new State();
+//        }
+//        return state;
+//    }    
+    
+     // helper function for checking whether a closure contains acceptable state
+    private final static boolean isAcceptable(Set<State> closure_) {
+        for (State state : closure_) {
+            if (state instanceof Acceptable)
+                return true;
+        }
+        return false;
+    }
+    
+//    // helper function for checking whether a closure contains initial state
+//    private final static boolean isInitial(Set<State> closure_) {
+//        for (State state : closure_) {
+//            if (state instanceof InitialState)
+//                return true;
+//        }
+//        return false;
+//    }
 
 
     @Override
     public Set<State> closure(State from, Object input) {
-        // first get the closure of the source state
-        Set<State> todo = closure(from);
+//        // first get the closure of the source state
+//        Set<State> todo = closure(from);
+//        
+//        Set<State> states = new HashSet<State>();
+//        for (State state : todo) {
+//            // valid transitions from the closure
+//            // NOTE: target state can be null;
+//            State to = _dfa.getState(state, input);
+//            
+//            // add the target state and its closure
+//            // NOTE: closure will include the target state itself
+//            states.addAll(closure(to));
+//        }
+//        
+//        return states;
+        return closure(closure(from), input);
+    }
+    
+    // helper function used to get the target closure from other closure
+    private Set<State> closure(Set<State> closure_, Object input_) {
+        assert(closure_ != null);
+        assert(input_   != null);
         
-        Set<State> states = new HashSet<State>();
-        for (State state : todo) {
-            // valid transitions from the closure
-            // NOTE: target state can be null;
-            State to = _dfa.getState(state, input);
+        Set<State> targetClosure = new HashSet<State>();
+        for (State state : closure_) {
+            // valid transitions from the closure            
+            State target = _dfa.getState(state, input_);
             
-            // add the target state and its closure
-            // NOTE: closure will include the target state itself
-            states.addAll(closure(to));
+            // target state cannot be null;
+            if (target != null) {
+                // add the target state and its closure
+                // NOTE: closure will include the target state itself
+                targetClosure.addAll(closure(target));
+            }
         }
         
-        return states;
+        return targetClosure;
     }
 
 
     @Override
     public Set<State> closure(State from) {
+        assert(from != null); // source state cannot be null
+        
         Set<State> ret = new HashSet<State>();
         Set<State> done = new HashSet<State>();
         List<State> todo = new LinkedList<State>();
@@ -83,9 +200,28 @@ public final class ImmutableNFA implements NFA {
 
     @Override
     public Set<Object> getInputs(State from) {
+        assert(from != null); // source state cannot be null;
+        
+//        Set<Object> inputs = new HashSet<Object>();
+//        // first get the closure of the source state
+//        for (State state : closure(from)) {
+//            // then add all valid inputs from the closure
+//            inputs.addAll(_dfa.getInputs(state));
+//        }
+//        // remove fake inputs for epsilon transitions
+//        inputs.removeAll(_epsilons);
+//        
+//        return inputs;
+        return getInputs(closure(from));
+    }
+    
+    // helper function used to get possible inputs for a closure
+    private Set<Object> getInputs(Set<State> closure_) {
+        assert(closure_ != null);
+        
         Set<Object> inputs = new HashSet<Object>();
         // first get the closure of the source state
-        for (State state : closure(from)) {
+        for (State state : closure_) {
             // then add all valid inputs from the closure
             inputs.addAll(_dfa.getInputs(state));
         }

@@ -1,4 +1,4 @@
-package mini.java.fa;
+package mini.java.fa.legacy;
 
 import static org.junit.Assert.assertTrue;
 
