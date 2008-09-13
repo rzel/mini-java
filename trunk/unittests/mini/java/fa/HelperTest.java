@@ -1,22 +1,27 @@
 package mini.java.fa;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
 import org.junit.Test;
 
 public class HelperTest {
 
-    // helper function used to get the only element from a singleton set
-    private static <T> T getSingletonContent(Set<T> singleton_) {
-        assert(singleton_.size() == 1); // singleton_ must be a real singleton
+    // helper function used to get a single element from the collection
+    private static <T> T getSingleton(Collection<T> collection_) {
+        assert(collection_ != null);
         
         T ret = null;
-        for (T element : singleton_) {
+        for (T element : collection_) {
             ret = element;
-        }
-        // to make compiler happy
+            break; // we need only one element
+        }        
         return ret;
     }
     
@@ -31,13 +36,14 @@ public class HelperTest {
                 
         // check inputs for initial state
         Set<Object> inputs = immutableNFA.getInputs(source);
-        assertNotNull(inputs);
-        assertTrue(inputs.size() == 1);        
-        Object input = getSingletonContent(inputs);
-        assertNotNull(input); // avoid error
+//        assertNotNull(inputs);
+//        assertTrue(inputs.size() == 1);
+        assertEquals(inputs, Collections.singleton('a'));
+//        Object input = getSingleton(inputs);
+//        assertNotNull(input); // avoid error
         
         // check target state
-        Set<State> targets = immutableNFA.closure(source, input);
+        Set<State> targets = immutableNFA.closure(source, 'a');
         assertTrue(targets.size() == 1);
     }
     
@@ -64,41 +70,41 @@ public class HelperTest {
     
     // NOTE: same input for multiple targets is prohibited
     
-    @Test
-    public final void testBuildNFAMultipleTransitionsDifferentTransitionsLinked() {
-        ImmutableNFA immutableNFA = Helper.buildNFA("ABa,BCb");
-        assertNotNull(immutableNFA); // avoid error
-        
-        // get initial state "A"
-        State A = immutableNFA.getInitialState();
-        assertNotNull(A);
-        
-        // get input for state "A" -- "a"
-        Set<Object> inputsForA = immutableNFA.getInputs(A);
-        assertNotNull(inputsForA);
-        assertTrue(inputsForA.size() == 1);        
-        Object inputForA = getSingletonContent(inputsForA);
-        assertNotNull(inputForA);
-        
-        // get state "B"
-        Set<State> Bs = immutableNFA.closure(A, inputForA);
-        assertNotNull(Bs);
-        assertTrue(Bs.size() == 1);        
-        State B = getSingletonContent(Bs);
-        assertNotNull(B);
-        
-        // get input for state "B" -- "b"
-        Set<Object> inputsForB = immutableNFA.getInputs(B);
-        assertNotNull(inputsForB);
-        assertTrue(inputsForB.size() == 1);        
-        Object inputForB = getSingletonContent(inputsForB);
-        assertNotNull(inputForB);
-        
-        // get state "C"
-        Set<State> Cs = immutableNFA.closure(B, inputForB);
-        assertNotNull(Cs);
-        assertTrue(Cs.size() == 1);
-    }
+//    @Test
+//    public final void testBuildNFAMultipleTransitionsDifferentTransitionsDifferentSources() {
+//        ImmutableNFA immutableNFA = Helper.buildNFA("ABa,BCb");
+//        assertNotNull(immutableNFA); // avoid error
+//        
+//        // get initial state "A"
+//        State A = immutableNFA.getInitialState();
+//        assertNotNull(A);
+//        
+//        // get input for state "A" -- "a"
+//        Set<Object> inputsForA = immutableNFA.getInputs(A);
+//        assertNotNull(inputsForA);
+//        assertTrue(inputsForA.size() == 1);        
+//        Object inputForA = getSingleton(inputsForA);
+//        assertNotNull(inputForA);
+//        
+//        // get state "B"
+//        Set<State> Bs = immutableNFA.closure(A, inputForA);
+//        assertNotNull(Bs);
+//        assertTrue(Bs.size() == 1);        
+//        State B = getSingleton(Bs);
+//        assertNotNull(B);
+//        
+//        // get input for state "B" -- "b"
+//        Set<Object> inputsForB = immutableNFA.getInputs(B);
+//        assertNotNull(inputsForB);
+//        assertTrue(inputsForB.size() == 1);        
+//        Object inputForB = getSingleton(inputsForB);
+//        assertNotNull(inputForB);
+//        
+//        // get state "C"
+//        Set<State> Cs = immutableNFA.closure(B, inputForB);
+//        assertNotNull(Cs);
+//        assertTrue(Cs.size() == 1);
+//    }
     
     @Test
     public final void testBuildNFAMultipleTransitionsDifferentTransitions() {
@@ -113,13 +119,13 @@ public class HelperTest {
         Set<State> Bs = immutableNFA.closure(A, 'a');
         assertNotNull(Bs);
         assertTrue(Bs.size() == 1);
-        State B = getSingletonContent(Bs);
+        State B = getSingleton(Bs);
                 
         // get state "C"
         Set<State> Cs = immutableNFA.closure(B, 'b');
         assertNotNull(Cs);
         assertTrue(Cs.size() == 1);
-        State C = getSingletonContent(Cs);
+        State C = getSingleton(Cs);
         
         // get state "D"
         Set<State> Ds = immutableNFA.closure(C, 'c');
@@ -140,5 +146,124 @@ public class HelperTest {
         assertNotNull(closure);
         assertTrue(closure.size() == 2);
     }
+    
+    @Test
+    public final void testBuildDFASingleTransition() {
+        ImmutableDFA immutableDFA = Helper.buildDFA("ABa");
+        assertNotNull(immutableDFA);
+        
+        // get initial state "A"
+        State A = immutableDFA.getInitialState();
+        assertNotNull(A);
+        
+        // check inputs for initial state
+        Set<Object> inputs = immutableDFA.getInputs(A);
+        //assertNotNull(inputs);
+        //assertTrue(inputs.size() == 1);
+        assertEquals(inputs, Collections.singleton('a'));
+        //Object input = getSingleton(inputs);
+        //assertNotNull(input); // avoid error
+        
+        State B = immutableDFA.getState(A, 'a');
+        assertNotNull(B);
+    }
 
+    @Test
+    public final void testBuildDFAMultipleTransitionsDifferentInputs() {
+        ImmutableDFA immutableDFA = Helper.buildDFA("ABb,ACc");
+        assertNotNull(immutableDFA);
+        
+        // get initial state "A"
+        State A = immutableDFA.getInitialState();
+        assertNotNull(A);
+        
+        // check inputs for initial state
+        Set<Object> inputs = immutableDFA.getInputs(A);
+        assertNotNull(inputs);
+        assertTrue(inputs.size() == 2);
+
+        for (Object input : inputs) {
+            State BorC = immutableDFA.getState(A, input);
+            assertNotNull(BorC);
+        }
+    }
+    
+    @Test
+    public final void testBuildDFAMultipleTransitionsDifferentTransitions() {
+        ImmutableDFA immutableDFA = Helper.buildDFA("ABa,CDc,BCb");
+        assertNotNull(immutableDFA); // avoid error
+        
+        // get initial state "A"
+        State A = immutableDFA.getInitialState();
+        assertNotNull(A);        
+        // get state "B"
+        State B = immutableDFA.getState(A, 'a');
+        assertNotNull(B);        
+        // get state "C"
+        State C = immutableDFA.getState(B, 'b');
+        assertNotNull(C);        
+        // get state "D"
+        State D = immutableDFA.getState(C, 'c');
+        assertNotNull(D);
+    }
+    
+    @Test
+    public final void testCompareSingleTransition() {
+        String Rep = "ABa";
+        DFA sourceDFA = Helper.buildDFA(Rep);
+        DFA targetDFA = Helper.buildDFA(Rep);
+        assertTrue(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareMultipleTransitionsDifferentInputs() {
+        String Rep = "ABb,ACc";
+        DFA sourceDFA = Helper.buildDFA(Rep);
+        DFA targetDFA = Helper.buildDFA(Rep);
+        assertTrue(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareMultipleTransitionsDifferentTransitions() {
+        String Rep = "ABa,BCb";
+        DFA sourceDFA = Helper.buildDFA(Rep);
+        DFA targetDFA = Helper.buildDFA(Rep);
+        assertTrue(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareFailedDifferentStructure() {
+        DFA sourceDFA = Helper.buildDFA("ABa");
+        DFA targetDFA = Helper.buildDFA("ABa,ABb");
+        assertFalse(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareFailedDifferentInputs() {
+        DFA sourceDFA = Helper.buildDFA("ABb");
+        DFA targetDFA = Helper.buildDFA("ACc");
+        assertFalse(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareLoop() {
+        String Rep = "ABa,BAa";
+        DFA sourceDFA = Helper.buildDFA(Rep);
+        DFA targetDFA = Helper.buildDFA(Rep);
+        assertTrue(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+    @Test
+    public final void testCompareLoopFailed() {
+        DFA sourceDFA = Helper.buildDFA("ABa,BAa");
+        DFA targetDFA = Helper.buildDFA("ABa,BCb");
+        assertFalse(new Helper.Comparator(sourceDFA, targetDFA).compare());
+    }
+    
+//    @Test
+//    public final void compareBug01() {
+//        DFA sourceDFA = Helper.buildDFA("DFd,BEd,ACd,ECa,ACa");
+//        DFA targetDFA = Helper.buildDFA("EFd");
+//        assertFalse(new Helper.Comparator(sourceDFA, targetDFA).compare());
+//    }
 }

@@ -1,4 +1,5 @@
-package mini.java.fa;
+package mini.java.fa.legacy;
+import mini.java.fa.State;
 import mini.java.fa.legacy.SimpleFA;
 import mini.java.fa.legacy.SimpleFAAdapter;
 
