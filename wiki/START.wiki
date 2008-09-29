@@ -1,4 +1,5 @@
 #summary Start from here...
+#labels Featured
 
 = Introduction =
 
@@ -7,4 +8,4 @@ This page contains some useful links.
 
 = Details =
 
-[http://www.cambridge.org/us/features/052182060X/index.html Project Home]
+[http://www.cambridge.org/us/features/052182060X/index.html Cambridge Project Home]
