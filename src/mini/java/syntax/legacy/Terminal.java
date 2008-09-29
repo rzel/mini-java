@@ -1,4 +1,4 @@
-package mini.java.syntax;
+package mini.java.syntax.legacy;
 
 public class Terminal extends SymbolType {
     public Terminal(String rep) {

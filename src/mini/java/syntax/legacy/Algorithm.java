@@ -8,9 +8,6 @@ import java.util.Stack;
 import mini.java.fa.State;
 import mini.java.lex.TokenRevamped;
 import mini.java.lex.TokenType;
-import mini.java.syntax.NonTerminal;
-import mini.java.syntax.SymbolType;
-import mini.java.syntax.Terminal;
 
 public class Algorithm {
 	

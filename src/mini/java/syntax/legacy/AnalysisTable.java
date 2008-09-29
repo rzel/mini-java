@@ -2,7 +2,6 @@ package mini.java.syntax.legacy;
 import java.util.*;
 
 import mini.java.fa.State;
-import mini.java.syntax.SymbolType;
 
 
 public class AnalysisTable extends HashMap<Pair<State, SymbolType>, Action> {

@@ -2,7 +2,6 @@ package mini.java.syntax.legacy;
 import java.util.LinkedList;
 import java.util.List;
 
-import mini.java.syntax.SymbolType;
 
 
 class GenericRule<T> {
