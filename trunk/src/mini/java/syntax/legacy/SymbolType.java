@@ -1,4 +1,4 @@
-package mini.java.syntax;
+package mini.java.syntax.legacy;
 
 import misc.Type;
 

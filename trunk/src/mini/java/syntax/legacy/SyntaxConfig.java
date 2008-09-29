@@ -1,9 +1,8 @@
-package mini.java.syntax;
+package mini.java.syntax.legacy;
 
 import mini.java.lex.LexConfig;
 import mini.java.lex.TextLexConfig;
 import mini.java.lex.TokenType;
-import mini.java.syntax.legacy.Rule;
 
 import java.util.Set;
 import java.util.HashSet;

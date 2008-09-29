@@ -1,7 +1,6 @@
 package mini.java.syntax.legacy;
 import java.util.*;
 
-import mini.java.syntax.SymbolType;
 
 //import lex.legacy.Token;
 
