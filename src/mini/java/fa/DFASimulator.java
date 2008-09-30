@@ -27,9 +27,14 @@ public interface DFASimulator {
     public void reset();
 
     /**
-     * Returns current state of the underlying DFA.
+     * Returns the current state of the underlying DFA.
      */
     public State getDFAState();
+    
+    /**
+     * Sets the current state of the underlying DFA to the given state.
+     */
+    public void setDFAState(State state_);
 
     /**
      * Returns current state of the DFASimulator. Not to be confused with

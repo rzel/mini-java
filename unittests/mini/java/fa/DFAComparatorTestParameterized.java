@@ -15,16 +15,16 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class HelperCompareTest {
+public class DFAComparatorTestParameterized {
 //    private static int id = 0; // indicator for stdout dumps
-    private static int MAXCOUNT = 1;
+    private static int MAXCOUNT = 10;
     private static int MAXLENGTH = 20;
     private static char[] states = {'A','B','C','D','E','F'};
     private static char[] inputs = {'a','b','c','d'};
     private String _repA;
     private String _repB;
 
-    public HelperCompareTest(String repA_, String repB_) {
+    public DFAComparatorTestParameterized(String repA_, String repB_) {
         assertNotNull(repA_); // avoid error
         assertNotNull(repB_);
         assertNotSame(repA_, repB_);
@@ -81,7 +81,7 @@ public class HelperCompareTest {
         DFA targetDFA = Helper.buildDFA(_repA);
         assertNotNull(sourceDFA);
         assertNotNull(targetDFA);
-        assertTrue(new Helper.Comparator(sourceDFA, targetDFA).compare());
+        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
     }
     
 //    @Test
