@@ -62,25 +62,23 @@ public class RuleTest {
     
     @Test
     public final void testEmptySpec() {
-        String ruleSpec = "";
-        Rule rule = Rule.parse(ruleSpec);
+        Rule rule = Rule.parse("");
         
         assertNull(rule);
     }
     
     @Test
     public final void testNullSpec() {
-        String ruleSpec = null;
-        Rule rule = Rule.parse(ruleSpec);
+        Rule rule = Rule.parse(null);
         
         assertNull(rule);
     }
 
     @Test
     public final void testEqualsSameInstance() {
-        String ruleSpec = "A ::= B";
-        Rule rule = Rule.parse(ruleSpec);
+        Rule rule = Rule.parse("A ::= B");
         
+        assertNotNull(rule);
         assertEquals(rule, rule);
     }
     
@@ -90,46 +88,62 @@ public class RuleTest {
         Rule rule = Rule.parse(ruleSpec);
         Rule anotherRule = Rule.parse(ruleSpec);
         
+        assertNotNull(rule);
+        assertNotNull(anotherRule);
         assertEquals(rule, anotherRule);
     }
     
     @Test
     public final void testEqualsNull() {
-        String ruleSpec = "A ::= B";
-        Rule rule = Rule.parse(ruleSpec);
+        Rule rule = Rule.parse("A ::= B");
         
+        assertNotNull(rule);
         assertFalse(rule.equals(null));
     }
     
     @Test
     public final void testEqualsDifferentRightSymbol() {
         Rule rule = Rule.parse("A ::= B");
-        Rule rule0 = Rule.parse("A :: = C");
+        Rule anotherRule = Rule.parse("A ::= C");
         
-        assertFalse(rule.equals(rule0));
+        assertNotNull(rule);
+        assertNotNull(anotherRule);
+        assertFalse(rule.equals(anotherRule));
     }
     
     @Test
     public final void testEqualsDifferentLeftSymbols() {
         Rule rule = Rule.parse("A ::= B");
-        Rule rule0 = Rule.parse("A :: = B C");
+        Rule anotherRule = Rule.parse("A ::= B C");
         
-        assertFalse(rule.equals(rule0));
+        assertNotNull(rule);
+        assertNotNull(anotherRule);
+        assertFalse(rule.equals(anotherRule));
     }
     
     @Test
     public final void testEqualsDifferentClass() {
-        String ruleSpec = "A ::= B";
-        Rule rule = Rule.parse(ruleSpec);
+        Rule rule = Rule.parse("A ::= B");
         
-        assertFalse(rule.equals(ruleSpec));
+        assertNotNull(rule);
+        assertFalse(rule.equals(new Object()));
     }
     
     @Test
     public final void testHashCode() {
         Rule rule = Rule.parse("A ::= B");
-        Rule rule0 = Rule.parse("A ::= B");
+        Rule anotherRule = Rule.parse("A ::= B");
         
-        assertEquals(rule.hashCode(), rule0.hashCode());
+        assertEquals(rule.hashCode(), anotherRule.hashCode());
+    }
+    
+    @Test
+    public final void testGetItems() {
+        Rule rule = Rule.parse("A ::= B");
+        
+        assertNotNull(rule);
+        assertNotNull(rule.getLeftSymbols());
+        assertNotNull(rule.getItems());
+        assertTrue(rule.getLeftSymbols().size() == (rule.getItems().size()-1));
     }
 }

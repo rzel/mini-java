@@ -45,6 +45,6 @@ public class NFABuildDFATest {
         
         assertNotNull(got);
         assertNotNull(expected);
-        assertTrue(new Helper.Comparator(got, expected).compare());
+        assertTrue(new DFAComparator(got, expected).compare());
     }
 }
