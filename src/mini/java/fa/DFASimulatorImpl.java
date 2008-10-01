@@ -23,9 +23,7 @@ public class DFASimulatorImpl implements DFASimulator {
 
     @Override
     public void reset() {
-        //_dfaState = _dfa.getInitialState();
         setDFAState(_dfa.getInitialState());
-        _running = true;
     }
 
     @Override
@@ -44,6 +42,7 @@ public class DFASimulatorImpl implements DFASimulator {
 
     @Override
     public void setDFAState(State state_) {
-        _dfaState = state_;        
+        _dfaState       = state_;        
+        _running        = true;
     }
 }
