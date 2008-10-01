@@ -22,7 +22,7 @@ public interface DFASimulator {
 
     /**
      * Resets the DFASimulator by setting the InitialState of the underlying DFA
-     * as current DFA state. And set the DFASimulator state to "running".
+     * as current DFA state.
      */
     public void reset();
 
@@ -33,6 +33,7 @@ public interface DFASimulator {
     
     /**
      * Sets the current state of the underlying DFA to the given state.
+     * NOTE: This method will also reset the DFASimulator state to "running".
      */
     public void setDFAState(State state_);
 
