@@ -18,12 +18,12 @@ public final class Helper {
      * characters; transitions are seperated by commas; the first source state
      * will be treated as an initial state.
      */
-    public static final ImmutableNFA buildNFA(String rep_) {
+    public static final NFA buildNFA(String rep_, NFABuilder builder_) {
         assert(rep_ != null);
-        assert(!rep_.isEmpty());
+        assert(builder_ != null);
         
-        // use the only implementation of NFA.Builder
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+//        // use the only implementation of NFA.Builder
+//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
         
         // "states" is a mapping from character representation of the
         // state to the actual state
@@ -50,15 +50,20 @@ public final class Helper {
             State targetState = states.get(target);
             if (transition.length() == 2) {
                 // add an epsilon transition
-                builder.addTransition(sourceState, targetState);
+                builder_.addTransition(sourceState, targetState);
             } else {
                 // add a normal transition
-                builder.addTransition(sourceState, targetState, transition.charAt(2));
+                builder_.addTransition(sourceState, targetState, transition.charAt(2));
             }
         }
         
         // build and return the NFA
-        return builder.buildNFA();
+        return builder_.buildNFA();
+    }
+    
+    // use the default implementation of NFABuilder;
+    public static final NFA buildNFA(String rep_) {
+        return buildNFA(rep_, new ImmutableNFA.Builder());
     }
 
     /**

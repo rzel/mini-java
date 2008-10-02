@@ -11,7 +11,9 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class ImmutableNFABuilderTest {
+public abstract class NFABuilderTest {
+    // factory method for NFABuilder implementation
+    protected abstract NFABuilder createNFABuilder();
 
     @Test
     public final void testSingleTransition() {
@@ -19,10 +21,10 @@ public class ImmutableNFABuilderTest {
         State to        = new State();
         Object input    = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(from, to, input);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         assertEquals(immutableNFA.closure(from, input), Collections.singleton(to));
     }
@@ -34,11 +36,11 @@ public class ImmutableNFABuilderTest {
         State s3        = new State();
         Object input    = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2, input);
         builder.addTransition(s2, s3, input);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         assertEquals(immutableNFA.closure(s1, input), Collections.singleton(s2));
         assertEquals(immutableNFA.closure(s2, input), Collections.singleton(s3));
@@ -49,13 +51,13 @@ public class ImmutableNFABuilderTest {
         State s1 = new InitialState();
         State s2 = new State();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
-        assertNotNull(immutableNFA); // avoid error
+        NFA nfa = builder.buildNFA();
+        assertNotNull(nfa); // avoid error
         
-        Set<State> got = immutableNFA.closure(s1);
+        Set<State> got = nfa.closure(s1);
         assertNotNull(got); // avoid error
         
         Set<State> expected = new HashSet<State>();
@@ -68,10 +70,10 @@ public class ImmutableNFABuilderTest {
     public final void testLoopEpsilonTransition() {
         State state = new InitialState();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(state, state);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         assertEquals(immutableNFA.closure(state), Collections.singleton(state));
     }
@@ -82,11 +84,11 @@ public class ImmutableNFABuilderTest {
         State s2 = new State();
         State s3 = new State();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         builder.addTransition(s1, s3);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         
         Set<State> got = immutableNFA.closure(s1);
@@ -105,11 +107,11 @@ public class ImmutableNFABuilderTest {
         State s2 = new State();
         State s3 = new State();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         builder.addTransition(s2, s3);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         
         Set<State> got = immutableNFA.closure(s1);
@@ -129,11 +131,11 @@ public class ImmutableNFABuilderTest {
         State s3 = new State();
         Object input = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         builder.addTransition(s2, s3, input);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         
         // check epsilon transitions
@@ -155,10 +157,10 @@ public class ImmutableNFABuilderTest {
         State s1 = new State();
         State s2 = new State();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
         assertNull(immutableNFA);
     }
     
@@ -177,8 +179,8 @@ public class ImmutableNFABuilderTest {
     
     @Test
     public final void testEmptyNFA() {
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
-        ImmutableNFA immutableNFA = builder.buildNFA();
+        NFABuilder builder = createNFABuilder();
+        NFA immutableNFA = builder.buildNFA();
         assertNull(immutableNFA);
     }
     
@@ -187,11 +189,11 @@ public class ImmutableNFABuilderTest {
         State s1 = new InitialState();
         State s2 = new State();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = createNFABuilder();
         builder.addTransition(s1, s2);
         
-        ImmutableNFA immutableNFA = builder.buildNFA();
-        ImmutableNFA anotherImmutableNFA = builder.buildNFA();
+        NFA immutableNFA = builder.buildNFA();
+        NFA anotherImmutableNFA = builder.buildNFA();
         assertNotNull(immutableNFA); // avoid error
         assertNotNull(anotherImmutableNFA); // avoid error
         assertEquals(immutableNFA, anotherImmutableNFA);

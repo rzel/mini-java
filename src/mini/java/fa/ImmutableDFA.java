@@ -103,6 +103,7 @@ public final class ImmutableDFA implements DFA {
                 if (initialState == null) {
                     initialState = (InitialState)from;
                 } else {
+                    // TODO throw IllegalTransitionException
                     assert (from == initialState);
                 }
             }
