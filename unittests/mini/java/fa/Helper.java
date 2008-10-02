@@ -68,7 +68,7 @@ public final class Helper {
      * for target state and one for the input object; transitions are seperated
      * by commas; the first source state will be treated as the initial state.
      */
-    public static final ImmutableDFA buildDFA(String rep_) {
+    public static final DFA buildDFA(String rep_) {
         assert(rep_ != null);
         assert(!rep_.isEmpty());
         

@@ -24,7 +24,10 @@ public final class ImmutableDFA implements DFA {
     private InitialState initialState;
 
     // private construct to prevent invalid DFA being created
-    private ImmutableDFA() {
+    private ImmutableDFA(Map<State, Map<Object, State>> transitions_, InitialState initialState_) {
+        // defensive copy to protect the immutable instance
+        transitions = new HashMap<State, Map<Object, State>>(transitions_);
+        initialState = initialState_;
     }
 
     @Override
@@ -60,7 +63,7 @@ public final class ImmutableDFA implements DFA {
      *
      * @author Alex
      */
-    public static final class Builder {
+    public static final class Builder implements DFABuilder {
         // cached instance for implementation of "==" operation;
         private ImmutableDFA _cachedInstance;
         
@@ -87,31 +90,12 @@ public final class ImmutableDFA implements DFA {
          * @param to -- target state
          * @param input -- input object
          */
+        @Override
         public void addTransition(State from, State to, Object input) {
-            
-            
-//            // ignore invalid states
-//            //if (from == null || to == null) { return; }
-//            // Null source state will definitely lead to an invalid DFA;
-//            if (to == null) { return; }
-//            
-//            // ignore invalid inputs
-//            if (input == null) { return; }
-            
+            // TODO throw IllegalTransitionException
             assert (from  != null);
             assert (to    != null);
             assert (input != null);
-    
-//            // set the source state to be the initial state
-//            if (from instanceof InitialState && from != initialState) {
-//                if (initialState == null) {
-//                    initialState = (InitialState)from;
-//                } else {
-//                    // A DFA cannot have more than one initial state;
-//                    // ignore this transition
-//                    return;
-//                }                
-//            }
             
             // if the source state is an initial state, set it to be
             // the only initial state of the DFA
@@ -152,24 +136,18 @@ public final class ImmutableDFA implements DFA {
          * transitions are added.
          * 
          * NOTE: each DFA must have one and only one initial state. If the initial
-         * state haven't been provided yet, no DFA will be created.
+         * state hasn't been provided yet, no DFA will be created.
          * 
          * @return an instance of ImmutableDFA; null if no valid ImmutableDFA can
          * be created. 
          */
-        public ImmutableDFA buildDFA() {
+        @Override
+        public DFA buildDFA() {
             // a new instance needs to be created
             if (_cachedInstance == null) {
-
                 // create an instance only if initialState is available;
                 if (initialState != null) {
-                    _cachedInstance = new ImmutableDFA();
-                    // Defensive copy to protect the immutable instance
-                    _cachedInstance.transitions = new HashMap<State, Map<Object, State>>(
-                            transitions);
-                    // initialState can be assigned directly since State is
-                    // immutable object itself.
-                    _cachedInstance.initialState = initialState;
+                    _cachedInstance = new ImmutableDFA(transitions, initialState);
                 }
             }
             return _cachedInstance;

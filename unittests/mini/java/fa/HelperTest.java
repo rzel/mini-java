@@ -148,7 +148,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildDFASingleTransition() {
-        ImmutableDFA immutableDFA = Helper.buildDFA("ABa");
+        DFA immutableDFA = Helper.buildDFA("ABa");
         assertNotNull(immutableDFA);
         
         // get initial state "A"
@@ -169,7 +169,7 @@ public class HelperTest {
 
     @Test
     public final void testBuildDFAMultipleTransitionsDifferentInputs() {
-        ImmutableDFA immutableDFA = Helper.buildDFA("ABb,ACc");
+        DFA immutableDFA = Helper.buildDFA("ABb,ACc");
         assertNotNull(immutableDFA);
         
         // get initial state "A"
@@ -189,7 +189,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildDFAMultipleTransitionsDifferentTransitions() {
-        ImmutableDFA immutableDFA = Helper.buildDFA("ABa,CDc,BCb");
+        DFA immutableDFA = Helper.buildDFA("ABa,CDc,BCb");
         assertNotNull(immutableDFA); // avoid error
         
         // get initial state "A"

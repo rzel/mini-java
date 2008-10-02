@@ -18,7 +18,7 @@ public class ImmutableDFABuilderTest {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA); // avoid error
         assertEquals(immutableDFA.getState(from, input), to);
     }
@@ -55,7 +55,7 @@ public class ImmutableDFABuilderTest {
         builder.addTransition(from, to, input);
         builder.addTransition(from, to1, input1);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
         assertEquals(immutableDFA.getState(from, input), to);
         assertEquals(immutableDFA.getState(from, input1), to1);
@@ -74,7 +74,7 @@ public class ImmutableDFABuilderTest {
         builder.addTransition(s1, s2, input);
         builder.addTransition(s2, s3, input1);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
         assertEquals(immutableDFA.getState(s1, input), s2);
         assertEquals(immutableDFA.getState(s2, input1), s3);
@@ -92,7 +92,7 @@ public class ImmutableDFABuilderTest {
         builder.addTransition(from, to, input);
         builder.addTransition(from, to1, input); // should override previous one
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
         assertEquals(immutableDFA.getState(from, input), to1);
     }
@@ -122,7 +122,7 @@ public class ImmutableDFABuilderTest {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(state, state, input);
 
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
         assertEquals(immutableDFA.getState(state, input), state);
     }
@@ -182,7 +182,7 @@ public class ImmutableDFABuilderTest {
     @Test
     public void testBuildEmptyDFA() {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         // won't build since no initial state
         assertNull(immutableDFA);
     }
@@ -196,7 +196,7 @@ public class ImmutableDFABuilderTest {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNotNull(immutableDFA);
     }
 
@@ -210,7 +210,7 @@ public class ImmutableDFABuilderTest {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
+        DFA immutableDFA = builder.buildDFA();
         assertNull(immutableDFA);
     }
     
@@ -223,14 +223,14 @@ public class ImmutableDFABuilderTest {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(from, to, input);
         
-        ImmutableDFA immutableDFA = builder.buildDFA();
-        ImmutableDFA immutableDFA1 = builder.buildDFA();
+        DFA firstDFA = builder.buildDFA();
+        DFA secondDFA = builder.buildDFA();        
         
-        assertNotNull(immutableDFA);
-        assertNotNull(immutableDFA1);
+        assertNotNull(firstDFA);
+        assertNotNull(secondDFA);
         
         // same instance should be returned
-        assertTrue(immutableDFA == immutableDFA1);
-        assertTrue(immutableDFA.equals(immutableDFA1));
+        assertTrue(firstDFA == secondDFA);
+//        assertTrue(firstDFA.equals(secondDFA));
     }
 }
