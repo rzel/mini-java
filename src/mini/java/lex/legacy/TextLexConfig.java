@@ -1,4 +1,4 @@
-package mini.java.lex;
+package mini.java.lex.legacy;
 
 //import java.util.Set;
 import java.util.List;
