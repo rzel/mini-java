@@ -1,50 +1,117 @@
 package mini.java.fa;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
-@RunWith(Parameterized.class)
+
 public class NFABuildDFATest {
-    private String _repA; // for NFA
-    private String _repB; // for DFA
-
-    public NFABuildDFATest(String repA_, String repB_) {
-        assert (repA_ != null);
-        assert (repB_ != null);
-        _repA = repA_;
-        _repB = repB_;
-    }
     
-    @Parameters
-    public static Collection<Object[]> getParameters() {
-        return Arrays.asList(new Object[][] {
-                { "ABa",        "ABa" },
-                { "ABa,BCb",    "ABa,BCb" },
-                { "ABb,ACc",    "ABb,ACc" },
-                { "ABa,BC",     "ABa" },
-                { "AB,BCa",     "ABa" },
-                { "ABa,BC,BD",  "ABa" },
-                { "AB,BC,BDa",  "ABa" },
-                { "ABa,BA,AC,CDb,CDc", "ADb,ADc,ACa,CCa,CDb,CDc" }, // a*(b|c)
-                { "ABa,BCa,BCb,CB,BD,ADc", "ABa,BEa,BEb,EEa,EEb,ADc" }, // (a(a|b)*)|c
-        });
+    @Test
+    public final void testBuildDFAAcceptableInitialState() {
+        State A = new InitialState();
+        State B = new AcceptableState();
+        Object input = new Object();
+        
+        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        builder.addTransition(A, B);
+        builder.addTransition(B, A, input);
+        
+        NFA nfa = builder.buildNFA();
+        assertNotNull(nfa);
+        
+        DFA dfa = nfa.buildDFA();
+        assertNotNull(dfa);
+        
+        InitialState initialState = dfa.getInitialState();
+        assertNotNull(initialState);
+        assertTrue(initialState instanceof Acceptable);
+        
+        State state = dfa.getState(initialState, input);
+        assertNotNull(state);
+        assertTrue(state instanceof AcceptableInitialState);
+        // the result dfa should contain only one state
+        assertTrue(state == initialState);
     }
     
     @Test
-    public final void testBuildDFA() {
-        DFA got = Helper.buildNFA(_repA).buildDFA();
-        DFA expected = Helper.buildDFA(_repB);
+    public final void testBuildDFAInitialState() {
+        State A = new InitialState();
+        State B = new State();
+        Object input = new Object();
         
-        assertNotNull(got);
-        assertNotNull(expected);
-        assertTrue(new DFAComparator(got, expected).compare());
+        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        builder.addTransition(A, B, input);
+        
+        NFA nfa = builder.buildNFA();
+        assertNotNull(nfa);
+        
+        DFA dfa = nfa.buildDFA();
+        assertNotNull(dfa);
+        
+        InitialState initialState = dfa.getInitialState();
+        assertNotNull(initialState);
+        
+        State state = dfa.getState(initialState, input);
+        assertNotNull(state);
+    }
+    
+    @Test
+    public final void testBuildDFAAcceptableState() {
+        State A = new InitialState();
+        State B = new State();
+        State C = new AcceptableState();
+        Object input = new Object();
+        
+        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        builder.addTransition(A, B, input);
+        builder.addTransition(B, C);
+        
+        NFA nfa = builder.buildNFA();
+        assertNotNull(nfa);
+        
+        DFA dfa = nfa.buildDFA();
+        assertNotNull(dfa);
+        
+        InitialState initialState = dfa.getInitialState();
+        assertNotNull(initialState);
+        
+        State state = dfa.getState(initialState, input);
+        assertNotNull(state);
+        assertTrue(state instanceof AcceptableState);
+    }
+    
+    @Test
+    public final void testBuildDFAMultipleAcceptableStates() {
+        State A = new AcceptableInitialState();
+        State B = new State();
+        Object input = new Object();
+        
+        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        builder.addTransition(A, B, input);
+        builder.addTransition(B, A);
+        
+        NFA nfa = builder.buildNFA();
+        assertNotNull(nfa);
+        
+        DFA dfa = nfa.buildDFA();
+        assertNotNull(dfa);
+        
+        InitialState initialState = dfa.getInitialState();
+        assertNotNull(initialState);
+        assertTrue(initialState instanceof Acceptable);
+        
+        State state = dfa.getState(initialState, input);
+        assertNotNull(state);
+        assertTrue(state instanceof Acceptable);
+    }
+    
+    @Test
+    public final void testBuildDFAInvalidDFA() {
+        NFA nfa = Helper.buildNFA("AB"); // no valid transition for DFA
+        DFA dfa = nfa.buildDFA();
+        assertNull(dfa); // invalid DFA
     }
 }
