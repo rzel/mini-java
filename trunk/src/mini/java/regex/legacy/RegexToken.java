@@ -1,7 +1,7 @@
 /**
  * Tokens parsed from input regular expressions, used internally
  */
-package mini.java.lex.legacy;
+package mini.java.regex.legacy;
 
 public class RegexToken {
     public enum Type { CHAR, STAR, QM, BAR, LP, RP, EXPR }

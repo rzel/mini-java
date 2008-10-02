@@ -1,4 +1,4 @@
-package mini.java.lex.legacy;
+package mini.java.regex.legacy;
 /**
  * 
  * A typical representation of a regular expression.
