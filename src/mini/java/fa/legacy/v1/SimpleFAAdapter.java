@@ -1,4 +1,4 @@
-package mini.java.fa.legacy;
+package mini.java.fa.legacy.v1;
 
 import java.util.Collections;
 import java.util.HashMap;

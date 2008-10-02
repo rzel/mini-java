@@ -1,7 +1,7 @@
 package mini.java.fa.legacy;
 import mini.java.fa.State;
-import mini.java.fa.legacy.SimpleFA;
-import mini.java.fa.legacy.SimpleFAAdapter;
+import mini.java.fa.legacy.v1.SimpleFA;
+import mini.java.fa.legacy.v1.SimpleFAAdapter;
 
 public class Test01 {
     //TODO: use junit

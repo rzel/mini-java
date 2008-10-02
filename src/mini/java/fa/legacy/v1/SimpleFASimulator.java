@@ -1,4 +1,4 @@
-package mini.java.fa.legacy;
+package mini.java.fa.legacy.v1;
 import java.util.Set;
 import java.util.HashSet;
 

@@ -1,4 +1,4 @@
-package mini.java.fa.legacy;
+package mini.java.fa.legacy.v2;
 import java.util.*;
 
 public class SimpleDFA extends AbstractDFA {

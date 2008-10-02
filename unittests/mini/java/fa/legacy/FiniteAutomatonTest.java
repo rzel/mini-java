@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-import mini.java.fa.legacy.SimpleFA;
-import mini.java.fa.legacy.SimpleFAAdapter;
+import mini.java.fa.legacy.v1.SimpleFA;
+import mini.java.fa.legacy.v1.SimpleFAAdapter;
 
 import org.junit.Test;
 
