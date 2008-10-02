@@ -31,7 +31,7 @@ public class DFATest {
 
     // factory method used by getParameters()
     // this will build some DFA randomly
-    public static ImmutableDFA createImmutableDFA() {
+    public static DFA createImmutableDFA() {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         InitialState initialState = new InitialState();
         Random rnd = new Random();

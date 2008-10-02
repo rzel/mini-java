@@ -41,7 +41,7 @@ public class DFASimulatorTest {
 
     // factory method used by getParameters()
     // this will build a simple test DFA
-    public static ImmutableDFA createImmutableDFA() {
+    public static DFA createImmutableDFA() {
         ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
         builder.addTransition(S1, S2, INPUT1);
         builder.addTransition(S2, S3, INPUT2);

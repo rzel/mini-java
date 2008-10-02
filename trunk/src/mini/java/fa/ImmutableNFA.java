@@ -7,18 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Default implementation for NFA. Similar to ImmutableDFA, ImmutableNFA will use a
- * nested builder to create instances.
- * 
- * @author Alex
- */
 public final class ImmutableNFA implements NFA {
     // fake inputs used to represent epsilon transitions
     private Set<Object> _epsilons;
     private DFA _dfa;
     
-
+    // private constructor
+    private ImmutableNFA(DFA dfa_, Set<Object> epsilons_) {
+        _dfa = dfa_;
+        // defensive copy to protect the immutable instance
+        _epsilons = new HashSet<Object>(epsilons_);
+    }
 
     @Override
     public DFA buildDFA() {
@@ -28,14 +27,13 @@ public final class ImmutableNFA implements NFA {
         // the "todo" list, containing unchecked states
         List<Set<State>> uncheckedStates = new LinkedList<Set<State>>();
         
-        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = new ImmutableDFA.Builder();
         
         // start from the initial state
         InitialState initialState = getInitialState();
         // get the closure for the initial state
         Set<State> initialClosure = closure(initialState);
         // create a new state for the initial closure
-        //newStates.put(initialClosure, createState(initialClosure));
         newStates.put(initialClosure, isAcceptable(initialClosure)
                 ? new AcceptableInitialState() : new InitialState());
         // add the initial closure to the "todo" list
@@ -43,24 +41,7 @@ public final class ImmutableNFA implements NFA {
         
         while (!uncheckedStates.isEmpty()) {
             Set<State> sourceClosure = uncheckedStates.remove(0);
-//            State newState = null;
-//            if (Helper.isInitial(sourceClosure) && Helper.isAcceptable(sourceClosure)) {
-//                newState = new AcceptableInitialState();
-//            } else if (Helper.isInitial(sourceClosure)) {
-//                newState = new InitialState();
-//            } else if (Helper.isAcceptable(sourceClosure)) {
-//                newState = new AcceptableState();
-//            }
-//            State newState = createState(sourceClosure);
-//            newStates.put(sourceClosure, newState);
             State sourceState = newStates.get(sourceClosure);
-            
-            // first get all possible input
-//            Set<Object> inputs = new HashSet<Object>();
-//            for (State state : sourceClosure) {
-//                inputs.addAll(getInputs(state));
-//            }
-//            Set<Object> inputs = getInputs(sourceClosure);
             
             // walk through all possible inputs
             for (Object input : getInputs(sourceClosure)) {
@@ -82,21 +63,6 @@ public final class ImmutableNFA implements NFA {
         return builder.buildDFA();
     }
     
-//    // helper function used to create new states based on the closures
-//    private final static State createState(Set<State> closure_) {
-//        State state = null;
-//        if (isInitial(closure_) && isAcceptable(closure_)) {
-//            state = new AcceptableInitialState();
-//        } else if (isInitial(closure_)) {
-//            state = new InitialState();
-//        } else if (isAcceptable(closure_)) {
-//            state = new AcceptableState();
-//        } else {
-//            state = new State();
-//        }
-//        return state;
-//    }    
-    
      // helper function for checking whether a closure contains acceptable state
     private final static boolean isAcceptable(Set<State> closure_) {
         for (State state : closure_) {
@@ -105,34 +71,9 @@ public final class ImmutableNFA implements NFA {
         }
         return false;
     }
-    
-//    // helper function for checking whether a closure contains initial state
-//    private final static boolean isInitial(Set<State> closure_) {
-//        for (State state : closure_) {
-//            if (state instanceof InitialState)
-//                return true;
-//        }
-//        return false;
-//    }
-
 
     @Override
     public Set<State> closure(State from, Object input) {
-//        // first get the closure of the source state
-//        Set<State> todo = closure(from);
-//        
-//        Set<State> states = new HashSet<State>();
-//        for (State state : todo) {
-//            // valid transitions from the closure
-//            // NOTE: target state can be null;
-//            State to = _dfa.getState(state, input);
-//            
-//            // add the target state and its closure
-//            // NOTE: closure will include the target state itself
-//            states.addAll(closure(to));
-//        }
-//        
-//        return states;
         return closure(closure(from), input);
     }
     
@@ -201,17 +142,6 @@ public final class ImmutableNFA implements NFA {
     @Override
     public Set<Object> getInputs(State from) {
         assert(from != null); // source state cannot be null;
-        
-//        Set<Object> inputs = new HashSet<Object>();
-//        // first get the closure of the source state
-//        for (State state : closure(from)) {
-//            // then add all valid inputs from the closure
-//            inputs.addAll(_dfa.getInputs(state));
-//        }
-//        // remove fake inputs for epsilon transitions
-//        inputs.removeAll(_epsilons);
-//        
-//        return inputs;
         return getInputs(closure(from));
     }
     
@@ -239,10 +169,7 @@ public final class ImmutableNFA implements NFA {
      * @author Alex
      */
     public static final class Builder {
-        private ImmutableDFA.Builder _dfaBuilder;
-        
-        // cached objects for implemetation of "==" operation
-        private ImmutableDFA _cachedDFA;
+        private DFABuilder _dfaBuilder;
         private ImmutableNFA _cachedInstance;
         
         // fake inputs used to represent epsilon transitions
@@ -261,7 +188,10 @@ public final class ImmutableNFA implements NFA {
             assert from_  != null;
             assert to_    != null;
             assert input_ != null;
+            
             _dfaBuilder.addTransition(from_, to_, input_);
+            // clear the cache, so new instance can be created
+            _cachedInstance = null;
         }
         
         /**
@@ -271,9 +201,12 @@ public final class ImmutableNFA implements NFA {
         public void addTransition(State from_, State to_) {
             assert from_ != null;
             assert to_   != null;
+            
             Object epsilon = new Object();
             _epsilons.add(epsilon);
             _dfaBuilder.addTransition(from_, to_, epsilon);
+            // clear the cache, so new instance can be created
+            _cachedInstance = null;
         }
         
         /**
@@ -285,18 +218,16 @@ public final class ImmutableNFA implements NFA {
          * @return an instance of ImmutableNFA; null if no valid NFA can be created.
          */
         public ImmutableNFA buildNFA() {
-            ImmutableDFA dfa = _dfaBuilder.buildDFA();
-
-            // If nothing changed, return the cached inistance
-            if (dfa != _cachedDFA && dfa != null) {
-                _cachedDFA = dfa;
-                _cachedInstance = new ImmutableNFA();                
-                _cachedInstance._dfa = dfa;
-                // Defensive copy to protect the immutable instance
-                _cachedInstance._epsilons = new HashSet<Object>(_epsilons);
+            // if a new instance needs to be created
+            if (_cachedInstance == null) {
+                DFA dfa = _dfaBuilder.buildDFA();
+                
+                // "_cachedInstance" will remain "null" if no valid DFA and NFA
+                // can be built; so a "null" value will be returned
+                if (dfa != null) {
+                    _cachedInstance = new ImmutableNFA(dfa, _epsilons);
+                }
             }
-            
-            // null will be returned if no instance can be created
             return _cachedInstance;
         }
     }

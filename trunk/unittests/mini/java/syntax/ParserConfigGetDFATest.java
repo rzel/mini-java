@@ -103,7 +103,7 @@ public class ParserConfigGetDFATest {
      * the rest ("STR") stands for the input string. <b>NOTE</b>: The first source
      * state will be treated as the initial state.
      */
-    private static ImmutableDFA createDFA(String... transitions) {
+    private static DFA createDFA(String... transitions) {
         assert(transitions != null);
         assert(transitions.length > 0);
         
