@@ -36,7 +36,7 @@ import java.util.Stack;
 import java.util.Arrays;
 
 import mini.java.fa.State;
-import mini.java.fa.legacy.SimpleFA;
+import mini.java.fa.legacy.v1.SimpleFA;
 
 
 public class RegexCompiler {

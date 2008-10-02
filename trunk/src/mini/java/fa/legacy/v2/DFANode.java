@@ -1,4 +1,4 @@
-package mini.java.fa.legacy;
+package mini.java.fa.legacy.v2;
 /**
  * 
  * This class represents a typical DFA Node.

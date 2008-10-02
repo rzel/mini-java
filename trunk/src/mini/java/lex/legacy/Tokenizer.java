@@ -3,6 +3,8 @@ package mini.java.lex.legacy;
 import java.util.*;
 
 import mini.java.fa.legacy.*;
+import mini.java.fa.legacy.v2.DFA;
+import mini.java.fa.legacy.v2.DFAState;
 
 public class Tokenizer {
     //hey, you must keep the order of the dfa, or no precedence
