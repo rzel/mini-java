@@ -17,6 +17,7 @@ import mini.java.fa.DFASimulator;
 import mini.java.fa.DFASimulatorImpl;
 import mini.java.fa.ImmutableNFA;
 import mini.java.fa.InitialState;
+import mini.java.fa.NFABuilder;
 import mini.java.fa.State;
 
 /**
@@ -80,7 +81,7 @@ public class ParserConfig {
         assert(_rules != null);
         
         // the DFA will be built using an NFA
-        ImmutableNFA.Builder nfaBuilder = new ImmutableNFA.Builder();
+        NFABuilder nfaBuilder = new ImmutableNFA.Builder();
         
         // mapping from non-terminal symbols to its corresponding NFA state
         Map<String, State> nfaStates = new HashMap<String, State>();

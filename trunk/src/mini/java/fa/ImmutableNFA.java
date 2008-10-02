@@ -168,7 +168,7 @@ public final class ImmutableNFA implements NFA {
      *
      * @author Alex
      */
-    public static final class Builder {
+    public static final class Builder implements NFABuilder { 
         private DFABuilder _dfaBuilder;
         private ImmutableNFA _cachedInstance;
         
@@ -184,6 +184,7 @@ public final class ImmutableNFA implements NFA {
          * Add a normal transition to the NFA being built. Will call the underlying
          * DFA.Builder to add the transition. See DFA.Builder for details.
          */
+        @Override
         public void addTransition(State from_, State to_, Object input_) {
             assert from_  != null;
             assert to_    != null;
@@ -198,6 +199,7 @@ public final class ImmutableNFA implements NFA {
          * Add an epsilon transition to the NFA being built. A fake input will be
          * created for this transition to simulate an epsilon transition.
          */
+        @Override
         public void addTransition(State from_, State to_) {
             assert from_ != null;
             assert to_   != null;
@@ -217,7 +219,8 @@ public final class ImmutableNFA implements NFA {
          * 
          * @return an instance of ImmutableNFA; null if no valid NFA can be created.
          */
-        public ImmutableNFA buildNFA() {
+        @Override
+        public NFA buildNFA() {
             // if a new instance needs to be created
             if (_cachedInstance == null) {
                 DFA dfa = _dfaBuilder.buildDFA();

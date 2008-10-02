@@ -26,7 +26,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFASingleTransition() {        
-        ImmutableNFA immutableNFA = Helper.buildNFA("ABa");
+        NFA immutableNFA = Helper.buildNFA("ABa");
         assertNotNull(immutableNFA); // avoid error
         
         // check initial state
@@ -48,7 +48,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFAMultipleTransitionsDifferentInputs() {
-        ImmutableNFA immutableNFA = Helper.buildNFA("ABa,ABb");
+        NFA immutableNFA = Helper.buildNFA("ABa,ABb");
         assertNotNull(immutableNFA); // avoid error
 
         // check initial state
@@ -107,7 +107,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFAMultipleTransitionsDifferentTransitions() {
-        ImmutableNFA immutableNFA = Helper.buildNFA("ABa,CDc,BCb");
+        NFA immutableNFA = Helper.buildNFA("ABa,CDc,BCb");
         assertNotNull(immutableNFA); // avoid error
         
         // get initial state "A"
@@ -134,7 +134,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFASingleEpsilonTransition() {
-        ImmutableNFA immutableNFA = Helper.buildNFA("AB");
+        NFA immutableNFA = Helper.buildNFA("AB");
         assertNotNull(immutableNFA); // avoid error
         
         // get initial state "A"

@@ -1,26 +1,26 @@
 package mini.java.fa.legacy;
 import mini.java.fa.State;
 import mini.java.fa.legacy.v1.SimpleFA;
-import mini.java.fa.legacy.v1.SimpleFAAdapter;
+import mini.java.fa.legacy.v1.NFAAdapter;
 
 public class Test01 {
     //TODO: use junit
-    public static void main(String[] args) {
-        SimpleFAAdapter fa = new SimpleFAAdapter(new SimpleFA());
-        State from = new State();
-        State to = new State();
-        Integer input = new Integer(5);
-
-        fa.addTransition(from, to, input);
-        System.out.println("reachableStates[from]" +
-            fa.getStates(from, input));
-        System.out.println("reachableStates[t]" +
-            fa.getStates(to, input));
-        System.out.println("possibleInputs[from]" +
-            fa.getInputs(from));
-        System.out.println("possibleInputs[to]" +
-            fa.getInputs(to));
-    }
+//    public static void main(String[] args) {
+//        NFAAdapter fa = new NFAAdapter();
+//        State from = new State();
+//        State to = new State();
+//        Integer input = new Integer(5);
+//
+//        fa.addTransition(from, to, input);
+//        System.out.println("reachableStates[from]" +
+//            fa.getStates(from, input));
+//        System.out.println("reachableStates[t]" +
+//            fa.getStates(to, input));
+//        System.out.println("possibleInputs[from]" +
+//            fa.getInputs(from));
+//        System.out.println("possibleInputs[to]" +
+//            fa.getInputs(to));
+//    }
 /*
         s = fa.move(frm, input0);
         assertTrue(s.size() == 1);

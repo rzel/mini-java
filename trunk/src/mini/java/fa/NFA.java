@@ -8,12 +8,14 @@ import java.util.Set;
  * This interface is an immutable one, similar as DFA, which is up to the
  * implemetations to decide whether to use a builder or some other mechanism
  * for adding transitions.
- * 
+ * <br>
+ * <br> 
  * Theoretically speaking, states in an NFA can have multiple successive states
  * of the same inputs. But such behaviour is not implemented in our NFA class
  * since the same behaviour can be achieved easily by using an epsilon transition.
- * 
- * NOTE: NFA is not intended to be run by simulators. One could call buildDFA()
+ * <br>
+ * <br>
+ * <b>NOTE:</b> NFA is not intended to be run by simulators. One could call buildDFA()
  * method to get an equivalent DFA representation of the NFA and run that DFA
  * instead.
  * 
@@ -22,10 +24,12 @@ import java.util.Set;
 public interface NFA {
     /**
      * Get the "closure" of the target states. A target state "closure" is all
-     * the target states and their closures from the source state's closure. An
-     * empty set will be returned if no such states.
-     * 
-     * NOTE: the source state itself will not be included in this kind of closure.
+     * the target states from the source state's closure and the target states'
+     * closures . An empty set will be returned if no such states.
+     * <br>
+     * <br>
+     * <b>NOTE:</b> the source state itself will not be included in this kind of
+     * closure.
      */
     public Set<State> closure(State from, Object input);
     
@@ -34,7 +38,7 @@ public interface NFA {
      * states reachable from the source state through an epsilon transition.
      * Empty set will be returned if no such states.
      * 
-     * NOTE: the source state will be included in its only closure.
+     * NOTE: the source state will be included in its own closure.
      */
     public Set<State> closure(State from);
     

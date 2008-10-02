@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 import mini.java.fa.legacy.v1.SimpleFA;
-import mini.java.fa.legacy.v1.SimpleFAAdapter;
+import mini.java.fa.legacy.v1.NFAAdapter;
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class FiniteAutomatonTest {
     @Test
     // Basic test case for a single transition
     public void testAddTransition() {
-//        DFA fa = new SimpleFAAdapter(new SimpleFA());
+//        DFA fa = new NFAAdapter(new SimpleFA());
 //
 //        State from = new State();
 //        State to = new State();
