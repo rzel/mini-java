@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Stack;
 
 import mini.java.fa.State;
-import mini.java.lex.TokenRevamped;
-import mini.java.lex.TokenType;
+import mini.java.lex.legacy.TokenRevamped;
+import mini.java.lex.legacy.TokenType;
 
 public class Algorithm {
 	

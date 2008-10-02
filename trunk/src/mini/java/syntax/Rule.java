@@ -1,5 +1,6 @@
 package mini.java.syntax;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,15 +28,19 @@ public class Rule {
         assert (leftSymbols_ != null && leftSymbols_.size() > 0);
 
         _rightSymbol = rightSymbol_;
-        _leftSymbols = leftSymbols_;
+        // defensive copy to protect the immutable object
+        _leftSymbols = new ArrayList<String>(leftSymbols_);
         
         // create the corresponding "items" for the left symbols;
         // "items" are represented by the NFA states, and will be used
         // to create the DFA of the syntax specification
         _items = new LinkedList<State>();
-        for (int i=0; i<=_leftSymbols.size(); ++i) { // there should be a "END" item
+        for (int i=0; i<=_leftSymbols.size(); ++i) {
             _items.add(new State());
         }
+        
+//        // there should be an "END" item
+//        _items.add(new AcceptableState());
     }
 
     public String getRightSymbol() {
@@ -59,7 +64,7 @@ public class Rule {
      * LeftSymbolB LeftSymbolC ... NOTE: left symbols should be seperated by
      * single spaces.
      */
-    public static Rule parse(String spec_) {
+    public static Rule createRule(String spec_) {
         if (spec_ == null || spec_.isEmpty())
             return null;
         if (spec_.indexOf(ASSIGNMENT_SYMBOL) < 0)
@@ -108,6 +113,15 @@ public class Rule {
 
     @Override
     public String toString() {
-        return String.format("[%s => %s]", _rightSymbol, _leftSymbols);
+        StringBuilder builder = new StringBuilder();
+        builder.append(_rightSymbol);
+        builder.append(ASSIGNMENT_SYMBOL);
+        for (String leftSymbol : _leftSymbols) {
+            builder.append(leftSymbol);
+            builder.append(SYMBOL_SEPARATOR);
+        }
+        // remove the trailing SPACE
+        builder.deleteCharAt(builder.length()-1);
+        return builder.toString();
     }
 }

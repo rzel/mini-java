@@ -1,14 +1,14 @@
 package mini.java.test;
 import mini.java.fa.legacy.DFA;
 import mini.java.fa.legacy.SimpleFA;
-import mini.java.lex.LexConfig;
-import mini.java.lex.TextLexConfig;
-import mini.java.lex.TokenRevamped;
-import mini.java.lex.TokenType;
-import mini.java.lex.TokenizerAdapter;
-import mini.java.lex.TokenizerIF;
+import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.RegexCompiler;
+import mini.java.lex.legacy.TextLexConfig;
+import mini.java.lex.legacy.TokenRevamped;
+import mini.java.lex.legacy.TokenType;
 import mini.java.lex.legacy.Tokenizer;
+import mini.java.lex.legacy.TokenizerAdapter;
+import mini.java.lex.legacy.TokenizerIF;
 
 import java.util.List;
 

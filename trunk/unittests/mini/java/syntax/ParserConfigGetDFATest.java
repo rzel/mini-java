@@ -55,6 +55,23 @@ public class ParserConfigGetDFATest {
            {"START ::= A B,,A ::= C",   "abA,,bcB,,adC"},
            {"START ::= A,,A ::= B,,B ::= C",                    "abA,,abB,,abC"},
            {"START ::= S,,S ::= A B,,S ::= C B,,B ::= D",       "abA,,acC,,agS,,bdB,,bfD,,ceB,,cfD"},
+           {
+               // syntax specification for REGEX
+               "START ::= E"    + ",," +
+               "E ::= E *"      + ",," +
+               "E ::= E | E"    + ",," +
+               "E ::= ( E )"    + ",," +
+               "E ::= E E"      + ",," +
+               "E ::= C",
+               
+               "abE,,acC,,ad(,," +
+               "beE,,bf*,,bg|,,bcC,,bd(,," +
+               "dhE,,dcC,,dd(,," +
+               "eeE,,ef*,,eg|,,ecC,,ed(,," +
+               "giE,,gcC,,gd(,," +
+               "heE,,hf*,,hg|,,hcC,,hd(,,hj),," +
+               "ieE,,if*,,ig|,,icC,,id("
+           }
         });
     }
     

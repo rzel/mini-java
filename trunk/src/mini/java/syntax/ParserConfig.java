@@ -29,7 +29,7 @@ import mini.java.fa.State;
 
 public class ParserConfig {
     // NOTE: there should be one and only one such START symbol
-    private static final String START = "START";
+    public static final String START = "START";
 
     private Set<Rule> _rules;
     private DFA       _dfa;
@@ -52,7 +52,7 @@ public class ParserConfig {
         BufferedReader reader = new BufferedReader(reader_);
         // read in the syntax specifications and create production rules
         while ((ruleSpec = reader.readLine()) != null) {
-            Rule rule = Rule.parse(ruleSpec);
+            Rule rule = Rule.createRule(ruleSpec);
             // TODO Rule.parse should throw exception instead of returning null
             if (rule != null) {
                 _rules.add(rule);
@@ -61,7 +61,7 @@ public class ParserConfig {
     }
 
     public Set<Rule> getRules() {
-        return _rules;
+        return Collections.unmodifiableSet(_rules);
     }
 
     /**
@@ -154,10 +154,12 @@ public class ParserConfig {
         Map<String, Set<State>> dfaStates = new HashMap<String, Set<State>>();        
         
         // 1. visit the DFA to initialize the non-terminal to dfa states mapping
+        Set<State> checkedStates = new HashSet<State>();
         List<State> uncheckedStates = new LinkedList<State>(
                 Arrays.asList(_dfa.getInitialState())); 
         while (!uncheckedStates.isEmpty()) {
             State sourceState = uncheckedStates.remove(0);
+            checkedStates.add(sourceState);
             // NOTE: this is BFS
             for (Object input : _dfa.getInputs(sourceState)) {                
                 String symbol = (String)input;
@@ -172,7 +174,7 @@ public class ParserConfig {
                 
                 // add the target state to the unchecked state list
                 State targetState = _dfa.getState(sourceState, symbol);
-                if (!uncheckedStates.contains(targetState)) {
+                if (!checkedStates.contains(targetState)) {
                     uncheckedStates.add(targetState);
                 }
             }
@@ -181,8 +183,8 @@ public class ParserConfig {
         // 2. build the mapping from the DFA states to the production rules
         DFASimulator dfaSimulator = new DFASimulatorImpl(_dfa);
         for (Rule rule : _rules) {
-            State targetState = null;
             String rightSymbol = rule.getRightSymbol();
+            State targetState = null;
             Set<State> sourceStates = dfaStates.containsKey(rightSymbol)
                 ? dfaStates.get(rightSymbol)
                 // for START symbol; it will never appear in the DFA
@@ -190,7 +192,7 @@ public class ParserConfig {
                 
             for (State sourceState : sourceStates) {
                 // start from the source state
-                dfaSimulator.reset();
+                //dfaSimulator.reset();
                 dfaSimulator.setDFAState(sourceState);
                 for (String symbol : rule.getLeftSymbols()) {
                     // walk through all the left symbols
@@ -200,6 +202,7 @@ public class ParserConfig {
 
                 if (targetState == null) {
                     targetState = dfaSimulator.getDFAState();
+                    //assert(targetState instanceof AcceptableState);
                 } else {
                     // make sure this is a SIMPLE SYNTAX
                     // TODO throw IllegalSyntaxException

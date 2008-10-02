@@ -1,7 +1,5 @@
-package mini.java.lex;
+package mini.java.lex.legacy;
 
-import mini.java.lex.legacy.Token;
-import mini.java.lex.legacy.Tokenizer;
 
 import java.util.List;
 import java.util.LinkedList;

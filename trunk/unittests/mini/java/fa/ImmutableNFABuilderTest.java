@@ -61,7 +61,7 @@ public class ImmutableNFABuilderTest {
         Set<State> expected = new HashSet<State>();
         expected.add(s1);
         expected.add(s2);        
-        assertEquals(got, expected);
+        assertEquals(expected, got);
     }
     
     @Test
@@ -96,7 +96,7 @@ public class ImmutableNFABuilderTest {
         expected.add(s1);
         expected.add(s2);        
         expected.add(s3);
-        assertEquals(got, expected);
+        assertEquals(expected, got);
     }
     
     @Test
@@ -119,7 +119,7 @@ public class ImmutableNFABuilderTest {
         expected.add(s1);
         expected.add(s2);        
         expected.add(s3);
-        assertEquals(got, expected);
+        assertEquals(expected, got);
     }    
     
     @Test

@@ -1,6 +1,5 @@
-package mini.java.lex;
+package mini.java.lex.legacy;
 
-import mini.java.lex.legacy.Token;
 
 public class TokenRevampedAdapter extends Token {
     private TokenRevamped token;

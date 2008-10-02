@@ -10,7 +10,6 @@ import java.util.Collection;
 
 import mini.java.fa.DFASimulator;
 import mini.java.fa.DFASimulatorImpl;
-import mini.java.fa.State;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +18,15 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class ParserConfigGetRuleTest {
+    // syntax specification for REGEX
+    private static String REGEX_SYNTAX = 
+        "START ::= E"    + ",," +
+        "E ::= E *"      + ",," +
+        "E ::= E | E"    + ",," +
+        "E ::= ( E )"    + ",," +
+        "E ::= E E"      + ",," +
+        "E ::= C";
+    
     private ParserConfig _parserConfig;
     private Rule         _expected;
     private String[]     _symbols;
@@ -35,7 +43,7 @@ public class ParserConfigGetRuleTest {
         assertNotNull(_parserConfig);
         assertNotNull(_parserConfig.getRules());
 
-        _expected = Rule.parse(expected_);
+        _expected = Rule.createRule(expected_);
         assertNotNull(_expected);
 
         _symbols = symbols_.split(",,");
@@ -50,11 +58,13 @@ public class ParserConfigGetRuleTest {
             assert(dfaSimulator.isRunning());
         }
         
-        State targetState = dfaSimulator.getDFAState();
-        Rule targetRule = _parserConfig.getRule(targetState);
+//        State targetState = dfaSimulator.getDFAState();
+//        assertTrue(targetState instanceof AcceptableState);
+//        Rule targetRule = _parserConfig.getRule((AcceptableState)targetState);
+        Rule targetRule = _parserConfig.getRule(dfaSimulator.getDFAState());
         
         assertNotNull(targetRule);
-        assertEquals(targetRule, _expected);
+        assertEquals(_expected, targetRule);
     }
     
     @Parameters
@@ -72,6 +82,9 @@ public class ParserConfigGetRuleTest {
            {"START ::= A C,,START ::= B C,,C ::= D",    "B,,D",         "C ::= D"},
            {"START ::= A C,,START ::= B C,,C ::= D",    "A,,C",         "START ::= A C"},
            {"START ::= A C,,START ::= B C,,C ::= D",    "B,,C",         "START ::= B C"},
+           
+           
+           {REGEX_SYNTAX, "C", "E ::= C"}, // Bug001, loop transitions
         });
     }
 
