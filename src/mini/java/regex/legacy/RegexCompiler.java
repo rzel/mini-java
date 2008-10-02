@@ -25,7 +25,7 @@
  *          := EXPR STAR
  *          := EXPR QM
  */
-package mini.java.lex.legacy;
+package mini.java.regex.legacy;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.LinkedList;

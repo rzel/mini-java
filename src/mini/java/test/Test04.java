@@ -4,13 +4,13 @@ import java.util.List;
 
 import mini.java.fa.legacy.DFA;
 import mini.java.lex.legacy.LexConfig;
-import mini.java.lex.legacy.RegexCompiler;
 import mini.java.lex.legacy.TextLexConfig;
 import mini.java.lex.legacy.TokenRevamped;
 import mini.java.lex.legacy.TokenType;
 import mini.java.lex.legacy.Tokenizer;
 import mini.java.lex.legacy.TokenizerAdapter;
 import mini.java.lex.legacy.TokenizerIF;
+import mini.java.regex.legacy.RegexCompiler;
 
 public class Test04 {
 //    public static void main(String[] args) throws Exception {
