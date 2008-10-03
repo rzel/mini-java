@@ -1,20 +1,19 @@
 package mini.java.syntax.legacy;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.TextLexConfig;
 import mini.java.lex.legacy.TokenType;
-
-import java.util.Set;
-import java.util.HashSet;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Arrays;
-//import java.util.ArrayList;
-import java.util.List;
 
 public class SyntaxConfig {
     public static String defaultConfigFile = "syntax.txt";
@@ -60,7 +59,8 @@ public class SyntaxConfig {
             }
 
 
-            Rule rule = new Rule(leftHand);
+            // FIXME convert SymbolType to TokenType
+            //Rule rule = new Rule(leftHand);
             for (String s : Arrays.asList(rightAfterSplit)) {
                 SymbolType symbolType = terminals.contains(new TokenType(s)) ? 
                     new Terminal(s) : new NonTerminal(s);
@@ -72,11 +72,13 @@ public class SyntaxConfig {
                 //        "TERMINAL" :
                 //        "NONTERMINAL")
                 //    + "]");
-                rule.addRhsToken(symbolType);
+                // FIXME convert SymbolType to TokenType
+                //rule.addRhsToken(symbolType);
             }
 
             //System.out.println(rule);
-            rules.add(rule);
+            // FIXME convert SymbolType to TokenType
+            //rules.add(rule);
         }
     }
 
