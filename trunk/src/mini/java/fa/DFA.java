@@ -12,21 +12,21 @@ import java.util.Set;
 
 public interface DFA {
     /**
-     * Get the target state from the source state through the given input.
+     * Returns the target state from the source state through the given input.
      * There should be no more than one such target state. Null input should
-     * be seen as invalid input, and no state should be returned.
+     * be seen as invalid input, and no states should be returned.
      * 
      * @return The target state. Null if there's no such state.
      */
     public State getState(State from, Object input);
     
     /**
-     * Return the initial state in this DFA
+     * Returns the initial state in this DFA.
      */
     public InitialState getInitialState();
 
     /**
-     * Get all inputs that the specified state can accept
+     * Returns all inputs that the specified state can accept.
      */
     public Set<Object> getInputs(State from);
 }
