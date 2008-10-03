@@ -35,12 +35,12 @@ public class Test03 {
         }
 
         // The first rule must be "START ::= Goal", should be fixed anyway
-        Rule rule = new Rule(new NonTerminal("START"));
-        rule.addRhsToken(new NonTerminal("Goal"));
-        rules.add(0, rule);
-        AnalysisTable drivingManual = Algorithm.closureSet(rules);
-        //System.out.println(drivingManual);
-        drivingManual.dump();
+//        Rule rule = new Rule(new NonTerminal("START"));
+//        rule.addRhsToken(new NonTerminal("Goal"));
+//        rules.add(0, rule);
+//        AnalysisTable drivingManual = Algorithm.closureSet(rules);
+//        //System.out.println(drivingManual);
+//        drivingManual.dump();
 
         //getSampleTokens();
         //for (TokenRevamped token : getSampleTokens()) {

@@ -1,24 +1,25 @@
 package mini.java.syntax.legacy;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 
 
-class GenericRule<T> {
-    private T lhs; //Oops! I almost forget that lhs should be NonTermianl
-    private List<T> rhs;
-
-    public GenericRule(T lhs) {
+public class Rule {
+    private TokenSpec lhs;	// TODO: should be TokenSpecSpec lhs!
+    private List<TokenSpec> rhs;
+    
+    public Rule() {
+        
+    }
+    public Rule(TokenSpec lhs) {
         this.lhs = lhs;
-        //this.rhs = new ArrayList<Token>();
-        rhs = new LinkedList<T>();
+        this.rhs = new ArrayList<TokenSpec>();
     }
 
-    public T getLhs() {
+    public TokenSpec getLhs() {
         return lhs;
+   
     }
-
-    public List<T> getRhs() {
+    public List<TokenSpec> getRhs() {
         return rhs;
     }
 
@@ -26,33 +27,25 @@ class GenericRule<T> {
         return rhs.size();
     }
 
-    public void addRhsToken(T t) {
+    public void addRhsTokenSpec(TokenSpec t) {
         rhs.add(t);
     }
-
-    public String toString() {
-        //return "=== Rule ===\n" +
-        //    " lhs: " + lhs.toString() + "\n" +
-        //    " rhs: " + rhs.toString();
-        String str = new String();
-        str += lhs.toString() + " ::=";
-        for (T type : rhs) {
-            str += " " + type;
-        }
-        return str;
+    public boolean nullable(){
+    	if(rhs.get(0).equals(TokenSpec.EMPTY_TOKEN)){
+    		return true;
+    	}
+    	return false;
     }
-
+    public String toString() {
+        return " Rule: " +lhs.toString() + " := " + rhs.toString();
+    }
+    
     public boolean equals(Object obj) {
         if(!(obj instanceof Rule)) return false;
         else {
             Rule rule = (Rule) obj;
-            return rule.getLhs().equals(this.lhs) && rule.getRhs().equals(this.rhs);
+            return rule.lhs.equals(this.lhs) && rule.rhs.equals(this.rhs);
         }
     }
 }
 
-public class Rule extends GenericRule<SymbolType> {
-    public Rule(SymbolType lhs) {
-        super(lhs);
-    }
-}

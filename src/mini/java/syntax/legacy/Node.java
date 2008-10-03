@@ -13,14 +13,14 @@ public class Node<T> {
     public List<Node<T>> children;
  
     /**
-     * Default constructor.
+     * Default ctor.
      */
     public Node() {
         this(null);
     }
  
     /**
-     * Convenience constructor to create a Node<T> with an instance of T.
+     * Convenience ctor to create a Node<T> with an instance of T.
      * @param data an instance of T.
      */
     public Node(T data) {

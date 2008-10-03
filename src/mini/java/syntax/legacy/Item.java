@@ -1,8 +1,5 @@
 package mini.java.syntax.legacy;
-import java.util.*;
-
-
-//import lex.legacy.Token;
+import java.util.List;
 
 public class Item {
     private Rule rule;
@@ -22,13 +19,18 @@ public class Item {
    
     public Item move() { return new Item(rule, dotPos + 1); }
 
-    public SymbolType getFollow() {
-        List<SymbolType> rhs = rule.getRhs();
+    public TokenSpec getFollow() {
+        List<TokenSpec> rhs = rule.getRhs();
         if(dotPos < rhs.size()) return rhs.get(dotPos);
         else return null;
     }
-    public SymbolType getPrevious() {
-        List<SymbolType> rhs = rule.getRhs();
+    public boolean hasFollow(){ 
+    	   if(dotPos < rule.getRhs().size()) 
+    		   return true;
+           else return false;
+    }
+    public TokenSpec getPrevious() {
+        List<TokenSpec> rhs = rule.getRhs();
         if(dotPos >0) return rhs.get(dotPos-1);
         else return null;
     }
@@ -36,29 +38,6 @@ public class Item {
     public void dump() {
         System.out.println("Rule: " + rule);
         System.out.println("DotPos: " + dotPos);
-    }
-
-    public String toString() {
-        String str = new String();
-        str += rule.getLhs().toString() + " ::=";
-//        for (int i=0; i<dotPos; ++i) {
-//            str += " " + rule.getRhs().get(i).toString();
-//        }
-//        str += " *";
-//        for (int i=dotPos; i<rule.getRhs().size(); ++i) {
-//            str += " " + rule.getRhs().get(i).toString();
-//        }
-
-        int i = 0;
-        for (SymbolType type : rule.getRhs()) {
-            if (i == dotPos)
-                str += " *";
-            str += " " + type.toString();
-            ++i;
-        }
-        if (str.indexOf('*') == -1)
-            str += " *";
-        return str;
     }
 
     public boolean equals(Object obj) {
