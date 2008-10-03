@@ -38,11 +38,14 @@ public abstract class DFASimulatorTest {
         return Arrays.asList(new Object[][] {
                 {"ABa",         "a",    true},
                 {"ABa",         "b",    false},
+                {"ABa",         "ba",   false}, // extra input should be ignored
                 {"ABa",         "ab",   false},
                 {"ABa,BCb",     "a",    true},
                 {"ABa,BCb",     "ab",   true},
                 {"ABa,BCb",     "aa",   false},
                 {"ABa,ACb,BAc", "acb",  true},
+                {"ABa,ACb,BAc", "aacb", false},
+                {"ABa,ACb,BAc", "acbb", false},
         });
     }
     

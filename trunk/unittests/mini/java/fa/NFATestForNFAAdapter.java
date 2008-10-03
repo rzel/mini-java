@@ -4,6 +4,7 @@ import mini.java.fa.legacy.v1.NFAAdapter;
 
 
 public class NFATestForNFAAdapter  extends NFATest {
+    @Override
     protected NFABuilder getBuilder() {
         return new NFAAdapter();
     }

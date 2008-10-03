@@ -1,6 +1,5 @@
-package mini.java.fa.legacy.v2;
+package mini.java.lex.legacy;
 
-import mini.java.lex.legacy.Tokenizer;
 
 public interface DFASimulator {
 	/**
