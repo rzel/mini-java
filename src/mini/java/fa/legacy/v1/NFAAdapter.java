@@ -1,9 +1,7 @@
 package mini.java.fa.legacy.v1;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import mini.java.fa.Acceptable;
@@ -24,61 +22,15 @@ import mini.java.fa.State;
  */
 
 public class NFAAdapter implements NFA, NFABuilder {
-    // the underlying SimpleFA object
-    private SimpleFA               simpleFA;
+    private SimpleFA       simpleFA;
+    private InputConvertor _inputConvertor;
 
-    // mapping from NFA input to SimpleFA input
-    private Map<Object, Character> objectToCharacter;
-
-    // mapping from SimpleFA input to NFA input
-    private Map<Character, Object> characterToObject;
-
-    // used to track used characters by simpleFA
-    private char                   charValue;
-
-//    // used to track added states; SimpleFA doesn't track states;
-//    private Set<State>             states;
-    
     // cached initial state
-    private InitialState           _initialState;
-
-//    public Set<Object> getInputs() {
-//        return objectToCharacter.keySet();
-//    }
-
-//    public Set<State> getStates() {
-//        return states;
-//    }
-
-//    public Set<State> getStates(State from) {
-//        Set<State> states = new HashSet<State>();
-//        for (Object input : this.getInputs(from)) {
-//            states.addAll(getStates(from, input));
-//        }
-//
-//        // the behavior in NFA is slightly different than the DFA version, that
-//        // NFA will also return any states reachable through an epsilon
-//        // transition
-//        states.addAll(this.simpleFA.e_closure(from));
-//
-//        return states;
-//    }
-
-//    /**
-//     * Get the underlying SimpleFA
-//     * 
-//     * @return
-//     */
-//    public SimpleFA getSimpleFA() {
-//        return simpleFA;
-//    }
+    private InitialState   _initialState;
 
     public NFAAdapter() {
         this.simpleFA           = new SimpleFA();
-        this.objectToCharacter  = new HashMap<Object, Character>();
-        this.characterToObject  = new HashMap<Character, Object>();
-//        this.states             = new HashSet<State>();
-        this.charValue          = 'A';
+        this._inputConvertor    = new InputConvertor();
     }
     
     // Helper function used to check whether the given state is
@@ -109,9 +61,8 @@ public class NFAAdapter implements NFA, NFABuilder {
         for (State state : sourceStates) {
             Set<Character> charInput = simpleFA.getInputMixed(state);
             for (Character c : charInput) {
-                Object o = characterToObject.get(c);
-                // if (o != null)
-                // objectInput.add(o);
+//                Object o = characterToObject.get(c);
+                Object o = _inputConvertor.convert(c);
                 assert (o != null);
                 objectInputs.add(o);
             }
@@ -121,24 +72,21 @@ public class NFAAdapter implements NFA, NFABuilder {
 
     @Override
     public void addTransition(State from, State to, Object input) {
-        Character c = null;
+//        Character c = null;
 
-//        // keep tracking states
-//        states.add(from);
-//        states.add(to);
+//        if (objectToCharacter.containsKey(input)) {
+//            // have seen this input before
+//            c = objectToCharacter.get(input);
+//        } else {
+//            // get a new character for the input
+//            c = new Character(charValue++);
+//
+//            // update the mapping
+//            objectToCharacter.put(input, c);
+//            characterToObject.put(c, input);
+//        }
 
-        if (objectToCharacter.containsKey(input)) {
-            // have seen this input before
-            c = objectToCharacter.get(input);
-        } else {
-            // get a new character for the input
-            c = new Character(charValue++);
-
-            // update the mapping
-            objectToCharacter.put(input, c);
-            characterToObject.put(c, input);
-        }
-
+        Character c = _inputConvertor.convert(input);
         // create a new input for simpleFA
         Set<Character> newInput = new HashSet<Character>(
                 Collections.singleton(c));
@@ -157,18 +105,6 @@ public class NFAAdapter implements NFA, NFABuilder {
         checkState(from);
         checkState(to);
     }
-
-//    public Set<AcceptableState> getAcceptableState() {
-//        Set<AcceptableState> states = new HashSet<AcceptableState>();
-//
-//        for (State state : getStates()) {
-//            if (state instanceof AcceptableState) {
-//                states.add((AcceptableState) state);
-//            }
-//        }
-//
-//        return states;
-//    }
 
     @Override
     public InitialState getInitialState() {
@@ -228,21 +164,16 @@ public class NFAAdapter implements NFA, NFABuilder {
         // never return null for collection
         Set<State> targetClosures = new HashSet<State>();
 
-        if (objectToCharacter.containsKey(input)) {
-            Character c = objectToCharacter.get(input);
-            assert(c != null);
-            
-            // 1. get the source state and its closure
-            Set<State> sourceClosure = closure(from);
-            // 2. get the target states
-            Set<State> targets = simpleFA.move(sourceClosure,
-                    new HashSet<Character>(Collections.singleton(c)));
-            
-            // NOTE: SimpleFA.e_closure doesn't return the source state.
-            targetClosures.addAll(simpleFA.e_closure(targets));
-            targetClosures.addAll(targets);
-        }
+        Character c = _inputConvertor.convert(input);
+        // 1. get the source state and its closure
+        Set<State> sourceClosure = closure(from);
+        // 2. get the target states
+        Set<State> targets = simpleFA.move(sourceClosure,
+                new HashSet<Character>(Collections.singleton(c)));
 
+        // NOTE: SimpleFA.e_closure doesn't return the source state.
+        targetClosures.addAll(simpleFA.e_closure(targets));
+        targetClosures.addAll(targets);
         return targetClosures;
     }
 

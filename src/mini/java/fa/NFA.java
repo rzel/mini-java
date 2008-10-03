@@ -23,7 +23,7 @@ import java.util.Set;
  */
 public interface NFA {
     /**
-     * Get the "closure" of the target states. A target state "closure" is all
+     * Returns the "closure" of the target states. A target state "closure" is all
      * the target states from the source state's closure and the target states'
      * closures . An empty set will be returned if no such states.
      * <br>
@@ -34,7 +34,7 @@ public interface NFA {
     public Set<State> closure(State from, Object input);
     
     /**
-     * Get the "closure" of the source state. A source state "closure" is all
+     * Returns the "closure" of the source state. A source state "closure" is all
      * states reachable from the source state through an epsilon transition.
      * Empty set will be returned if no such states.
      * 
@@ -43,19 +43,13 @@ public interface NFA {
     public Set<State> closure(State from);
     
     /**
-     * Get the initial state in this NFA. Each NFA can have one and only one such
+     * Returns the initial state in this NFA. Each NFA can have one and only one such
      * initial state.
      */
     public InitialState getInitialState();
 
     /**
-     * Get valid inputs of the given source state and its closure
+     * Returns valid inputs of the given source state and its closure
      */
     public Set<Object> getInputs(State from);
-
-//    /**
-//     * Convert the NFA to a DFA.
-//     * @return an equivalent DFA representation
-//     */
-//    public DFA buildDFA();
 }
