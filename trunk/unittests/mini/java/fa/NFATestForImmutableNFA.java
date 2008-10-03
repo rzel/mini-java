@@ -7,6 +7,6 @@ public class NFATestForImmutableNFA extends NFATest {
     
     @Override
     protected NFA createNFA() {
-        return Helper.buildNFA("ABa,BCb,CDc,AC,AD,DE");
+        return TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE");
     }
 }

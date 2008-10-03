@@ -3,30 +3,23 @@ package mini.java.fa;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * A collection of helper functions for finite automata operations.
- *
- * @author Alex
- */
-public final class Helper {    
+public class TestHelper {    
     /**
      * Helper function used to build NFA. It takes a string
      * parameter which represents a NFA. The string has the form of:
-     * "ABa,ABb,AB,CD"; in which each normal transition is represented by
-     * three characters, one for source state, one for target state and one
-     * for the input object; epsilon transitions are represented by two
-     * characters; transitions are seperated by commas; the first source state
-     * will be treated as an initial state.
+     * "ABa,ABb,AB,CD"; in which:
+     * <ul>
+     * <li>Each normal transition is represented by three characters;
+     * <li>Epsilon transitions are represented by twocharacters;
+     * <li>Transitions are seperated by commas;
+     * <li>The first source state will be treated as an initial state;
+     * </ul>
      */
-    public static final NFA buildNFA(String rep_, NFABuilder builder_) {
+    protected static final NFA buildNFA(String rep_, NFABuilder builder_) {
         assert(rep_ != null);
-        assert(builder_ != null);
-        
-//        // use the only implementation of NFA.Builder
-//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
         
         // "states" is a mapping from character representation of the
-        // state to the actual state
+        // state to the actual nfa state
         Map<Character, State> states = new HashMap<Character, State>();
         
         // the first source state should be treated as an initial state
@@ -61,24 +54,25 @@ public final class Helper {
         return builder_.buildNFA();
     }
     
-    // use the default implementation of NFABuilder;
-    public static final NFA buildNFA(String rep_) {
+    protected static final NFA buildNFA(String rep_) {
+        // use the default NFABuilder
         return buildNFA(rep_, new ImmutableNFA.Builder());
     }
 
     /**
      * Helper function used to build DFA. It takes a string parameter which
-     * represents a DFA. The string has the form of: "ABa,ABb"; in which each
-     * transition is represented by three characters, one for source state, one
-     * for target state and one for the input object; transitions are seperated
-     * by commas; the first source state will be treated as the initial state.
+     * represents a DFA. The string has the form of: "ABa,ABb"; in which:
+     * <ul>
+     * <li>Each transition is represented by three characters;
+     * <li>Transitions are seperated by commas;
+     * <li>The first source state will be treated as the initial state;
+     * </ul>
      */
-    public static final DFA buildDFA(String rep_) {
+    protected static final DFA buildDFA(String rep_) {
         assert(rep_ != null);
-        assert(!rep_.isEmpty());
         
         // use the only implementation of DFA.Builder
-        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = new ImmutableDFA.Builder();
         
         // "states" is a mapping from character representation sof the
         // state to the actual states
@@ -111,6 +105,4 @@ public final class Helper {
         // build and return the DFA
         return builder.buildDFA();
     }
-    
- 
 }

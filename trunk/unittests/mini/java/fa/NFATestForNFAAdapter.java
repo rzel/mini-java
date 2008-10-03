@@ -10,6 +10,6 @@ public class NFATestForNFAAdapter extends NFATest {
     
     @Override
     protected NFA createNFA() {
-        return Helper.buildNFA("ABa,BCb,CDc,AC,AD,DE", new NFAAdapter());
+        return TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", new NFAAdapter());
     }
 }

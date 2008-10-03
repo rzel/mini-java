@@ -12,7 +12,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class NFAConvertorTest {
+public class NFAConvertorTest extends TestHelper {
     private String _nfa; // for NFA
     private String _dfa; // for DFA
 
@@ -40,8 +40,8 @@ public class NFAConvertorTest {
     
     @Test
     public final void testBuildDFA() {
-        DFA got = NFAConvertor.convert(Helper.buildNFA(_nfa));
-        DFA expected = Helper.buildDFA(_dfa);
+        DFA got = NFAConvertor.convert(buildNFA(_nfa));
+        DFA expected = buildDFA(_dfa);
         
         assertNotNull(got);
         assertNotNull(expected);
