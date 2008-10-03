@@ -53,9 +53,9 @@ public interface NFA {
      */
     public Set<Object> getInputs(State from);
 
-    /**
-     * Convert the NFA to a DFA.
-     * @return an equivalent DFA representation
-     */
-    public DFA buildDFA();
+//    /**
+//     * Convert the NFA to a DFA.
+//     * @return an equivalent DFA representation
+//     */
+//    public DFA buildDFA();
 }
