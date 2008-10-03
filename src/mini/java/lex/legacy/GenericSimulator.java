@@ -1,9 +1,7 @@
-package mini.java.fa.legacy.v2;
+package mini.java.lex.legacy;
 import java.util.Iterator;
 
-import mini.java.lex.legacy.JDomParser;
-import mini.java.lex.legacy.Modifier;
-import mini.java.lex.legacy.Tokenizer;
+import mini.java.fa.legacy.v2.DFA;
 import mini.java.regex.legacy.RegexCompiler;
 import mini.java.regex.legacy.RegularExpression;
 

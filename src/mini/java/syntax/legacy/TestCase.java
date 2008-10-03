@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mini.java.fa.legacy.v2.DFASimulator;
-import mini.java.fa.legacy.v2.GenericSimulator;
+import mini.java.lex.legacy.DFASimulator;
+import mini.java.lex.legacy.GenericSimulator;
 import mini.java.lex.legacy.Token;
 import mini.java.lex.legacy.Tokenizer;
 
