@@ -24,28 +24,23 @@ public class RegexParser extends ParserImpl {
         "E ::= C",
     };
     
-    // cached ParserConfig instance
-    private ParserConfig _parserConfig;
-
     @Override
     public ParserConfig getParserConfig() {
-        // lazy initialization
-        if (_parserConfig == null) {
-            StringBuilder builder = new StringBuilder();
-            for (String rule : _rules) {
-                builder.append(rule);
-                builder.append('\n');
-            }
-
-            try {
-                _parserConfig = new ParserConfig(new StringReader(
-                        builder.toString()));
-            } catch (IOException ex_) {
-                // DO NOTHING HERE
-            }
+        StringBuilder builder = new StringBuilder();
+        for (String rule : _rules) {
+            builder.append(rule);
+            builder.append('\n');
         }
-        
-        return _parserConfig;
+
+        ParserConfig parserConfig = null;
+        try {
+            parserConfig = new ParserConfig(
+                    new StringReader(builder.toString()));
+        } catch (IOException ex_) {
+            // DO NOTHING HERE
+        }
+
+        return parserConfig;
     }
 
 }
