@@ -18,6 +18,7 @@ import mini.java.fa.DFASimulatorImpl;
 import mini.java.fa.ImmutableNFA;
 import mini.java.fa.InitialState;
 import mini.java.fa.NFABuilder;
+import mini.java.fa.NFAConvertor;
 import mini.java.fa.State;
 
 /**
@@ -125,7 +126,7 @@ public class ParserConfig {
 
         // 4. create the DFA for the underlying syntax specification
         // TODO if the NFA or the DFA cannot be built, throw an exception
-        _dfa = nfaBuilder.buildNFA().buildDFA();
+        _dfa = NFAConvertor.convert(nfaBuilder.buildNFA());
         
         //assert(_dfa != null);
     }

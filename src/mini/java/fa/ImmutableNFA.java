@@ -1,10 +1,8 @@
 package mini.java.fa;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public final class ImmutableNFA implements NFA {
@@ -19,58 +17,58 @@ public final class ImmutableNFA implements NFA {
         _epsilons = new HashSet<Object>(epsilons_);
     }
 
-    @Override
-    public DFA buildDFA() {
-        // mapping from set of NFA states (closures) to new DFA states
-        // NOTE: this also serves as the "flags" for checked states
-        Map<Set<State>, State> newStates = new HashMap<Set<State>, State>();
-        // the "todo" list, containing unchecked states
-        List<Set<State>> uncheckedStates = new LinkedList<Set<State>>();
-        
-        DFABuilder builder = new ImmutableDFA.Builder();
-        
-        // start from the initial state
-        InitialState initialState = getInitialState();
-        // get the closure for the initial state
-        Set<State> initialClosure = closure(initialState);
-        // create a new state for the initial closure
-        newStates.put(initialClosure, isAcceptable(initialClosure)
-                ? new AcceptableInitialState() : new InitialState());
-        // add the initial closure to the "todo" list
-        uncheckedStates.add(initialClosure);
-        
-        while (!uncheckedStates.isEmpty()) {
-            Set<State> sourceClosure = uncheckedStates.remove(0);
-            State sourceState = newStates.get(sourceClosure);
-            
-            // walk through all possible inputs
-            for (Object input : getInputs(sourceClosure)) {
-                // get the target closure
-                Set<State> targetClosure = closure(sourceClosure, input);
-                // create new state for target closure if there isn't one
-                if (!newStates.containsKey(targetClosure)) {
-                    //newStates.put(targetClosure, createState(targetClosure));
-                    newStates.put(targetClosure, isAcceptable(targetClosure)
-                            ? new AcceptableState() : new State());
-                    uncheckedStates.add(targetClosure);
-                }
-                State targetState = newStates.get(targetClosure);
-                // add the corresponding transition in the DFA
-                builder.addTransition(sourceState, targetState, input);
-            }
-        }
-        
-        return builder.buildDFA();
-    }
-    
-     // helper function for checking whether a closure contains acceptable state
-    private final static boolean isAcceptable(Set<State> closure_) {
-        for (State state : closure_) {
-            if (state instanceof Acceptable)
-                return true;
-        }
-        return false;
-    }
+//    @Override
+//    public DFA buildDFA() {
+//        // mapping from set of NFA states (closures) to new DFA states
+//        // NOTE: this also serves as the "flags" for checked states
+//        Map<Set<State>, State> newStates = new HashMap<Set<State>, State>();
+//        // the "todo" list, containing unchecked states
+//        List<Set<State>> uncheckedStates = new LinkedList<Set<State>>();
+//        
+//        DFABuilder builder = new ImmutableDFA.Builder();
+//        
+//        // start from the initial state
+//        InitialState initialState = getInitialState();
+//        // get the closure for the initial state
+//        Set<State> initialClosure = closure(initialState);
+//        // create a new state for the initial closure
+//        newStates.put(initialClosure, isAcceptable(initialClosure)
+//                ? new AcceptableInitialState() : new InitialState());
+//        // add the initial closure to the "todo" list
+//        uncheckedStates.add(initialClosure);
+//        
+//        while (!uncheckedStates.isEmpty()) {
+//            Set<State> sourceClosure = uncheckedStates.remove(0);
+//            State sourceState = newStates.get(sourceClosure);
+//            
+//            // walk through all possible inputs
+//            for (Object input : getInputs(sourceClosure)) {
+//                // get the target closure
+//                Set<State> targetClosure = closure(sourceClosure, input);
+//                // create new state for target closure if there isn't one
+//                if (!newStates.containsKey(targetClosure)) {
+//                    //newStates.put(targetClosure, createState(targetClosure));
+//                    newStates.put(targetClosure, isAcceptable(targetClosure)
+//                            ? new AcceptableState() : new State());
+//                    uncheckedStates.add(targetClosure);
+//                }
+//                State targetState = newStates.get(targetClosure);
+//                // add the corresponding transition in the DFA
+//                builder.addTransition(sourceState, targetState, input);
+//            }
+//        }
+//        
+//        return builder.buildDFA();
+//    }
+//    
+//     // helper function for checking whether a closure contains acceptable state
+//    private final static boolean isAcceptable(Set<State> closure_) {
+//        for (State state : closure_) {
+//            if (state instanceof Acceptable)
+//                return true;
+//        }
+//        return false;
+//    }
 
     @Override
     public Set<State> closure(State from, Object input) {

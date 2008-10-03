@@ -12,15 +12,15 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class NFABuildDFATestParameterized {
-    private String _repA; // for NFA
-    private String _repB; // for DFA
+public class NFAConvertorTest {
+    private String _nfa; // for NFA
+    private String _dfa; // for DFA
 
-    public NFABuildDFATestParameterized(String repA_, String repB_) {
-        assert (repA_ != null);
-        assert (repB_ != null);
-        _repA = repA_;
-        _repB = repB_;
+    public NFAConvertorTest(String nfa_, String dfa_) {
+        assert (nfa_ != null);
+        assert (dfa_ != null);
+        _nfa = nfa_;
+        _dfa = dfa_;
     }
     
     @Parameters
@@ -40,8 +40,8 @@ public class NFABuildDFATestParameterized {
     
     @Test
     public final void testBuildDFA() {
-        DFA got = Helper.buildNFA(_repA).buildDFA();
-        DFA expected = Helper.buildDFA(_repB);
+        DFA got = NFAConvertor.convert(Helper.buildNFA(_nfa));
+        DFA expected = Helper.buildDFA(_dfa);
         
         assertNotNull(got);
         assertNotNull(expected);

@@ -3,15 +3,10 @@ package mini.java.fa.legacy.v1;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import mini.java.fa.Acceptable;
-import mini.java.fa.DFA;
-import mini.java.fa.DFABuilder;
-import mini.java.fa.ImmutableDFA;
 import mini.java.fa.InitialState;
 import mini.java.fa.NFA;
 import mini.java.fa.NFABuilder;
@@ -185,48 +180,48 @@ public class NFAAdapter implements NFA, NFABuilder {
         return _initialState;
     }
 
-    @Override
-    public DFA buildDFA() {
-        SimpleFA fa = simpleFA.toDFA();
-        DFABuilder builder = new ImmutableDFA.Builder();
-        
-        // convert the SimpleFA to ImmutableDFA
-        Set<State> checkedStates = new HashSet<State>();
-        List<State> uncheckedStates = new LinkedList<State>();
-        
-        // get the initial state from the DFA
-        State initialState = fa.getInitialState();
-        assert(initialState instanceof InitialState);
-        
-        // we will start from the InitialState
-        uncheckedStates.add(initialState);
-        while (!uncheckedStates.isEmpty()) {
-            State sourceState = uncheckedStates.remove(0);
-            checkedStates.add(sourceState);
-            
-            Set<Character> inputs = fa.getInputMixed(sourceState);
-            for (Character input : inputs) {
-                Set<State> targetStates = fa.move(sourceState, Collections.singleton(input));
-                assert(targetStates.size() == 1);
-                
-                // get the single element from the set
-                State targetState = targetStates.toArray(new State[0])[0];
-                
-                // get the actual input for this transition
-                Object objectInput = characterToObject.get(input);
-                assert(objectInput != null);
-                
-                // add this transition
-                builder.addTransition(sourceState, targetState, objectInput);
-                
-                if (!checkedStates.contains(targetState)) {
-                    uncheckedStates.add(targetState);
-                }
-            }
-        }
-        
-        return builder.buildDFA();
-    }
+//    @Override
+//    public DFA buildDFA() {
+//        SimpleFA fa = simpleFA.toDFA();
+//        DFABuilder builder = new ImmutableDFA.Builder();
+//        
+//        // convert the SimpleFA to ImmutableDFA
+//        Set<State> checkedStates = new HashSet<State>();
+//        List<State> uncheckedStates = new LinkedList<State>();
+//        
+//        // get the initial state from the DFA
+//        State initialState = fa.getInitialState();
+//        assert(initialState instanceof InitialState);
+//        
+//        // we will start from the InitialState
+//        uncheckedStates.add(initialState);
+//        while (!uncheckedStates.isEmpty()) {
+//            State sourceState = uncheckedStates.remove(0);
+//            checkedStates.add(sourceState);
+//            
+//            Set<Character> inputs = fa.getInputMixed(sourceState);
+//            for (Character input : inputs) {
+//                Set<State> targetStates = fa.move(sourceState, Collections.singleton(input));
+//                assert(targetStates.size() == 1);
+//                
+//                // get the single element from the set
+//                State targetState = targetStates.toArray(new State[0])[0];
+//                
+//                // get the actual input for this transition
+//                Object objectInput = characterToObject.get(input);
+//                assert(objectInput != null);
+//                
+//                // add this transition
+//                builder.addTransition(sourceState, targetState, objectInput);
+//                
+//                if (!checkedStates.contains(targetState)) {
+//                    uncheckedStates.add(targetState);
+//                }
+//            }
+//        }
+//        
+//        return builder.buildDFA();
+//    }
 
     @Override
     public Set<State> closure(State from, Object input) {

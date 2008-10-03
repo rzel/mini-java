@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 
-public class NFABuildDFATest {
+public class NFAConvertorTestAcceptableStates {
     
     @Test
     public final void testBuildDFAAcceptableInitialState() {
@@ -22,7 +22,7 @@ public class NFABuildDFATest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = nfa.buildDFA();
+        DFA dfa = NFAConvertor.convert(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -48,7 +48,7 @@ public class NFABuildDFATest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = nfa.buildDFA();
+        DFA dfa = NFAConvertor.convert(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -72,7 +72,7 @@ public class NFABuildDFATest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = nfa.buildDFA();
+        DFA dfa = NFAConvertor.convert(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -96,7 +96,7 @@ public class NFABuildDFATest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = nfa.buildDFA();
+        DFA dfa = NFAConvertor.convert(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -111,7 +111,7 @@ public class NFABuildDFATest {
     @Test
     public final void testBuildDFAInvalidDFA() {
         NFA nfa = Helper.buildNFA("AB"); // no valid transition for DFA
-        DFA dfa = nfa.buildDFA();
+        DFA dfa = NFAConvertor.convert(nfa);
         assertNull(dfa); // invalid DFA
     }
 }
