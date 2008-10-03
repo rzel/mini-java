@@ -1,81 +1,64 @@
 package mini.java.fa;
 
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
+@RunWith(Parameterized.class)
 public class DFAComparatorTest {
+    private DFA _dfaA;
+    private DFA _dfaB;
+    private boolean _result;
+//    private DFAComparator _comparator;
+    
+    public DFAComparatorTest(String dfaA_, String dfaB_, boolean result_) {
+        assert(dfaA_ != null);
+        assert(dfaB_ != null);
+        
+        _dfaA = TestHelper.buildDFA(dfaA_);
+        _dfaB = TestHelper.buildDFA(dfaB_);
+        _result = result_;
+        
+        assertNotNull(_dfaA);
+        assertNotNull(_dfaB);
+    }
+    
+    @Parameters
+    public static Collection<Object[]> getParameters() {
+        return Arrays.asList(new Object[][] {
+                {"ABa",         "CDa",          true}, // single transition
+                {"ABb,ACc",     "CDb,CEc",      true}, // multiple transitions
+                {"ABa,BCb",     "CDa,DEb",      true},
+                {"abA,acB",     "abA,acB",      true},
+                {"ABa,BAa",     "CDa,DCa",      true}, // loop
+                {"ABa,BAa",     "ABa,BCb",      false},
+                {"ABa",         "ABa,ABb",      false}, // different structure
+                {"ABb",         "ACc",          false}, // different inputs
+                {"DFd,BEd,ACd,ECa,ACa", "EFd",   true},
+        });
+    }
+    
+//    @Before
+//    public void setUp() {
+//        _comparator = new DFAComparator(_dfaA, _dfaB);
+//        assertNotNull(_comparator);
+//    }
+//    
+//    @After
+//    public void tearDown() {
+//        _comparator = null;
+//    }
     
     @Test
     public final void testCompare() {
-        String rep = "abA,acB";
-        DFA sourceDFA = TestHelper.buildDFA(rep);
-        DFA targetDFA = TestHelper.buildDFA(rep);
-        assertNotNull(sourceDFA);
-        assertNotNull(targetDFA);
-        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
-    }    
-
-    @Test
-    public final void testCompareSingleTransition() {
-        String Rep = "ABa";
-        DFA sourceDFA = TestHelper.buildDFA(Rep);
-        DFA targetDFA = TestHelper.buildDFA(Rep);
-        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
+        assertEquals(_result, new DFAComparator(_dfaA, _dfaB).compare());
     }
-    
-    @Test
-    public final void testCompareMultipleTransitionsDifferentInputs() {
-        String Rep = "ABb,ACc";
-        DFA sourceDFA = TestHelper.buildDFA(Rep);
-        DFA targetDFA = TestHelper.buildDFA(Rep);
-        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-    @Test
-    public final void testCompareMultipleTransitionsDifferentTransitions() {
-        String Rep = "ABa,BCb";
-        DFA sourceDFA = TestHelper.buildDFA(Rep);
-        DFA targetDFA = TestHelper.buildDFA(Rep);
-        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-    @Test
-    public final void testCompareFailedDifferentStructure() {
-        DFA sourceDFA = TestHelper.buildDFA("ABa");
-        DFA targetDFA = TestHelper.buildDFA("ABa,ABb");
-        assertFalse(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-    @Test
-    public final void testCompareFailedDifferentInputs() {
-        DFA sourceDFA = TestHelper.buildDFA("ABb");
-        DFA targetDFA = TestHelper.buildDFA("ACc");
-        assertFalse(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-    @Test
-    public final void testCompareLoop() {
-        String Rep = "ABa,BAa";
-        DFA sourceDFA = TestHelper.buildDFA(Rep);
-        DFA targetDFA = TestHelper.buildDFA(Rep);
-        assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-    @Test
-    public final void testCompareLoopFailed() {
-        DFA sourceDFA = TestHelper.buildDFA("ABa,BAa");
-        DFA targetDFA = TestHelper.buildDFA("ABa,BCb");
-        assertFalse(new DFAComparator(sourceDFA, targetDFA).compare());
-    }
-    
-//    @Test
-//    public final void compareBug01() {
-//        DFA sourceDFA = Helper.buildDFA("DFd,BEd,ACd,ECa,ACa");
-//        DFA targetDFA = Helper.buildDFA("EFd");
-//        assertFalse(new Helper.Comparator(sourceDFA, targetDFA).compare());
-//    }
 }
 
