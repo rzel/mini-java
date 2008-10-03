@@ -3,7 +3,7 @@ package mini.java.regex;
 import java.io.IOException;
 import java.io.StringReader;
 
-import mini.java.syntax.AbstractParser;
+import mini.java.syntax.ParserImpl;
 import mini.java.syntax.ParserConfig;
 
 /**
@@ -13,7 +13,7 @@ import mini.java.syntax.ParserConfig;
  * 
  * @author Alex
  */
-public class RegexParser extends AbstractParser {    
+public class RegexParser extends ParserImpl {    
     // syntax specification for REGEX
     private static String[] _rules = {
         "START ::= E",

@@ -7,7 +7,7 @@ import mini.java.fa.DFASimulator;
 import mini.java.fa.DFASimulatorImpl;
 import mini.java.fa.State;
 
-public abstract class AbstractParser implements Parser {
+public abstract class ParserImpl implements Parser {
     private static final String END = "END";
     //private List<Symbol> _symbolList;
     private List<Symbol> _symbolStack  = new LinkedList<Symbol>();
