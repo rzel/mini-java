@@ -77,8 +77,8 @@ public class DFAComparatorTestParameterized {
 //        // dump the randomly generated string representation to stdout
 //        System.out.println("[" + id + "]_rep = " + _repA);
         
-        DFA sourceDFA = Helper.buildDFA(_repA);
-        DFA targetDFA = Helper.buildDFA(_repA);
+        DFA sourceDFA = TestHelper.buildDFA(_repA);
+        DFA targetDFA = TestHelper.buildDFA(_repA);
         assertNotNull(sourceDFA);
         assertNotNull(targetDFA);
         assertTrue(new DFAComparator(sourceDFA, targetDFA).compare());

@@ -10,7 +10,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-public class HelperTest {
+public class TestHelperTest {
 
     // helper function used to get a single element from the collection
     private static <T> T getSingleton(Collection<T> collection_) {
@@ -26,7 +26,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFASingleTransition() {        
-        NFA immutableNFA = Helper.buildNFA("ABa");
+        NFA immutableNFA = TestHelper.buildNFA("ABa");
         assertNotNull(immutableNFA); // avoid error
         
         // check initial state
@@ -48,7 +48,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFAMultipleTransitionsDifferentInputs() {
-        NFA immutableNFA = Helper.buildNFA("ABa,ABb");
+        NFA immutableNFA = TestHelper.buildNFA("ABa,ABb");
         assertNotNull(immutableNFA); // avoid error
 
         // check initial state
@@ -107,7 +107,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFAMultipleTransitionsDifferentTransitions() {
-        NFA immutableNFA = Helper.buildNFA("ABa,CDc,BCb");
+        NFA immutableNFA = TestHelper.buildNFA("ABa,CDc,BCb");
         assertNotNull(immutableNFA); // avoid error
         
         // get initial state "A"
@@ -134,7 +134,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildNFASingleEpsilonTransition() {
-        NFA immutableNFA = Helper.buildNFA("AB");
+        NFA immutableNFA = TestHelper.buildNFA("AB");
         assertNotNull(immutableNFA); // avoid error
         
         // get initial state "A"
@@ -148,7 +148,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildDFASingleTransition() {
-        DFA immutableDFA = Helper.buildDFA("ABa");
+        DFA immutableDFA = TestHelper.buildDFA("ABa");
         assertNotNull(immutableDFA);
         
         // get initial state "A"
@@ -169,7 +169,7 @@ public class HelperTest {
 
     @Test
     public final void testBuildDFAMultipleTransitionsDifferentInputs() {
-        DFA immutableDFA = Helper.buildDFA("ABb,ACc");
+        DFA immutableDFA = TestHelper.buildDFA("ABb,ACc");
         assertNotNull(immutableDFA);
         
         // get initial state "A"
@@ -189,7 +189,7 @@ public class HelperTest {
     
     @Test
     public final void testBuildDFAMultipleTransitionsDifferentTransitions() {
-        DFA immutableDFA = Helper.buildDFA("ABa,CDc,BCb");
+        DFA immutableDFA = TestHelper.buildDFA("ABa,CDc,BCb");
         assertNotNull(immutableDFA); // avoid error
         
         // get initial state "A"

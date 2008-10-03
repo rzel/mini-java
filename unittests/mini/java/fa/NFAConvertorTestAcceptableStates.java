@@ -110,7 +110,7 @@ public class NFAConvertorTestAcceptableStates {
     
     @Test
     public final void testBuildDFAInvalidDFA() {
-        NFA nfa = Helper.buildNFA("AB"); // no valid transition for DFA
+        NFA nfa = TestHelper.buildNFA("AB"); // no valid transition for DFA
         DFA dfa = NFAConvertor.convert(nfa);
         assertNull(dfa); // invalid DFA
     }
