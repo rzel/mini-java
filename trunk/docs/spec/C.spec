@@ -4,7 +4,15 @@
 	<!-- operators -->
 	<token>
   		<Type>BIN_OP</Type> 
-  		<RegularExpression>(+|-|\*|&lt;|&amp;&amp;)</RegularExpression> 
+  		<RegularExpression>(+|-|&lt;|&amp;&amp;)</RegularExpression> 
+  	</token>
+  	<token>
+  		<Type>STAR</Type> 
+  		<RegularExpression>\*</RegularExpression> 
+  	</token>
+  	<token>
+  		<Type>OPERATOR</Type> 
+  		<RegularExpression>(-&gt;|&amp;)</RegularExpression> 
   	</token>
   	<!-- paras, brackets, squares -->
   	<token>
@@ -47,26 +55,21 @@
   	<!-- skip -->
   	<token>
   		<Type>SKIP</Type> 
-  		<RegularExpression> |
-|	|
-|
-
+  		<RegularExpression> |\n|\t|\r|\n
 </RegularExpression> 
   	</token>
-  	<token>
-  		<Type>Comment</Type> 
-  		<RegularExpression>/\*([a-z]|[A-Z]|_|[0-9]| )*\*/</RegularExpression> 
-  	</token>
-  	<token>
-  		<Type>KEYWORD</Type> 
-  		<RegularExpression>System.out.println</RegularExpression> 
-  	</token>
+  	
+  	
   	<token>
   		<Type>INTERPUNCTION</Type> 
-  		<RegularExpression>.|;|,|?|:</RegularExpression> 
+  		<RegularExpression>\.|;|,|\?|:</RegularExpression> 
+  	</token>
+  	<token>
+  		<Type>COMMENT</Type> 
+  		<RegularExpression>/\*(^*)*\*(((\*)*|(~/*)(^*)*)\*)*/|//.*</RegularExpression> 
   	</token>
 </tokens>
 <modifiers>
-	<modifier name="model.CKeywordModifier" />
+	<modifier name="lex.model.CKeywordModifier" />
 </modifiers>
 </spec> 
