@@ -2,100 +2,70 @@
 <spec>
 <tokens>
 	<!-- operators -->
-  	<token>
-  		<Type>+</Type> 
-  		<RegularExpression>+</RegularExpression> 
-  	</token>
-  	<token>
-  		<Type>-</Type> 
-  		<RegularExpression>-</RegularExpression> 
-  	</token>
-  	<token>
-  		<Type>*</Type> 
-  		<RegularExpression>\*</RegularExpression> 
+	<token>
+  		<Type>BIN_OP</Type> 
+  		<RegularExpression>(+|-|\*|&lt;|&amp;&amp;)</RegularExpression> 
   	</token>
   	
   	<!-- paras, brackets, squares -->
   	<token>
-  		<Type>(</Type>
+  		<Type>LEFT_PARA</Type>
   		<RegularExpression>\(</RegularExpression>
   	</token>
   	<token>
-  		<Type>)</Type>
+  		<Type>RIGHT_PARA</Type>
   		<RegularExpression>\)</RegularExpression>
   	</token>
-
   	
   	<token>
-  		<Type>{</Type>
+  		<Type>LEFT_BRACKET</Type>
   		<RegularExpression>{</RegularExpression>
   	</token>
   	<token>
-  		<Type>}</Type>
+  		<Type>RIGHT_BRACKET</Type>
   		<RegularExpression>}</RegularExpression>
   	</token>
   	
   	<token>
-  		<Type>[</Type>
+  		<Type>LEFT_SQUARE</Type>
   		<RegularExpression>\[</RegularExpression>
   	</token>
   	<token>
-  		<Type>]</Type>
+  		<Type>RIGHT_SQYARE</Type>
   		<RegularExpression>\]</RegularExpression>
-  	</token>
-  	
-  	<token>
-  		<Type>System.out.println</Type>
-  		<RegularExpression>System.out.println</RegularExpression> 
   	</token>
   	
   	<!-- id, int -->
   	<token>
-  		<Type>id</Type> 
-  		<RegularExpression>([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*|&lt;|&amp;&amp;|&gt;</RegularExpression> 
+  		<Type>IDENTIFIER</Type> 
+  		<RegularExpression>([a-z]|[A-Z]|_)([a-z]|[A-Z]|[0-9]|_)*</RegularExpression> 
   	</token>
   	<token>
-  		<Type>integer</Type> 
-  		<RegularExpression>0|([1-9][0-9]*)</RegularExpression> 
+  		<Type>INTEGER</Type> 
+  		<RegularExpression>[1-9]?[0-9]*</RegularExpression> 
   	</token>
   	
   	<!-- skip -->
   	<token>
   		<Type>SKIP</Type> 
-  		<RegularExpression> |\n|\t|\r|\r\n</RegularExpression> 
-  	</token>
-
-  	<token>
-  		<Type>COMMENT</Type> 
-  		<RegularExpression>/\*(^*)*\*(((\*)*|(~/*)(^*)*)\*)*/|//.*</RegularExpression> 
-  	</token>
-  
-  	<token>
-  		<Type>,</Type> 
-  		<RegularExpression>,</RegularExpression> 
+  		<RegularExpression> |
+|	||
+</RegularExpression> 
   	</token>
   	<token>
-  		<Type>;</Type> 
-  		<RegularExpression>;</RegularExpression> 
+  		<Type>Comment</Type> 
+  		<RegularExpression>/\*([a-z]|[A-Z]|_|[0-9]| )*\*/</RegularExpression> 
   	</token>
   	<token>
-  		<Type>.</Type> 
-  		<RegularExpression>\.</RegularExpression> 
+  		<Type>KEYWORD</Type> 
+  		<RegularExpression>System.out.println</RegularExpression> 
   	</token>
   	<token>
-  		<Type>=</Type> 
-  		<RegularExpression>=</RegularExpression> 
-  	</token>
-  	<token>
-  		<Type>!=</Type> 
-  		<RegularExpression>!=</RegularExpression> 
-  	</token>
-  	<token>
-  		<Type>!</Type> 
-  		<RegularExpression>!</RegularExpression> 
+  		<Type>INTERPUNCTION</Type> 
+  		<RegularExpression>.|;|,|=|!=</RegularExpression> 
   	</token>
 </tokens>
 <modifiers>
-	<modifier name="lexer.MiniJavaKeywordModifier" />
+	<modifier name="model.MiniJavaKeywordModifier" />
 </modifiers>
 </spec> 
