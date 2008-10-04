@@ -4,70 +4,68 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Before;
 import org.junit.Test;
 
 public abstract class NFATest {
+    private static InitialState S0 = new InitialState();
+    private static State S1 = new State();
+    private static State S2 = new State();
+    
+    // input objects for tests
+    private static Object O1 = new Object();
+    
+    private NFABuilder _builder;
+    
     // factory method for NFABuilder implementation
     protected abstract NFABuilder getBuilder();
+    
+    @Before
+    public void setUp() {
+        // get a new builder before each test
+        _builder = getBuilder();
+    }
 
     @Test
     public final void testAddTransition001() {
         // TEST:        Single transition
         // INPUTS:      (InitialState, State, Object)
-        State from      = new InitialState();
-        State to        = new State();
-        Object input    = new Object();
+        _builder.addTransition(S0, S1, O1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(from, to, input);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
-        assertEquals(nfa.closure(from, input), Collections.singleton(to));
+        assertEquals(Collections.singleton(S1), nfa.closure(S0, O1));
     }
     
     @Test
     public final void testAddTransition002() {
         // TEST:        Multiple Transitions
         // INPUTS:      (s1,s2,input),(s2,s3,input);
-        State s1        = new InitialState();
-        State s2        = new State();
-        State s3        = new State();
-        Object input    = new Object();
+        _builder.addTransition(S0, S1, O1);
+        _builder.addTransition(S1, S2, O1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2, input);
-        builder.addTransition(s2, s3, input);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
-        assertEquals(nfa.closure(s1, input), Collections.singleton(s2));
-        assertEquals(nfa.closure(s2, input), Collections.singleton(s3));
+        assertEquals(Collections.singleton(S1), nfa.closure(S0, O1));
+        assertEquals(Collections.singleton(S2), nfa.closure(S1, O1));
     }
     
     @Test
     public final void testAddTransition003() {
         // TEST:        Single epsilon transition
         // INPUTS:      (s1,s2);
-        State s1 = new InitialState();
-        State s2 = new State();
+        _builder.addTransition(S0, S1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error
-        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);        
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1));
         assertEquals(expected, got);
     }
     
@@ -75,38 +73,28 @@ public abstract class NFATest {
     public final void testAddTransition004() {
         // TEST:        Single epsilon transition (Loop)
         // INPUTS:      (s1,s1);
-        State state = new InitialState();
+        _builder.addTransition(S0, S0);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(state, state);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
-        assertEquals(nfa.closure(state), Collections.singleton(state));
+        
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = Collections.singleton((State)S0);
+        assertEquals(expected, got);
     }
     
     @Test
     public final void testAddTransition005() {
         // TEST:        Multiple epsilon transitions (Same source state)
         // INPUTS:      (s1,s2),(s1,s3);
-        State s1 = new InitialState();
-        State s2 = new State();
-        State s3 = new State();
+        _builder.addTransition(S0, S1);
+        _builder.addTransition(S0, S2);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        builder.addTransition(s1, s3);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error
-        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);        
-        expected.add(s3);
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1,S2));
         assertEquals(expected, got);
     }
     
@@ -114,24 +102,14 @@ public abstract class NFATest {
     public final void testAddTransition006() {
         // TEST:        Multiple epsilon transitions
         // INPUTS:      (s1,s2),(s2,s3);
-        State s1 = new InitialState();
-        State s2 = new State();
-        State s3 = new State();
+        _builder.addTransition(S0, S1);
+        _builder.addTransition(S1, S2);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        builder.addTransition(s2, s3);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error
-        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);        
-        expected.add(s3);
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1,S2));
         assertEquals(expected, got);
     }    
     
@@ -139,96 +117,66 @@ public abstract class NFATest {
     public final void testAddTransition007() {
         // TEST:        Both normal transitions and epsilon transitions
         // INPUTS:      (s1,s2),(s2,s3,input);
-        State s1 = new InitialState();
-        State s2 = new State();
-        State s3 = new State();
-        Object input = new Object();
+        _builder.addTransition(S0, S1);
+        _builder.addTransition(S1, S2, O1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        builder.addTransition(s2, s3, input);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        // check epsilon transitions
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);
-        assertEquals(got, expected);
+        // check the epsilon transition
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1));
+        assertEquals(expected, got);
         
-        // check normal transitions
-        assertEquals(nfa.closure(s2, input), Collections.singleton(s3));
+        // check the normal transition
+        assertEquals(Collections.singleton(S2), nfa.closure(S1,O1));
     }
     
     @Test
     public final void testAddTransition008() {
         // TEST:        Both normal transitions and epsilon transitions
         // INPUTS:      (s1,s2),(s1,s3,input);
-        State s1 = new InitialState();
-        State s2 = new State();
-        State s3 = new State();
-        Object input = new Object();
+        _builder.addTransition(S0, S1);
+        _builder.addTransition(S0, S2, O1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        builder.addTransition(s1, s3, input);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        // check epsilon transitions
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);
-        assertEquals(got, expected);
+        // check the epsilon transition
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1));
+        assertEquals(expected, got);
         
-        // check normal transitions
-        assertEquals(nfa.closure(s1, input), Collections.singleton(s3));
+        // check the normal transition
+        assertEquals(Collections.singleton(S2), nfa.closure(S0,O1));
     }
     
     @Test
     public final void testAddTransition009() {
         // TEST:        Both normal transitions and epsilon transitions
         // INPUTS:      (s1,s2),(s1,s2,input);
-        State s1 = new InitialState();
-        State s2 = new State();
-        Object input = new Object();
+        _builder.addTransition(S0, S1);
+        _builder.addTransition(S0, S1, O1);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        builder.addTransition(s1, s2, input);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNotNull(nfa); // avoid error
         
-        // check epsilon transitions
-        Set<State> got = nfa.closure(s1);
-        assertNotNull(got); // avoid error        
-        Set<State> expected = new HashSet<State>();
-        expected.add(s1);
-        expected.add(s2);
-        assertEquals(got, expected);
+        // check the epsilon transition
+        Set<State> got = nfa.closure(S0);
+        Set<State> expected = new HashSet<State>(Arrays.asList(S0,S1));
+        assertEquals(expected, got);
         
-        // check normal transitions
-        assertEquals(nfa.closure(s1, input), Collections.singleton(s2));
+        // check the normal transition
+        assertEquals(Collections.singleton(S1), nfa.closure(S0,O1));
     }
 
     @Test
     public final void testBuildNFA001() {
         // TEST:        NFA with no initial state
         // INPUTS:      (State,State)
-        State s1 = new State();
-        State s2 = new State();
+        _builder.addTransition(S1,S2);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNull(nfa);
     }
     
@@ -236,8 +184,7 @@ public abstract class NFATest {
     public final void testBuildNFA002() {
         // TEST:        NFA with no transitions
         // INPUTS:      null
-        NFABuilder builder = getBuilder();
-        NFA nfa = builder.buildNFA();
+        NFA nfa = _builder.buildNFA();
         assertNull(nfa);
     }
     
@@ -245,36 +192,28 @@ public abstract class NFATest {
     public final void testBuildNFA003() {
         // TEST:        Build multiple NFA
         // INPUTS:      (s1, s2)
-        State s1 = new InitialState();
-        State s2 = new State();
+        _builder.addTransition(S0, S0);
         
-        NFABuilder builder = getBuilder();
-        builder.addTransition(s1, s2);
-        
-        NFA firstNFA = builder.buildNFA();
-        NFA secondNFA = builder.buildNFA();
+        NFA firstNFA = _builder.buildNFA();
+        NFA secondNFA = _builder.buildNFA();
         assertNotNull(firstNFA); // avoid error
         assertNotNull(secondNFA); // avoid error
         assertEquals(firstNFA, secondNFA);
     }
-    
-    // should create an NFA with "ABa,BCb,CDc,AC,AD,DE"
+
     
     @Test
     public final void testGetInputs() {
         // TEST:        Get input from the initial state
         // INPUTS:      "ABa,BCb,CDc,AC,AD,DE"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", builder);
+        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", _builder);
         assertNotNull(nfa); // avoid error
         
         InitialState initialState = nfa.getInitialState();
         assertNotNull(initialState);
         
         Set<Object> got = nfa.getInputs(initialState);
-        Set<Object> expected = new HashSet<Object>();
-        expected.add('a');
-        expected.add('c');
+        Set<Object> expected = new HashSet<Object>(Arrays.asList('a','c'));
         assertEquals(expected, got);
     }
     
@@ -282,8 +221,7 @@ public abstract class NFATest {
     public final void testGetInitialState() {
         // TEST:        Get initial state from the NFA
         // INPUTS:      "ABa,BCb,CDc,AC,AD,DE"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", builder);
+        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", _builder);
         assertNotNull(nfa); // avoid error
         
         InitialState initialState = nfa.getInitialState();
@@ -294,8 +232,7 @@ public abstract class NFATest {
     public final void testSourceClosure001() {
         // TEST:        Get closure from the initial state
         // INPUTS:      "ABa,BCb,CDc,AC,AD,DE"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", builder);
+        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", _builder);
         assertNotNull(nfa); // avoid error
         
         InitialState initialState = nfa.getInitialState();
@@ -310,8 +247,7 @@ public abstract class NFATest {
     public final void testSourceClosure002() {
         // TEST:        Get closure from the initial state
         // INPUTS:      "AB,BC,CD"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("AB,BC,CD", builder);
+        NFA nfa = TestHelper.buildNFA("AB,BC,CD", _builder);
         assertNotNull(nfa); // avoid error
         
         InitialState initialState = nfa.getInitialState();
@@ -326,8 +262,7 @@ public abstract class NFATest {
     public final void testSourceClosure003() {
         // TEST:        Loop epsilon transitions
         // INPUTS:      "AB,BA"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("AB,BA", builder);
+        NFA nfa = TestHelper.buildNFA("AB,BA", _builder);
         assertNotNull(nfa); // avoid error
         
         // actual closure
@@ -336,6 +271,7 @@ public abstract class NFATest {
         // closure for "A"
         InitialState initialState = nfa.getInitialState();
         assertNotNull(initialState);
+        
         got = nfa.closure(initialState);
         assertNotNull(got);
         assertEquals(2, got.size());
@@ -349,6 +285,7 @@ public abstract class NFATest {
             }
         }
         assertNotNull(targetState);
+        
         got = nfa.closure(targetState);
         assertNotNull(got);
         assertEquals(2, got.size());
@@ -358,8 +295,7 @@ public abstract class NFATest {
     public final void testTargetClosure() {
         // TEST:        Get target closure from the initial state
         // INPUTS:      "ABa,BCb,CDc,AC,AD,DE"
-        NFABuilder builder = getBuilder();
-        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", builder);
+        NFA nfa = TestHelper.buildNFA("ABa,BCb,CDc,AC,AD,DE", _builder);
         assertNotNull(nfa); // avoid error
         
         InitialState initialState = nfa.getInitialState();
