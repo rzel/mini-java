@@ -23,7 +23,7 @@ public abstract class ParserImpl implements Parser {
         
         // add an "END" symbol to the symbol list;
         // so the symbol list will never be empty
-        symbols.add(new Terminal(END, null));
+        symbols.add(new Terminal(END));
 
         while (!symbols.isEmpty()) { // should always be true
             Symbol symbol = symbols.remove(0);
