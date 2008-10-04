@@ -52,22 +52,22 @@ public final class Helper {
 //            assert(rep_.charAt(0) == ')');
 //            rep_ = rep_.substring(1); // remove the trailing left parenthesis
             
-            return new Symbol(symbolType, null, symbols);
+            return new NonTerminal(symbolType, symbols);
         } else {
             // this is a terminal symbol
             if (idxOfComma < 0 && idxOfRP < 0) {
                 // if either comma or RP doesn't exist
-                return new Symbol(rep_, null);
+                return new Terminal(rep_);
             } else if (idxOfComma > 0 && idxOfRP > 0) {
                 // if both exist, return the one with the smaller index
                 return (idxOfComma < idxOfRP)
-                    ? new Symbol(rep_.substring(0, idxOfComma), null)
-                    : new Symbol(rep_.substring(0, idxOfRP), null);
+                    ? new Terminal(rep_.substring(0, idxOfComma))
+                    : new Terminal(rep_.substring(0, idxOfRP));
             } else {
                 // else return the one exists
                 return (idxOfComma > idxOfRP)
-                ? new Symbol(rep_.substring(0, idxOfComma), null)
-                : new Symbol(rep_.substring(0, idxOfRP), null);
+                ? new Terminal(rep_.substring(0, idxOfComma))
+                : new Terminal(rep_.substring(0, idxOfRP));
             }
         }
     }

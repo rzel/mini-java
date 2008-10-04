@@ -3,7 +3,7 @@ package mini.java.lex;
 import java.io.Reader;
 import java.util.List;
 
-import mini.java.syntax.Symbol;
+import mini.java.syntax.Terminal;
 
 public interface Tokenizer {
     /**
@@ -11,5 +11,5 @@ public interface Tokenizer {
      * NOTE: Tokens are represented by terminal symbols. The actual string
      * will be stored as "data" inside the symbol objects.
      */
-    public List<Symbol> tokenize(Reader reader_);
+    public List<Terminal> tokenize(Reader reader_);
 }

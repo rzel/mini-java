@@ -8,5 +8,5 @@ public interface Parser {
      * NOTE: Both non-terminals and terminals are represented by Symbol.
      * And tokens are also treated as Symbol since they are actually terminals. 
      */
-    public Symbol parse(List<Symbol> symbols_);
+    public Symbol parse(List<Terminal> terminals_);
 }

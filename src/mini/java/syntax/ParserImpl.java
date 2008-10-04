@@ -9,32 +9,33 @@ import mini.java.fa.State;
 
 public abstract class ParserImpl implements Parser {
     private static final String END = "END";
-    //private List<Symbol> _symbolList;
+
     private List<Symbol> _symbolStack  = new LinkedList<Symbol>();
     private List<State>  _stateStack   = new LinkedList<State>();
     private ParserConfig _parserConfig = getParserConfig();
 
     @Override
-    public Symbol parse(List<Symbol> symbols_) {
+    public NonTerminal parse(List<Terminal> terminals_) {
         DFASimulator dfaSimulator = new DFASimulatorImpl(_parserConfig.getDFA());
         
         // create a new list, so the parameter won't be changed
-        List<Symbol> symbols = new LinkedList<Symbol>(symbols_);
+        List<Symbol> symbols = new LinkedList<Symbol>(terminals_);
         
-        // add an "END" symbol to the symbol list; so the symbol list
-        // will never be empty
-        symbols.add(new Symbol(END, null));
+        // add an "END" symbol to the symbol list;
+        // so the symbol list will never be empty
+        symbols.add(new Terminal(END, null));
 
         while (!symbols.isEmpty()) { // should always be true
             Symbol symbol = symbols.remove(0);
-            String symbolType = symbol.getSymbolType();
+            String type = symbol.getType();
             
             // if current symbol is of type START, then we have done
-            if (symbolType.equals(ParserConfig.START)) {
-                return symbol;
+            if (type.equals(ParserConfig.START)) {
+                assert(symbol instanceof NonTerminal);
+                return((NonTerminal) symbol);
             }
             
-            dfaSimulator.step(symbolType);
+            dfaSimulator.step(type);
             // NOTE: if the dfaSimulator has stopped, then the
             // dfaState returned is the previous state
             State dfaState = dfaSimulator.getDFAState();
@@ -68,20 +69,21 @@ public abstract class ParserImpl implements Parser {
     
     // Helper function used to reduce the production rules
     // NOTE: this will also clear the _symbolStack and the _stateStack
-    private Symbol reduce(Rule rule_) {
+    private NonTerminal reduce(Rule rule_) {
         // the expected left symbols
-        List<String> symbolTypes = rule_.getLeftSymbols();
+        List<String> types = rule_.getLeftSymbols();
 
         // the start index of the production rule in the symbol stack
-        int idx = _symbolStack.size() - symbolTypes.size();
+        int idx = _symbolStack.size() - types.size();
 
         List<Symbol> children = new LinkedList<Symbol>();
-        for (int i = 0; i < symbolTypes.size(); ++i) {
+        for (int i = 0; i < types.size(); ++i) {
             Symbol symbol = _symbolStack.get(idx);
 
             // make sure this is the expected production rule
-            String got = symbol.getSymbolType();
-            String expected = symbolTypes.get(i);
+            String got = symbol.getType();
+            String expected = types.get(i);
+            assert (expected != null);
             assert (expected.equals(got));
 
             _symbolStack.remove(idx);
@@ -92,7 +94,7 @@ public abstract class ParserImpl implements Parser {
             children.add(symbol);
         }
 
-        return new Symbol(rule_.getRightSymbol(), null, children);
+        return new NonTerminal(rule_.getRightSymbol(), children);
     }
     
     /**
