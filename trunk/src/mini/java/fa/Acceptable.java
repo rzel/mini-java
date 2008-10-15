@@ -1,7 +1,7 @@
 package mini.java.fa;
 
 /**
- * Tag interface for acceptable states and acceptable initial states.
+ * Tag interface.
  *
  * @author Alex
  */

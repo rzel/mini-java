@@ -18,13 +18,14 @@ import org.junit.runners.Parameterized.Parameters;
  * @author Alex
  */
 @RunWith(Parameterized.class)
-public class DFASimulatorTestDFAState {
+public class DFASimulatorDFAStateTest {
     private static State S1 = new InitialState();
     private static State S2 = new State();
     private static State S3 = new State();
     
     private static Object INPUT1 = new Object();
     private static Object INPUT2 = new Object();
+    private static Object INPUT3 = new Object();
     
     // the simulator being tested
     private DFASimulator _simulator;
@@ -35,7 +36,7 @@ public class DFASimulatorTestDFAState {
         return Arrays.asList(new Object[][] {{ new DFASimulatorImpl(dfa) }});
     }
     
-    public DFASimulatorTestDFAState(DFASimulator simulator_) {
+    public DFASimulatorDFAStateTest(DFASimulator simulator_) {
         _simulator = simulator_;
     }
 

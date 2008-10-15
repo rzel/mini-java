@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 
-public class NFAConvertorTestAcceptableStates {
+public class NFAConvertorAcceptableStateTest {
     
     @Test
     public final void testBuildDFAAcceptableInitialState() {
