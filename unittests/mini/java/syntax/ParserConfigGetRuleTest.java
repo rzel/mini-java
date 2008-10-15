@@ -32,6 +32,7 @@ public class ParserConfigGetRuleTest {
     private String[]     _symbols;
     
     // Constructor
+    // TODO catch IOException and call fail()
     public ParserConfigGetRuleTest(String rules_, String symbols_,
             String expected_) throws IOException {
         assert (rules_ != null);
