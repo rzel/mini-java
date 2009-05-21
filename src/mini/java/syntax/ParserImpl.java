@@ -3,9 +3,9 @@ package mini.java.syntax;
 import java.util.LinkedList;
 import java.util.List;
 
-import mini.java.fa.DFASimulator;
-import mini.java.fa.DFASimulatorImpl;
-import mini.java.fa.State;
+import mini.java.fa.v3.DFASimulator;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.impl.DFASimulatorImpl;
 
 public abstract class ParserImpl implements Parser {
     private static final String END = "END";

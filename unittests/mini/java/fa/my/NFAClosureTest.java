@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import mini.java.fa.AcceptableNFAState;
+import mini.java.fa.NFAClosure;
+import mini.java.fa.NFAState;
+
 import org.junit.Before;
 import org.junit.Test;
 

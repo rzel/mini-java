@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-import mini.java.fa.State;
+import mini.java.fa.v3.State;
 import mini.java.lex.legacy.TokenRevamped;
 import mini.java.lex.legacy.TokenType;
 

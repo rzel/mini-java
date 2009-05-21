@@ -1,6 +1,6 @@
 package mini.java.syntax.legacy;
 
-import mini.java.fa.State;
+import mini.java.fa.v3.State;
 
 public class Action {
     public static final int ACTION_SHIFT = 0;

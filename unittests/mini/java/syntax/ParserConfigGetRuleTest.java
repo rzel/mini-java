@@ -8,8 +8,8 @@ import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collection;
 
-import mini.java.fa.DFASimulator;
-import mini.java.fa.DFASimulatorImpl;
+import mini.java.fa.v3.DFASimulator;
+import mini.java.fa.v3.impl.DFASimulatorImpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

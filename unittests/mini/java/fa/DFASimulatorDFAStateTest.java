@@ -7,6 +7,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFASimulator;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.impl.DFASimulatorImpl;
+import mini.java.fa.v3.impl.ImmutableDFA;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

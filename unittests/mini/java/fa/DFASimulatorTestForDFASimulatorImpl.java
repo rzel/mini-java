@@ -1,5 +1,9 @@
 package mini.java.fa;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFASimulator;
+import mini.java.fa.v3.impl.DFASimulatorImpl;
+
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 

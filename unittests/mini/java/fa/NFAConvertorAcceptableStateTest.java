@@ -4,6 +4,16 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import mini.java.fa.v3.Acceptable;
+import mini.java.fa.v3.AcceptableInitialState;
+import mini.java.fa.v3.AcceptableState;
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.NFA;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.helper.NFAConvertor;
+import mini.java.fa.v3.impl.ImmutableNFA;
+
 import org.junit.Test;
 
 

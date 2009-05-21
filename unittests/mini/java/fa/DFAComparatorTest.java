@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.helper.DFAComparator;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

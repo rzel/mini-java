@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import mini.java.fa.State;
+import mini.java.fa.v3.State;
 
 
 /**

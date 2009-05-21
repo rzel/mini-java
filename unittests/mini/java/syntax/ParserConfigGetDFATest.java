@@ -10,11 +10,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import mini.java.fa.DFA;
-import mini.java.fa.DFAComparator;
-import mini.java.fa.ImmutableDFA;
-import mini.java.fa.InitialState;
-import mini.java.fa.State;
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.helper.DFAComparator;
+import mini.java.fa.v3.impl.ImmutableDFA;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
