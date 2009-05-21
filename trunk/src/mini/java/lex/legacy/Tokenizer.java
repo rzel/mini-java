@@ -1,8 +1,11 @@
 package mini.java.lex.legacy;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
-import mini.java.fa.legacy.*;
 import mini.java.fa.v2.DFA;
 import mini.java.fa.v2.DFAState;
 
