@@ -1,7 +1,7 @@
 package mini.java.lex.legacy;
 import java.util.Iterator;
 
-import mini.java.fa.legacy.v2.DFA;
+import mini.java.fa.v2.DFA;
 import mini.java.regex.legacy.RegexCompiler;
 import mini.java.regex.legacy.RegularExpression;
 

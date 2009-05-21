@@ -3,6 +3,8 @@ package mini.java.fa.my;
 import java.util.HashMap;
 import java.util.Map;
 
+import mini.java.fa.NFAState;
+
 public final class TestHelper {
     public static final char INITIAL_STATE = 'A';
     public Map<Character, NFAState> _states = new HashMap<Character, NFAState>();

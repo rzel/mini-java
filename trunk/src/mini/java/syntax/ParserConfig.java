@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mini.java.fa.DFA;
-import mini.java.fa.DFASimulator;
-import mini.java.fa.DFASimulatorImpl;
-import mini.java.fa.ImmutableNFA;
-import mini.java.fa.InitialState;
-import mini.java.fa.NFABuilder;
-import mini.java.fa.NFAConvertor;
-import mini.java.fa.State;
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFASimulator;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.NFABuilder;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.helper.NFAConvertor;
+import mini.java.fa.v3.impl.DFASimulatorImpl;
+import mini.java.fa.v3.impl.ImmutableNFA;
 
 /**
  * ParserConfig contains all the information a Parser needs to do the parsing.

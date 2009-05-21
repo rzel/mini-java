@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.NFA;
+import mini.java.fa.v3.State;
+
 import org.junit.Test;
 
 public class TestHelperTest {

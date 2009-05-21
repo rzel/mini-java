@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
-import mini.java.fa.legacy.v1.SimpleFASimulator;
+import mini.java.fa.v1.SimpleFASimulator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

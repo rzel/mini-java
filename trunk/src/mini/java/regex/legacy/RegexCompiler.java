@@ -35,8 +35,8 @@ import java.util.HashSet;
 import java.util.Stack;
 import java.util.Arrays;
 
-import mini.java.fa.State;
-import mini.java.fa.legacy.v1.SimpleFA;
+import mini.java.fa.v1.SimpleFA;
+import mini.java.fa.v3.State;
 
 
 public class RegexCompiler {

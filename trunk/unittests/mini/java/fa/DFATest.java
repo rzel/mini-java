@@ -4,6 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFABuilder;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.State;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -203,5 +211,21 @@ public abstract class DFATest {
         // make sure every DFA has an initial state
         assertNotNull(initialState);
         assertEquals(S0, initialState);
+    }
+    
+    @Test
+    public void testGetInputs() {
+        // TEST: getInputs() should return the correct inputs
+        _builder.addTransition(S0,S1,O1);
+        _builder.addTransition(S0, S2, O2);
+        
+        DFA dfa = _builder.buildDFA();
+        assertNotNull(dfa);
+        
+        InitialState initState = dfa.getInitialState();
+        assertNotNull(initState);
+        assertEquals(
+                new HashSet<Object>(Arrays.asList(O1,O2)),
+                dfa.getInputs(initState));
     }
 }

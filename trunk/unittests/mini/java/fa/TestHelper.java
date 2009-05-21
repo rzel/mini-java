@@ -3,6 +3,15 @@ package mini.java.fa;
 import java.util.HashMap;
 import java.util.Map;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFABuilder;
+import mini.java.fa.v3.InitialState;
+import mini.java.fa.v3.NFA;
+import mini.java.fa.v3.NFABuilder;
+import mini.java.fa.v3.State;
+import mini.java.fa.v3.impl.ImmutableDFA;
+import mini.java.fa.v3.impl.ImmutableNFA;
+
 public class TestHelper {    
     /**
      * Helper function used to build NFA. It takes a string

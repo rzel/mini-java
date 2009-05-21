@@ -1,6 +1,6 @@
 package mini.java.test;
-import mini.java.fa.State;
-import mini.java.fa.legacy.v2.DFA;
+import mini.java.fa.v2.DFA;
+import mini.java.fa.v3.State;
 import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.TextLexConfig;
 import mini.java.lex.legacy.TokenRevamped;
