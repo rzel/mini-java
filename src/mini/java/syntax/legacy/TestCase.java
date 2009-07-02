@@ -101,7 +101,7 @@ public class TestCase {
 		System.out.println("==============================================================");
 		for(Iterator<Item> it= result.iterator();it.hasNext();){
 			Item tmp = it.next();
-			tmp.dump();
+//			tmp.dump();
 		}
 		System.out.println("==============================================================");
 	}
@@ -119,7 +119,7 @@ public class TestCase {
 		System.out.println("==============================================================");
 		for(Iterator<Item> it= result.iterator();it.hasNext();){
 			Item tmp = it.next();
-			tmp.dump();
+//			tmp.dump();
 		}
 		System.out.println("==============================================================");
 	}

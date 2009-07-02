@@ -37,7 +37,7 @@ public class Rule {
     	return false;
     }
     public String toString() {
-        return " Rule: " +lhs.toString() + " := " + rhs.toString();
+        return "[Rule: " +lhs + " ::= " + rhs + "]";
     }
     
     public boolean equals(Object obj) {
