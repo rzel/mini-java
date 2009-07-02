@@ -35,18 +35,47 @@ public class Item {
         else return null;
     }
 
-    public void dump() {
-        System.out.println("Rule: " + rule);
-        System.out.println("DotPos: " + dotPos);
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + dotPos;
+        result = prime * result + ((rule == null) ? 0 : rule.hashCode());
+        return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if(!(obj instanceof Item)) return false;
-        else {
-            Item item = (Item) obj;
-            return item.rule.equals(this.rule) &&
-                item.dotPos == this.dotPos;
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final Item other = (Item) obj;
+        if (dotPos != other.dotPos)
+            return false;
+        if (rule == null) {
+            if (other.rule != null)
+                return false;
+        } else if (!rule.equals(other.rule))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(rule.getLhs().toString());
+        sb.append(" :: =");
+        for (int i=0; i<rule.getRhsLen(); ++i) {
+            if (dotPos == i) {
+                sb.append(" dot");
+            }
+            sb.append(' ');
+            sb.append(rule.getRhs().get(i).toString());
         }
+        return sb.toString();
     }
 }
 

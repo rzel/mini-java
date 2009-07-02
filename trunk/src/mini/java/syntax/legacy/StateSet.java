@@ -39,7 +39,7 @@ public class StateSet {
 			linenum++;
 			for(Iterator<Item> it3 = it2.next().iterator();it3.hasNext();){
 				Item tmp = it3.next();
-				tmp.dump();
+//				tmp.dump();
 			}
 			System.out.println();
 			System.out.println("-------------------------------------------------------------------------------------------");

@@ -22,5 +22,20 @@ public abstract class SymbolType extends Type {
     public String toString() {
         return getRep();
     }
+    
+    /**
+     * Converts TokenSpec to SymbolType.
+     */
+    public static SymbolType createSymbol(TokenSpec spec_) {
+        if (spec_.getType().equals(TokenSpec.NON_TERMINAL_TYPE)) {
+            return new NonTerminal(spec_.getText());
+        }
+        else if (spec_.getType().equals(TokenSpec.TERMINAL_TYPE)) {
+            return new Terminal(spec_.getText());
+        }
+        else {
+            throw new IllegalArgumentException("Unknown token/symbol type: " + spec_.getType());
+        }
+    }
 
 }
