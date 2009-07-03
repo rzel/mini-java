@@ -3,14 +3,13 @@ package mini.java.fa;
 import java.util.HashMap;
 import java.util.Map;
 
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
 import mini.java.fa.v3.NFABuilder;
 import mini.java.fa.v3.State;
-import mini.java.fa.v3.impl.ImmutableDFA;
-import mini.java.fa.v3.impl.ImmutableNFA;
 
 public class TestHelper {    
     /**
@@ -65,7 +64,7 @@ public class TestHelper {
     
     protected static final NFA buildNFA(String rep_) {
         // use the default NFABuilder
-        return buildNFA(rep_, new ImmutableNFA.Builder());
+        return buildNFA(rep_, ComponentFactory.createNFABuilder());
     }
 
     /**
@@ -81,7 +80,7 @@ public class TestHelper {
         assert(rep_ != null);
         
         // use the only implementation of DFA.Builder
-        DFABuilder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = ComponentFactory.createDFABuilder();
         
         // "states" is a mapping from character representation sof the
         // state to the actual states

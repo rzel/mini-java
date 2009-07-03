@@ -12,12 +12,13 @@ public class HelperTest {
     public final void testDumpString() {
         TestHelper helper = new TestHelper();
         helper.addNFAStates("ABCDEF");
-        helper.addTransitions("AB,ACa,BDa,CEb,DFc");
+        helper.addTransitions("AB,AA,ACa,BDa,CEb,DFc");
         
         NFAState state = helper.getNFAState('A');
         String got = Helper.dumpString(state);
         String expected =
-            "0 => 1\n"
+            "0 => 0\n"
+          + "0 => 1\n"
           + "0 =>(a) 2\n"
           + "1 =>(a) 3\n"
           + "2 =>(b) 4\n"
@@ -25,4 +26,21 @@ public class HelperTest {
         assertEquals(expected, got);        
     }
 
+    @Test
+    public final void testDumpStringSortedEpsilons() {
+        TestHelper helper = new TestHelper();
+        helper.addNFAStates("ABCDEF");
+        helper.addTransitions("AA,AB,AC,AD,AE,AF");
+        
+        NFAState state = helper.getNFAState('A');
+        String got = Helper.dumpString(state);
+        String expected =
+            "0 => 0\n"
+          + "0 => 1\n"
+          + "0 => 2\n"
+          + "0 => 3\n"
+          + "0 => 4\n"
+          + "0 => 5\n";
+        assertEquals(expected, got);  
+    }
 }

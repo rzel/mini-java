@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.Acceptable;
 import mini.java.fa.v3.AcceptableInitialState;
 import mini.java.fa.v3.AcceptableState;
@@ -16,7 +17,6 @@ import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
 import mini.java.fa.v3.State;
-import mini.java.fa.v3.impl.ImmutableDFA;
 
 public class NFAConvertor {
     public static DFA convert(NFA nfa_) {
@@ -26,7 +26,7 @@ public class NFAConvertor {
         Map<Set<State>, State> newStates = new HashMap<Set<State>, State>();
         
         // the default DFABuilder
-        DFABuilder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = ComponentFactory.createDFABuilder();
         
         // 1. get the closure for the initial state
         InitialState initialState = nfa_.getInitialState();
