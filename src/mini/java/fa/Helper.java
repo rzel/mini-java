@@ -76,17 +76,27 @@ public final class Helper {
             public Queue<NFAState> findNext(NFAState node_) {
                 Queue<NFAState> nodes = new LinkedList<NFAState>();
                 // first the epsilons
+//                Set<NFAState> epsilons = new TreeSet<NFAState>(
+//                        new Comparator<NFAState>() {
+//                            public int compare(NFAState o1, NFAState o2) {
+//                                return o1.toString().compareTo(o2.toString());
+//                            }
+//                        });
+//                epsilons.addAll(node_.getStates());
+//                nodes.addAll(epsilons);
                 nodes.addAll(node_.getStates());
+                
                 // then we visit the transitions according to the order of
                 // their string representations
-                Set<Object> inputs = new TreeSet<Object>(
-                        new Comparator<Object>() {
-                            public int compare(Object o1, Object o2) {
-                                return o1.toString().compareTo(o2.toString());
-                            }
-                        });
-                inputs.addAll(node_.getInputs());
-                for (Object input : inputs) {
+//                Set<Object> inputs = new TreeSet<Object>(
+//                        new Comparator<Object>() {
+//                            public int compare(Object o1, Object o2) {
+//                                return o1.toString().compareTo(o2.toString());
+//                            }
+//                        });
+//                inputs.addAll(node_.getInputs());
+//                for (Object input : inputs) {
+                for (Object input : node_.getInputs()) {
                     nodes.add(node_.getState(input));
                 }
                 

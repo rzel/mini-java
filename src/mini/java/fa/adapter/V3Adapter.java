@@ -1,11 +1,13 @@
 package mini.java.fa.adapter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import mini.java.fa.AcceptableNFAState;
+import mini.java.fa.NFAClosure;
 import mini.java.fa.NFAState;
 import mini.java.fa.v3.Acceptable;
 import mini.java.fa.v3.DFA;
@@ -108,6 +110,7 @@ public class V3Adapter implements DFABuilder, DFA, NFABuilder, NFA {
           ? this : null;
     }
     
+    // Converts NFAStates to States
     private Set<State> _getStates(Set<NFAState> states_) {
         Set<State> ret = new HashSet<State>();
         for (NFAState state : states_) {
@@ -120,9 +123,12 @@ public class V3Adapter implements DFABuilder, DFA, NFABuilder, NFA {
     @Override
     public Set<State> closure(State from_, Object input) {
         NFAState from = _getNFAStateOrDie(from_);
-        Set<NFAState> states = from.getClosure() // first the source closure
-            .getClosure(input).getStates(); // then the target closure
-        return _getStates(states);
+        NFAClosure closure = from.getClosure().getClosure(input);
+        if (closure != null) {
+            return _getStates(closure.getStates());
+        } else {
+            return Collections.emptySet();
+        }
     }
 
     @Override

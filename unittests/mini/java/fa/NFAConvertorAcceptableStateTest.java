@@ -3,16 +3,16 @@ package mini.java.fa;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.Acceptable;
 import mini.java.fa.v3.AcceptableInitialState;
 import mini.java.fa.v3.AcceptableState;
 import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
+import mini.java.fa.v3.NFABuilder;
 import mini.java.fa.v3.State;
 import mini.java.fa.v3.helper.NFAConvertor;
-import mini.java.fa.v3.impl.ImmutableNFA;
 
 import org.junit.Test;
 
@@ -25,7 +25,8 @@ public class NFAConvertorAcceptableStateTest {
         State B = new AcceptableState();
         Object input = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = ComponentFactory.createNFABuilder();
         builder.addTransition(A, B);
         builder.addTransition(B, A, input);
         
@@ -52,7 +53,8 @@ public class NFAConvertorAcceptableStateTest {
         State B = new State();
         Object input = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = ComponentFactory.createNFABuilder();
         builder.addTransition(A, B, input);
         
         NFA nfa = builder.buildNFA();
@@ -75,7 +77,8 @@ public class NFAConvertorAcceptableStateTest {
         State C = new AcceptableState();
         Object input = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = ComponentFactory.createNFABuilder();
         builder.addTransition(A, B, input);
         builder.addTransition(B, C);
         
@@ -99,7 +102,8 @@ public class NFAConvertorAcceptableStateTest {
         State B = new State();
         Object input = new Object();
         
-        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+//        ImmutableNFA.Builder builder = new ImmutableNFA.Builder();
+        NFABuilder builder = ComponentFactory.createNFABuilder();
         builder.addTransition(A, B, input);
         builder.addTransition(B, A);
         

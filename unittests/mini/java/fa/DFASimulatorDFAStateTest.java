@@ -7,12 +7,13 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.DFASimulator;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.State;
 import mini.java.fa.v3.impl.DFASimulatorImpl;
-import mini.java.fa.v3.impl.ImmutableDFA;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +51,8 @@ public class DFASimulatorDFAStateTest {
     // factory method used by getParameters()
     // this will build a simple test DFA
     public static DFA createImmutableDFA() {
-        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+//        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = ComponentFactory.createDFABuilder();
         builder.addTransition(S1, S2, INPUT1);
         builder.addTransition(S2, S3, INPUT2);
         

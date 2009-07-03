@@ -71,6 +71,7 @@ public class ParserConfigGetRuleTest {
     @Parameters
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][] {
+           // rules, symbols(inputs),  expected rule
            {"START ::= A",                      "A",            "START ::= A"},
            {"START ::= A B",                    "A,,B",         "START ::= A B"},
            {"START ::= A,,A ::= B",             "A",            "START ::= A"},

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.DFASimulator;
 import mini.java.fa.v3.InitialState;
@@ -19,7 +20,6 @@ import mini.java.fa.v3.NFABuilder;
 import mini.java.fa.v3.State;
 import mini.java.fa.v3.helper.NFAConvertor;
 import mini.java.fa.v3.impl.DFASimulatorImpl;
-import mini.java.fa.v3.impl.ImmutableNFA;
 
 /**
  * ParserConfig contains all the information a Parser needs to do the parsing.
@@ -82,7 +82,7 @@ public class ParserConfig {
         assert(_rules != null);
         
         // the DFA will be built using an NFA
-        NFABuilder nfaBuilder = new ImmutableNFA.Builder();
+        NFABuilder nfaBuilder = ComponentFactory.createNFABuilder();
         
         // mapping from non-terminal symbols to its corresponding NFA state
         Map<String, State> nfaStates = new HashMap<String, State>();

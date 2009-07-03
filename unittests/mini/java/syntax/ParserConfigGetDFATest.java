@@ -10,11 +10,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import mini.java.ComponentFactory;
 import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.State;
 import mini.java.fa.v3.helper.DFAComparator;
-import mini.java.fa.v3.impl.ImmutableDFA;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -107,7 +108,7 @@ public class ParserConfigGetDFATest {
         assert(transitions != null);
         assert(transitions.length > 0);
         
-        ImmutableDFA.Builder builder = new ImmutableDFA.Builder();
+        DFABuilder builder = ComponentFactory.createDFABuilder();
         
         // mapping from character representation to the actual state
         Map<Character, State> states = new HashMap<Character, State>();
