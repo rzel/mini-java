@@ -10,6 +10,9 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.State;
+
 
 public final class Helper {
     /**
@@ -131,5 +134,63 @@ public final class Helper {
         }
         // TODO - should we remove the tailing %n?
         return sb.toString();
+    }
+    
+    
+    /**
+     * dumpString() for V3 interface
+     */
+    public static String dumpString(DFA dfa_) {
+        final DFA dfa = dfa_;
+        final StringBuilder sb = new StringBuilder();
+        final Map<State, Integer> ids = new HashMap<State, Integer>();
+        
+        State init = dfa_.getInitialState();
+        if (init == null) {
+            throw new IllegalArgumentException("Invalid DFA: initial state is null!");
+        }
+        ids.put(init, 0);
+        
+        findAll(init, new Finder<State>() {
+            public Queue<State> findNext(State node_) {
+                if (node_ == null) {
+                    throw new IllegalArgumentException("State cannot be null!");
+                }
+                Queue<State> ret = new LinkedList<State>();
+                
+                Set<Object> inputs = new TreeSet<Object>(new Comparator<Object>() {
+                    public int compare(Object o1, Object o2) {
+                        return ("" + o1).compareTo("" + o2); //null
+                    }
+                });
+                inputs.addAll(dfa.getInputs(node_));
+                
+                for (Object input : inputs) {
+                    State target = dfa.getState(node_, input);
+                    if (target == null) {
+                        throw new IllegalArgumentException("Unable to find the corresponding target state for ("
+                                + node_ + ", " + input + ")");
+                    }
+                    if (!ids.containsKey(target)) {
+                        ids.put(target, ids.size());
+                    }
+                    ret.add(target);
+                    // XXX - is this method guaranteed to be called the same order
+                    // as the states in the final queue?
+                    sb.append(String.format("%s =>(%s) %s%n",
+                            ids.get(node_), input, ids.get(target)));
+                }
+                return ret;
+            }
+        });
+        return sb.toString();
+    }
+    
+    /**
+     * Alternative implementation of DFAComparator.
+     */
+    public static boolean compare(DFA A_, DFA B_) {
+        return ((A_ == null) && (B_ == null)
+                || dumpString(A_).equals(dumpString(B_)));
     }
 }

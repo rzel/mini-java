@@ -1,4 +1,4 @@
-package mini.java.fa;
+package mini.java;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class TestHelper {
      * <li>The first source state will be treated as an initial state;
      * </ul>
      */
-    protected static final NFA buildNFA(String rep_, NFABuilder builder_) {
+    public static final NFA buildNFA(String rep_, NFABuilder builder_) {
         assert(rep_ != null);
         
         // "states" is a mapping from character representation of the
@@ -62,7 +62,7 @@ public class TestHelper {
         return builder_.buildNFA();
     }
     
-    protected static final NFA buildNFA(String rep_) {
+    public static final NFA buildNFA(String rep_) {
         // use the default NFABuilder
         return buildNFA(rep_, ComponentFactory.createNFABuilder());
     }
@@ -76,7 +76,7 @@ public class TestHelper {
      * <li>The first source state will be treated as the initial state;
      * </ul>
      */
-    protected static final DFA buildDFA(String rep_) {
+    public static final DFA buildDFA(String rep_) {
         assert(rep_ != null);
         
         // use the only implementation of DFA.Builder

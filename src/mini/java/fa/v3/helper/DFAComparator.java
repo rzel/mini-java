@@ -46,11 +46,12 @@ public final class DFAComparator {
     private boolean compare(State stateA_, State stateB_) {
         assert (stateA_ != null);
         assert (stateB_ != null);
-
-        // we have checked "stateA_" before; if it is checked against
-        // "stateB_" then we are done, they are the same(?)
-        if (_checkedStates.containsKey(stateA_)) {
-            return (_checkedStates.get(stateA_) == stateB_);
+        
+        // before we do the recursion, save the states
+        if (_checkedStates.put(stateA_, stateB_) != null
+                || _checkedStates.put(stateB_, stateA_) != null)
+        {
+            throw new RuntimeException("FIXME - this is broken again!");
         }
 
         Set<Object> sourceInputs = _dfaA.getInputs(stateA_);
@@ -66,8 +67,16 @@ public final class DFAComparator {
             assert (sourceState != null);
             assert (targetState != null);
 
-            // before we do the recursion, save the states
-            _checkedStates.put(stateA_, stateB_);
+            // we have checked "stateA_" before; if it is checked against
+            // "stateB_" then we are done, they are the same(?)
+            if (_checkedStates.containsKey(sourceState)) {
+                return (_checkedStates.get(sourceState) == targetState);
+            }
+            // also need to check the other way
+            if (_checkedStates.containsKey(targetState)) {
+                return (_checkedStates.get(targetState) == sourceState);
+            }
+            
             // compare the following states recursively
             if (!compare(sourceState, targetState)) {
                 return false;

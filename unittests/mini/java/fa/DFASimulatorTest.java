@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.TestHelper;
 import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.DFASimulator;
 

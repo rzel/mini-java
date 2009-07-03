@@ -15,7 +15,7 @@ public class NFAClosure {
     public NFAClosure(NFAState state_) {
         assert(state_ != null);
         
-        _states = Helper.findClosure(state_);
+        _states = NFAState.findClosure(state_);
     }
     
     /**
@@ -27,7 +27,7 @@ public class NFAClosure {
         
         _states = new HashSet<NFAState>();
         for (NFAState state : states_) {
-            _states.addAll(Helper.findClosure(state));
+            _states.addAll(NFAState.findClosure(state));
         }
     }
     

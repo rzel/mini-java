@@ -1,4 +1,4 @@
-package mini.java.fa;
+package mini.java;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

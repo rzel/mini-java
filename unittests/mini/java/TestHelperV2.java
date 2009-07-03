@@ -1,11 +1,11 @@
-package mini.java.fa.my;
+package mini.java;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import mini.java.fa.NFAState;
 
-public final class TestHelper {
+public final class TestHelperV2 {
     public static final char INITIAL_STATE = 'A';
     public Map<Character, NFAState> _states = new HashMap<Character, NFAState>();
     

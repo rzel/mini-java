@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import mini.java.ComponentFactory;
+import mini.java.TestHelper;
 import mini.java.fa.v3.Acceptable;
 import mini.java.fa.v3.AcceptableInitialState;
 import mini.java.fa.v3.AcceptableState;

@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import mini.java.TestHelperV2;
 import mini.java.fa.NFAClosure;
 import mini.java.fa.NFAState;
 
@@ -18,12 +19,12 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class GetSourceClosureTest {
-    private TestHelper _helper;
+    private TestHelperV2 _helper;
     private Set<NFAState> _expected;
     
     // Constructor
     public GetSourceClosureTest(String states_, String transitions_, String closure_) {
-        _helper = new TestHelper();
+        _helper = new TestHelperV2();
         _helper.addNFAStates(states_);
         _helper.addTransitions(transitions_);
         
@@ -53,7 +54,7 @@ public class GetSourceClosureTest {
     
     @Test
     public void testFindClosure() {
-        NFAState initialState = _helper.getNFAState(TestHelper.INITIAL_STATE);
+        NFAState initialState = _helper.getNFAState(TestHelperV2.INITIAL_STATE);
         NFAClosure closure = new NFAClosure(initialState);
         
         assertNotNull(closure);
