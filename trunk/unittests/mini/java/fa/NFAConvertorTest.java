@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.TestHelper;
 import mini.java.fa.v3.DFA;
-import mini.java.fa.v3.helper.DFAComparator;
 import mini.java.fa.v3.helper.NFAConvertor;
 
 import org.junit.Test;
@@ -49,6 +49,6 @@ public class NFAConvertorTest extends TestHelper {
         
         assertNotNull(got);
         assertNotNull(expected);
-        assertTrue(new DFAComparator(got, expected).compare());
+        assertTrue(Helper.compare(got, expected));
     }
 }

@@ -2,6 +2,7 @@ package mini.java.syntax;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -15,7 +16,6 @@ import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.State;
-import mini.java.fa.v3.helper.DFAComparator;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,11 @@ public class ParserConfigGetDFATest {
     public void testGetDFA() {
         DFA dfa = _parserConfig.getDFA();
         assertNotNull(dfa);
-        assertTrue(new DFAComparator(dfa, _dfa).compare());
+        
+        String got = mini.java.fa.Helper.dumpString(dfa);
+        String expected = mini.java.fa.Helper.dumpString(_dfa);
+//        assertTrue(mini.java.fa.Helper.compare(dfa, _dfa));
+        assertEquals(expected, got);
     }
     
     @Parameters
@@ -54,7 +58,7 @@ public class ParserConfigGetDFATest {
            {"START ::= A,,A ::= B",     "abA,,acB"},
            {"START ::= A B,,B ::= C",   "abA,,bcB,,bdC"},
            {"START ::= A B,,A ::= C",   "abA,,bcB,,adC"},
-           {"START ::= A,,A ::= B,,B ::= C",                    "abA,,abB,,abC"},
+           {"START ::= A,,A ::= B,,B ::= C",                    "abA,,acB,,adC"},
            {"START ::= S,,S ::= A B,,S ::= C B,,B ::= D",       "abA,,acC,,agS,,bdB,,bfD,,ceB,,cfD"},
            {
                // syntax specification for REGEX

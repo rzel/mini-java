@@ -1,6 +1,7 @@
 package mini.java.fa.my;
 
 import static org.junit.Assert.assertEquals;
+import mini.java.TestHelperV2;
 import mini.java.fa.Helper;
 import mini.java.fa.NFAState;
 
@@ -10,7 +11,7 @@ public class HelperTest {
 
     @Test
     public final void testDumpString() {
-        TestHelper helper = new TestHelper();
+        TestHelperV2 helper = new TestHelperV2();
         helper.addNFAStates("ABCDEF");
         helper.addTransitions("AB,AA,ACa,BDa,CEb,DFc");
         
@@ -28,7 +29,7 @@ public class HelperTest {
 
     @Test
     public final void testDumpStringSortedEpsilons() {
-        TestHelper helper = new TestHelper();
+        TestHelperV2 helper = new TestHelperV2();
         helper.addNFAStates("ABCDEF");
         helper.addTransitions("AA,AB,AC,AD,AE,AF");
         

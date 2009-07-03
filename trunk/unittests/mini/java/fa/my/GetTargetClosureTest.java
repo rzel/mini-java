@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import mini.java.TestHelperV2;
 import mini.java.fa.NFAClosure;
 import mini.java.fa.NFAState;
 
@@ -25,10 +26,10 @@ public class GetTargetClosureTest {
     // Constructor
     public GetTargetClosureTest(String states_, String transitions_,
             Object input_, String targets_) {
-        TestHelper helper = new TestHelper();
+        TestHelperV2 helper = new TestHelperV2();
         helper.addNFAStates(states_);
         helper.addTransitions(transitions_);
-        _initialState = helper.getNFAState(TestHelper.INITIAL_STATE);
+        _initialState = helper.getNFAState(TestHelperV2.INITIAL_STATE);
         _input = input_;
 
         _targetStates = new HashSet<NFAState>();

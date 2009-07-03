@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import mini.java.TestHelper;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
 import mini.java.fa.v3.NFABuilder;

@@ -176,4 +176,27 @@ public class NFAState {
         
         return sb.toString();
     }
+    
+    /**
+     * Helper function used to find the closure for the given NFAState.
+     */
+    public static Set<NFAState> findClosure(NFAState state_) {
+        final Set<NFAState> ret = new TreeSet<NFAState>(new Comparator<NFAState>() {
+            public int compare(NFAState s1, NFAState s2) {
+                return s1._id.compareTo(s2._id);
+            }
+        });
+        ret.add(state_); // closure includes itself
+        
+        visit(state_, new Callback() {
+            public boolean on(NFAState src_, NFAState target_) {
+                return ret.add(target_);
+            }
+            // we don't care about the normal transitions
+            public boolean on(NFAState src_, NFAState target_, Object input_) {
+                return false;
+            }
+        });
+        return ret;
+    }
 }
