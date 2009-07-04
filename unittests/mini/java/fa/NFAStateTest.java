@@ -1,4 +1,4 @@
-package mini.java.fa.my;
+package mini.java.fa;
 
 import static org.junit.Assert.assertNotNull;
 import mini.java.fa.NFAState;

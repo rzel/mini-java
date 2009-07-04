@@ -1,4 +1,4 @@
-package mini.java.fa.my;
+package mini.java.fa;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,13 +18,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class GetTargetClosureTest {
+public class NFAClosureGetTargetClosureTest {
     private NFAState      _initialState;
     private Set<NFAState> _targetStates;
     private Object        _input;
     
     // Constructor
-    public GetTargetClosureTest(String states_, String transitions_,
+    public NFAClosureGetTargetClosureTest(String states_, String transitions_,
             Object input_, String targets_) {
         TestHelperV2 helper = new TestHelperV2();
         helper.addNFAStates(states_);

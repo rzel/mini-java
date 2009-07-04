@@ -1,4 +1,4 @@
-package mini.java.fa.my;
+package mini.java.fa;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,12 +18,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class GetSourceClosureTest {
+public class NFAClosureGetSourceClosureTest {
     private TestHelperV2 _helper;
     private Set<NFAState> _expected;
     
     // Constructor
-    public GetSourceClosureTest(String states_, String transitions_, String closure_) {
+    public NFAClosureGetSourceClosureTest(String states_, String transitions_, String closure_) {
         _helper = new TestHelperV2();
         _helper.addNFAStates(states_);
         _helper.addTransitions(transitions_);
