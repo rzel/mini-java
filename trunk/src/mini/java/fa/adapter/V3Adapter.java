@@ -138,4 +138,10 @@ public class V3Adapter implements DFABuilder, DFA, NFABuilder, NFA {
         return _getStates(states);
     }
 
+    /**
+     * Returns the underlying root NFAState
+     */
+    public NFAState getUnderlying() {
+        return _getNFAStateOrDie(_initState);
+    }
 }

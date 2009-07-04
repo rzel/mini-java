@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import mini.java.ComponentFactory;
 import mini.java.TestHelper;
+import mini.java.fa.helper.Helper;
 import mini.java.fa.v3.Acceptable;
 import mini.java.fa.v3.AcceptableInitialState;
 import mini.java.fa.v3.AcceptableState;
@@ -13,7 +14,6 @@ import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
 import mini.java.fa.v3.NFABuilder;
 import mini.java.fa.v3.State;
-import mini.java.fa.v3.helper.NFAConvertor;
 
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class NFAConvertorAcceptableStateTest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = NFAConvertor.convert(nfa);
+        DFA dfa = Helper.collapse(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -61,7 +61,7 @@ public class NFAConvertorAcceptableStateTest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = NFAConvertor.convert(nfa);
+        DFA dfa = Helper.collapse(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -86,7 +86,7 @@ public class NFAConvertorAcceptableStateTest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = NFAConvertor.convert(nfa);
+        DFA dfa = Helper.collapse(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -111,7 +111,7 @@ public class NFAConvertorAcceptableStateTest {
         NFA nfa = builder.buildNFA();
         assertNotNull(nfa);
         
-        DFA dfa = NFAConvertor.convert(nfa);
+        DFA dfa = Helper.collapse(nfa);
         assertNotNull(dfa);
         
         InitialState initialState = dfa.getInitialState();
@@ -126,7 +126,7 @@ public class NFAConvertorAcceptableStateTest {
     @Test
     public final void testBuildDFAInvalidDFA() {
         NFA nfa = TestHelper.buildNFA("AB"); // no valid transition for DFA
-        DFA dfa = NFAConvertor.convert(nfa);
+        DFA dfa = Helper.collapse(nfa);
         assertNull(dfa); // invalid DFA
     }
 }
