@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public abstract class FAComparisonTest {
+public abstract class DFAComparisonData {
     @Parameters
     public static Collection<Object[]> getParameters() {
         return Arrays.asList(new Object[][] {

@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import mini.java.fa.helper.Helper;
 import mini.java.fa.v3.Acceptable;
 
 public class NFAClosure {
@@ -15,7 +16,7 @@ public class NFAClosure {
     public NFAClosure(NFAState state_) {
         assert(state_ != null);
         
-        _states = NFAState.findClosure(state_);
+        _states = Helper.findClosure(state_);
     }
     
     /**
@@ -27,7 +28,7 @@ public class NFAClosure {
         
         _states = new HashSet<NFAState>();
         for (NFAState state : states_) {
-            _states.addAll(NFAState.findClosure(state));
+            _states.addAll(Helper.findClosure(state));
         }
     }
     

@@ -3,12 +3,13 @@ package mini.java.fa.my;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import mini.java.TestHelperV2;
-import mini.java.fa.FAComparisonTest;
+import mini.java.fa.DFAComparisonData;
 import mini.java.fa.NFAState;
+import mini.java.fa.helper.Helper;
 
 import org.junit.Test;
 
-public final class DumpStringV2Test extends FAComparisonTest {
+public final class HelperDumpTest extends DFAComparisonData {
     private final static String STATES = "ABCDEFabc";
     private NFAState _A, _B;
     private boolean _result;
@@ -20,7 +21,7 @@ public final class DumpStringV2Test extends FAComparisonTest {
         return helper.getNFAState(rep_.charAt(0));
     }
     
-    public DumpStringV2Test(String A_, String B_, boolean result_) {
+    public HelperDumpTest(String A_, String B_, boolean result_) {
         _A = buildNFAState(A_);
         _B = buildNFAState(B_);
         _result = result_;
@@ -28,8 +29,8 @@ public final class DumpStringV2Test extends FAComparisonTest {
         
     @Test
     public final void testDumpString() {
-        String A = NFAState.dump(_A);
-        String B = NFAState.dump(_B);
+        String A = Helper.dump(_A);
+        String B = Helper.dump(_B);
         
         if (_result) {
             assertEquals(A, B);

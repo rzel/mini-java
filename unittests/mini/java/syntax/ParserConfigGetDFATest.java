@@ -44,8 +44,8 @@ public class ParserConfigGetDFATest {
         DFA dfa = _parserConfig.getDFA();
         assertNotNull(dfa);
         
-        String got = mini.java.fa.Helper.dumpString(dfa);
-        String expected = mini.java.fa.Helper.dumpString(_dfa);
+        String got = mini.java.fa.helper.Helper.dumpString(dfa);
+        String expected = mini.java.fa.helper.Helper.dumpString(_dfa);
 //        assertTrue(mini.java.fa.Helper.compare(dfa, _dfa));
         assertEquals(expected, got);
     }
