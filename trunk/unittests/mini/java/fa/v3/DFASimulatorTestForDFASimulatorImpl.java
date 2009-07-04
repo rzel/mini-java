@@ -1,4 +1,4 @@
-package mini.java.fa;
+package mini.java.fa.v3;
 
 import mini.java.fa.v3.DFA;
 import mini.java.fa.v3.DFASimulator;

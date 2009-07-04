@@ -1,9 +1,8 @@
-package mini.java.fa.my;
+package mini.java.fa.helper;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import mini.java.TestHelperV2;
-import mini.java.fa.DFAComparisonData;
 import mini.java.fa.NFAState;
 import mini.java.fa.helper.Helper;
 

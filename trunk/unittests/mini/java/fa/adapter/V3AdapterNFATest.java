@@ -1,10 +1,10 @@
-package mini.java.fa.my;
+package mini.java.fa.adapter;
 
-import mini.java.fa.NFATest;
 import mini.java.fa.adapter.V3Adapter;
 import mini.java.fa.v3.NFABuilder;
+import mini.java.fa.v3.NFATest;
 
-public class NFAAdapterTest extends NFATest {
+public class V3AdapterNFATest extends NFATest {
 
     @Override
     protected NFABuilder getBuilder() {
