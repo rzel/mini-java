@@ -1,6 +1,5 @@
-package mini.java.fa;
+package mini.java.fa.v1.adapter;
 
-import mini.java.fa.v1.adapter.SimpleFAtoNFAAdapter;
 import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.DFATest;
 

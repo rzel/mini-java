@@ -1,11 +1,10 @@
-package mini.java.fa;
+package mini.java.fa.v1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import mini.java.TestHelper;
 import mini.java.fa.helper.Helper;
 import mini.java.fa.helper.NFAConversionData;
-import mini.java.fa.v1.SimpleFA;
 import mini.java.fa.v1.adapter.InputConvertor;
 import mini.java.fa.v1.adapter.SimpleFAtoNFAAdapter;
 import mini.java.fa.v3.DFA;
