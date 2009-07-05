@@ -6,6 +6,8 @@ import java.util.Set;
 
 import mini.java.fa.v1.SimpleFA;
 import mini.java.fa.v3.Acceptable;
+import mini.java.fa.v3.DFA;
+import mini.java.fa.v3.DFABuilder;
 import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.NFA;
 import mini.java.fa.v3.NFABuilder;
@@ -22,7 +24,8 @@ import mini.java.fa.v3.State;
  * @author Alex
  */
 
-public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
+public class SimpleFAtoNFAAdapter
+        implements NFA, NFABuilder, DFA, DFABuilder {
     private SimpleFA       simpleFA;
     private InputConvertor _inputConvertor;
 
@@ -30,16 +33,24 @@ public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
     private InitialState   _initialState;
 
     public SimpleFAtoNFAAdapter() {
-        this(new SimpleFA());
+        this(new SimpleFA(), new InputConvertor());
     }
     
-    public SimpleFAtoNFAAdapter(SimpleFA fa_) {
+    /**
+     * Wrapper around an existing SimpleFA object.
+     */
+    public SimpleFAtoNFAAdapter(SimpleFA fa_, InputConvertor inputConvertor_) {
         this.simpleFA = fa_;
-        this._inputConvertor = new InputConvertor();
+        this._initialState = (InitialState)fa_.getInitialState();
+        this._inputConvertor = inputConvertor_;
     }
     
     public SimpleFA getSimpleFA() {
         return this.simpleFA;
+    }
+    
+    public InputConvertor getInputConvertor() {
+        return _inputConvertor;
     }
     
     // Helper function used to check whether the given state is
@@ -70,7 +81,6 @@ public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
         for (State state : sourceStates) {
             Set<Character> charInput = simpleFA.getInputMixed(state);
             for (Character c : charInput) {
-//                Object o = characterToObject.get(c);
                 Object o = _inputConvertor.convert(c);
                 assert (o != null);
                 objectInputs.add(o);
@@ -81,20 +91,6 @@ public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
 
     @Override
     public void addTransition(State from, State to, Object input) {
-//        Character c = null;
-
-//        if (objectToCharacter.containsKey(input)) {
-//            // have seen this input before
-//            c = objectToCharacter.get(input);
-//        } else {
-//            // get a new character for the input
-//            c = new Character(charValue++);
-//
-//            // update the mapping
-//            objectToCharacter.put(input, c);
-//            characterToObject.put(c, input);
-//        }
-
         Character c = _inputConvertor.convert(input);
         // create a new input for simpleFA
         Set<Character> newInput = new HashSet<Character>(
@@ -125,55 +121,12 @@ public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
         return _initialState;
     }
 
-//    @Override
-//    public DFA buildDFA() {
-//        SimpleFA fa = simpleFA.toDFA();
-//        DFABuilder builder = new ImmutableDFA.Builder();
-//        
-//        // convert the SimpleFA to ImmutableDFA
-//        Set<State> checkedStates = new HashSet<State>();
-//        List<State> uncheckedStates = new LinkedList<State>();
-//        
-//        // get the initial state from the DFA
-//        State initialState = fa.getInitialState();
-//        assert(initialState instanceof InitialState);
-//        
-//        // we will start from the InitialState
-//        uncheckedStates.add(initialState);
-//        while (!uncheckedStates.isEmpty()) {
-//            State sourceState = uncheckedStates.remove(0);
-//            checkedStates.add(sourceState);
-//            
-//            Set<Character> inputs = fa.getInputMixed(sourceState);
-//            for (Character input : inputs) {
-//                Set<State> targetStates = fa.move(sourceState, Collections.singleton(input));
-//                assert(targetStates.size() == 1);
-//                
-//                // get the single element from the set
-//                State targetState = targetStates.toArray(new State[0])[0];
-//                
-//                // get the actual input for this transition
-//                Object objectInput = characterToObject.get(input);
-//                assert(objectInput != null);
-//                
-//                // add this transition
-//                builder.addTransition(sourceState, targetState, objectInput);
-//                
-//                if (!checkedStates.contains(targetState)) {
-//                    uncheckedStates.add(targetState);
-//                }
-//            }
-//        }
-//        
-//        return builder.buildDFA();
-//    }
-
     @Override
     public Set<State> closure(State from, Object input) {
+        Character c = _inputConvertor.convert(input);
         // never return null for collection
         Set<State> targetClosures = new HashSet<State>();
 
-        Character c = _inputConvertor.convert(input);
         // 1. get the source state and its closure
         Set<State> sourceClosure = closure(from);
         // 2. get the target states
@@ -197,6 +150,31 @@ public class SimpleFAtoNFAAdapter implements NFA, NFABuilder {
 
     @Override
     public NFA buildNFA() {
-        return (_initialState == null) ? null : this;
+        if (_initialState == null) {
+            return null;
+        }
+        return this;
+    }
+
+    @Override
+    public State getState(State from, Object input) {
+        Character c = _inputConvertor.convert(input);
+        Set<State> ret = simpleFA.move(from, Collections.singleton(c));
+        if (ret.isEmpty()) {
+            return null;
+        }
+        // if we have more than one transition, throw
+        if (ret.size() != 1) {
+            throw new RuntimeException("DFA being used as NFA");
+        }
+        return ret.iterator().next();
+    }
+
+    @Override
+    public DFA buildDFA() {
+        if (_initialState == null) {
+            return null;
+        }        
+        return this;
     }
 }
