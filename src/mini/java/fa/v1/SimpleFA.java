@@ -1,12 +1,14 @@
 package mini.java.fa.v1;
 
-import java.util.Map;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import mini.java.fa.v3.InitialState;
 import mini.java.fa.v3.State;
 
 public class SimpleFA {
@@ -68,33 +70,6 @@ public class SimpleFA {
         }
     }
 
-    // debug output
-    public void dump() {
-        Set<State> seen = new HashSet<State>();
-        for (Map.Entry<State, Map<State, Set<Character>>> entry : map.entrySet()) {
-            for (Map.Entry<State, Set<Character>> entry0 : entry.getValue().entrySet()) {
-                System.out.println(entry.getKey().toString() + " --> "
-                        + entry0.getKey().toString() + "(" + entry0.getValue()
-                        + ")");
-            }
-            if (emap.containsKey(entry.getKey())) {
-                seen.add(entry.getKey());
-                for (State s : emap.get(entry.getKey())) {
-                    System.out.println(entry.getKey() + " --> " + s);
-                }
-            }
-        }
-        for (State s : emap.keySet()) {
-            if (!seen.contains(s)) {
-                for (State s0 : emap.get(s)) {
-                    System.out.println(s + " --> " + s0);
-                }
-            }
-        }
-        System.out.println("INIT: " + initialState);
-        System.out.println("ACCEPTED: " + acceptedStates);
-    }
-
     public void addAcceptedState(State state) {
         acceptedStates.add(state);
     }
@@ -136,11 +111,7 @@ public class SimpleFA {
 
     // find the states State frm can reach through an empty input
     public Set<State> e_closure(State frm) {
-        Set<State> ret = new HashSet<State>();
-
-        // NOTE: e_closure shouldn't return the source state("frm") unless
-        // there's an epsilon transition that points back to the source state
-        // itself ret.add(frm);
+        Set<State> ret = new HashSet<State>(Collections.singleton(frm));
 
         if (emap.containsKey(frm)) {
             Set<State> ret0 = new HashSet<State>();
@@ -186,7 +157,8 @@ public class SimpleFA {
         // an array of new states from the nfa;
         List<Set<State>> todo = new LinkedList<Set<State>>();
 
-        State initState = fa.createState();
+//        State initState = fa.createState();
+        State initState = new InitialState();
         fa.setInitialState(initState);
 
         // Bug1: ".*" should accept empty string;
