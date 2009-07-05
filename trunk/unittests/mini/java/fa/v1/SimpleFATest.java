@@ -1,11 +1,10 @@
-package mini.java.fa;
+package mini.java.fa.v1;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import mini.java.fa.v1.SimpleFA;
 import mini.java.fa.v3.State;
 
 import org.junit.Test;
