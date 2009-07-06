@@ -3,6 +3,7 @@ package mini.java.lex;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import mini.java.syntax.Terminal;
@@ -20,7 +21,7 @@ public class DummyTokenizerTest {
             builder.append(DummyTokenizer.SPACE);
         }
         
-        List<Terminal> symbols = new DummyTokenizer().tokenize(builder.toString());
+        List<Terminal> symbols = Arrays.asList(new DummyTokenizer().tokenize(builder.toString()));
         
         assertEquals(symbols.size(), _symbols.length);
         for (int i=0; i<_symbols.length; ++i) {

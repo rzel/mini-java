@@ -33,7 +33,7 @@ public class RegexParserTest {
     
     @Test
     public void testParse() {
-        Symbol got = _parser.parse(new DummyTokenizer().tokenize(_symbols));
+        Symbol got = _parser.parse(Arrays.asList(new DummyTokenizer().tokenize(_symbols)));
         Symbol expected = Helper.createSymbol(_symbol);
         
         assertNotNull(expected);
