@@ -7,7 +7,6 @@ import java.io.StringReader;
 import java.util.LinkedList;
 import java.util.List;
 
-import mini.java.syntax.Symbol;
 import mini.java.syntax.Terminal;
 
 /**
@@ -17,10 +16,10 @@ import mini.java.syntax.Terminal;
  * 
  * @author Alex
  */
-public class DummyTokenizer implements Tokenizer {
+public class DummyTokenizer implements ITokenizer {
     public static final String SPACE = " ";
 
-    @Override
+    
     public List<Terminal> tokenize(Reader reader_) {
         List<Terminal> symbols = new LinkedList<Terminal>();
         BufferedReader reader = new BufferedReader(reader_);
@@ -44,7 +43,8 @@ public class DummyTokenizer implements Tokenizer {
      * StringReader. This method will call the actual tokenizer(Reader)
      * to get the result token list.
      */
-    public List<Terminal> tokenize(String string_) {
-        return tokenize(new StringReader(string_));
+    @Override
+    public Terminal[] tokenize(String string_) {
+        return tokenize(new StringReader(string_)).toArray(new Terminal[0]);
     }
 }
