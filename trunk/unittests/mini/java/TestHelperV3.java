@@ -1,14 +1,18 @@
-package mini.java.syntax;
+package mini.java;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import mini.java.syntax.NonTerminal;
+import mini.java.syntax.Symbol;
+import mini.java.syntax.Terminal;
 
 /**
  * A collection of helper functions for syntax analysis.
  *
  * @author Alex
  */
-public final class Helper {
+public final class TestHelperV3 {
     /**
      * Helper function used to create a symbol tree. It takes a string
      * representation of the symbol tree and build the tree recursively.

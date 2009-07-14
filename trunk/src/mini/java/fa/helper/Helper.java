@@ -1,5 +1,6 @@
 package mini.java.fa.helper;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -27,18 +28,27 @@ import mini.java.fa.v3.State;
 public final class Helper {
     
     // Comparison based on object's string representation
-    protected final static Comparator<Object> STR_CMP = new Comparator<Object>() {
+    public final static Comparator<Object> STR_CMP = new Comparator<Object>() {
         public int compare(Object s1, Object s2) {
             return ("" + s1).compareTo("" + s2);
         }
     };
     
+    
     /**
+     * (Singleton version)
      * Graph traversal algorithm implementation. Each node will be visited once.
      */
     public static <T> void visit(T node_, IFinder<T> finder_) {
+        visit(Collections.singleton(node_), finder_);
+    }
+    
+    /**
+     * Graph traversal algorithm implementation. Each node will be visited once.
+     */
+    public static <T> void visit(Collection<T> nodes_, IFinder<T> finder_) {
         Set<T> checkedNodes = new HashSet<T>();
-        Queue<T> uncheckedNodes = new LinkedList<T>(Collections.singleton(node_));
+        Queue<T> uncheckedNodes = new LinkedList<T>(nodes_);
         
         while (!uncheckedNodes.isEmpty()) {
             T node = uncheckedNodes.remove();
@@ -130,13 +140,20 @@ public final class Helper {
     }
     
     /**
-     * Yet another implementation for findClosure().
+     * (Singleton version) Yet another implementation for findClosure().
      */
     public static Set<NFAState> findClosure(NFAState state_) {
+        return findClosure(Collections.singleton(state_));
+    }
+    
+    /**
+     * Yet another implementation for findClosure().
+     */
+    public static Set<NFAState> findClosure(Set<NFAState> states_) {
         final Set<NFAState> ret = new HashSet<NFAState>();
-        ret.add(state_); // closure includes itself
+        ret.addAll(states_); // closure includes itself
         
-        visit(state_, new NFAStateFinder(
+        visit(states_, new NFAStateFinder(
                 new IFinderCallback<NFAState>() {
                     public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
                         if (input_ == null) {
@@ -150,9 +167,10 @@ public final class Helper {
     }
     
     /**
-     * Collapses the epsilons in the give NFA to create a DFA.
+     * Collapses the epsilons in the given NFA to create a DFA.
      */
     public static NFAState collapse(NFAState root_) {
+
         // mapping from closures to new DFA states
         final Map<NFAClosure, NFAState> mapping = new HashMap<NFAClosure, NFAState>();
         
@@ -168,9 +186,9 @@ public final class Helper {
                         assert(input_ != null);
                         
                         if (!mapping.containsKey(dest_)) {
-                            mapping.put(dest_,
-                                    dest_.isAcceptable()
-                                        ? new AcceptableNFAState() : new NFAState());
+                            NFAState state = dest_.isAcceptable()
+                                ? new AcceptableNFAState() : new NFAState();
+                            mapping.put(dest_, state);
                         }
                         // add the corresponding transitions in the newly created DFA
                         NFAState src = mapping.get(src_);
@@ -185,8 +203,11 @@ public final class Helper {
      * Alternative implementation of NFAConvertor.
      */
     public static DFA collapse(NFA nfa_) {
+        if (nfa_ == null) {
+            throw new IllegalArgumentException("NFA cannot be null");
+        }
         if (! (nfa_ instanceof V3Adapter)) {
-            throw new UnsupportedOperationException("Only V3Adapter impl is supported");
+            throw new UnsupportedOperationException("Only V3Adapter impl is supported: " + nfa_.getClass());
         }
         
         NFAState root = ((V3Adapter)nfa_).getUnderlying();
@@ -219,4 +240,25 @@ public final class Helper {
                 }));
         return builder.buildDFA();
     }
+    
+    /**
+     * Helper method used to find all states in the given NFA
+     */
+    public static Set<NFAState> findAll(NFAState root_) {
+        final Set<NFAState> ret = new HashSet<NFAState>();
+        ret.add(root_);
+        
+        visit(root_, new NFAStateFinder(
+                new IFinderCallback<NFAState>() {
+                    @Override
+                    public boolean onNext(NFAState src_, NFAState dest_,
+                            Object input_)
+                    {
+                        ret.add(dest_);
+                        return true;
+                    }
+                }));
+        return ret;
+    }
+    
 }

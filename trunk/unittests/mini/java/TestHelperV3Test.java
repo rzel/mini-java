@@ -1,18 +1,21 @@
-package mini.java.syntax;
+package mini.java;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import mini.java.syntax.NonTerminal;
+import mini.java.syntax.Symbol;
+import mini.java.syntax.Terminal;
 
 import org.junit.Test;
 
-public class HelperTest {
+public class TestHelperV3Test {
     
     @Test
     public void testCreateSymbol001() {
         // TEST:        Create a terminal symbol
         // INPUTS:      "A"
-        Symbol symbol = Helper.createSymbol("A");
+        Symbol symbol = TestHelperV3.createSymbol("A");
         assertNotNull(symbol);
         assertTrue(symbol instanceof Terminal);
     }
@@ -21,7 +24,7 @@ public class HelperTest {
     public void testCreateSymbol002() {
         // TEST:        Create a non terminal symbol
         // INPUTS:      "A"
-        Symbol symbol = Helper.createSymbol("A(A)");
+        Symbol symbol = TestHelperV3.createSymbol("A(A)");
         assertNotNull(symbol);
         assertTrue(symbol instanceof NonTerminal);
         

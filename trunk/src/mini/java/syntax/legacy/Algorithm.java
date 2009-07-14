@@ -13,6 +13,7 @@ import mini.java.lex.legacy.TokenRevamped;
 import mini.java.lex.legacy.TokenType;
 
 public class Algorithm {
+    // XXX - this algorithm cannot handle rule sets with multiple "START" rules
     public static Map<Pair<State, SymbolType>, Action> closureSet(
             List<Rule> rules) {
         // Pair<State, SymbolType> -- current state and current input
@@ -65,6 +66,7 @@ public class Algorithm {
                 // add "reduce" action
                 else {
                     State state = new State(num);
+                    // XXX - "END" symbol should be the only lookahead for "START" rule
                     Pair<State, SymbolType> reducePair = new Pair<State, SymbolType>(
                             state, new Terminal("END")); // if this is the end of the source
                     Rule rule = tmp.getRule();
@@ -199,11 +201,10 @@ public class Algorithm {
         return list;
     }
 
-    // TODO - List.contains(); new HashSet<List<Item>>().contains()
     private static int isContains(List<Item> tmpList2, List<List<Item>> result) {
         for (int i = 0; i < result.size(); i++) {
             int times = 0;
-            List<Item> tmp = result.get(i);
+            List<Item> tmp = result.get(i); // TODO - containsAll
             for (int j = 0; j < tmpList2.size(); j++) {
                 if (tmp.contains(tmpList2.get(j))) {
                     times++;

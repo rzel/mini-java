@@ -11,12 +11,12 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class CreateRuleTest {
+public class RuleCreateRuleTest {
     private String _rule;
     private boolean _isNull;
     
     // Constructor
-    public CreateRuleTest(String rule_, boolean isNull_) {
+    public RuleCreateRuleTest(String rule_, boolean isNull_) {
         _rule = rule_;
         _isNull = isNull_;
     }

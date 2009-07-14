@@ -23,13 +23,15 @@ public class NFAClosure {
      * Constructor. Creates a closure object for a collection of NFAStates.
      */
     public NFAClosure(Set<NFAState> states_) {
-        assert(states_ != null);
-        assert(!states_.isEmpty());
+//        assert(states_ != null);
+//        assert(!states_.isEmpty());
+//        
+//        _states = new HashSet<NFAState>();
+//        for (NFAState state : states_) {
+//            _states.addAll(Helper.findClosure(state));
+//        }
         
-        _states = new HashSet<NFAState>();
-        for (NFAState state : states_) {
-            _states.addAll(Helper.findClosure(state));
-        }
+        _states = Helper.findClosure(states_);
     }
     
     /**
@@ -105,4 +107,11 @@ public class NFAClosure {
             return false;
         return true;
     }
+
+    @Override
+    public String toString() {
+        return _states.toString();
+    }
+    
+    
 }

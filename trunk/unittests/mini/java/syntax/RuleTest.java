@@ -77,8 +77,8 @@ public class RuleTest {
         Rule rule = Rule.createRule("A ::= B");
         
         assertNotNull(rule);
-        assertNotNull(rule.getLeftSymbols());
+        assertNotNull(rule.getRightSymbols());
         assertNotNull(rule.getItems());
-        assertTrue(rule.getLeftSymbols().size() == (rule.getItems().size()-1));
+        assertTrue(rule.getRightSymbols().size() == (rule.getItems().size()-1));
     }
 }

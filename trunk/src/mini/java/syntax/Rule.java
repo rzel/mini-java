@@ -2,8 +2,10 @@ package mini.java.syntax;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import mini.java.fa.v3.State;
 
@@ -16,39 +18,96 @@ import mini.java.fa.v3.State;
  * @author Alex
  */
 public class Rule {
+    /**
+     * Used to process the symbol tree corresponding to the specific rule.
+     */
+    public interface IRuleHandler<T> {
+        /**
+         * Handles the symbol(tree) based on the context obj.
+         */
+        public void handle(Symbol sym_, T ctx_);
+    }
+    
     private static final String SYMBOL_SEPARATOR  = " ";
     private static final String ASSIGNMENT_SYMBOL = " ::= ";
-    private String              _rightSymbol;
-    private List<String>        _leftSymbols;
+    private String              _leftSymbol;
+    private List<String>        _rightSymbols;
     private List<State>         _items;
+    private IRuleHandler<?>     _handler;
+    
+    private RuleSet       _parent;
+    
+    // to be used with the builder interface
+    public Rule() {
+        _rightSymbols = new LinkedList<String>();
+    }
+    
+    public void setParent(RuleSet parent_) {
+        _parent = parent_;
+    }
+    
+    public RuleSet getParent() {
+        return _parent;
+    }
+    
+    public Rule addLeftSymbol(String leftSymbol_) {
+        _leftSymbol = leftSymbol_;
+        return this; // builder...
+    }
+    
+    public Rule addRightSymbols(String... rightSymbols_) {
+        _rightSymbols.addAll(Arrays.asList(rightSymbols_));
+        // builder...
+        return this;
+    }
+    
+    // alias
+    public Rule left(String leftSymbol_) {
+        return addLeftSymbol(leftSymbol_);
+    }    
+    public Rule right(String... rightSymbols_) {
+        return addRightSymbols(rightSymbols_);
+    }
+    
+    
+    public Rule addHandler(IRuleHandler<?> handler_) {
+        _handler = handler_;
+        return this; // builder...
+    }
+    
+    public IRuleHandler<?> getHandler() {
+        return _handler;
+    }
 
     // private constructor
-    private Rule(String rightSymbol_, List<String> leftSymbols_) {
-        assert (rightSymbol_ != null && !rightSymbol_.isEmpty());
-        assert (leftSymbols_ != null && leftSymbols_.size() > 0);
+    private Rule(String leftSymbol_, List<String> rightSymbols_) {
+        assert (leftSymbol_ != null && !leftSymbol_.isEmpty());
+        assert (rightSymbols_ != null && rightSymbols_.size() > 0);
 
-        _rightSymbol = rightSymbol_;
+        _leftSymbol = leftSymbol_;
         // defensive copy to protect the immutable object
-        _leftSymbols = new ArrayList<String>(leftSymbols_);
+        _rightSymbols = new ArrayList<String>(rightSymbols_);
         
         // create the corresponding "items" for the left symbols;
         // "items" are represented by the NFA states, and will be used
         // to create the DFA of the syntax specification
         _items = new LinkedList<State>();
-        for (int i=0; i<=_leftSymbols.size(); ++i) {
+        for (int i=0; i<=_rightSymbols.size(); ++i) {
             _items.add(new State());
         }
         
 //        // there should be an "END" item
 //        _items.add(new AcceptableState());
+        
+        _parent = null;
     }
 
-    public String getRightSymbol() {
-        return _rightSymbol;
+    public String getLeftSymbol() {
+        return _leftSymbol;
     }
 
-    public List<String> getLeftSymbols() {
-        return _leftSymbols;
+    public List<String> getRightSymbols() {
+        return _rightSymbols;
     }
     
     public List<State> getItems() {
@@ -92,9 +151,9 @@ public class Rule {
         final int prime = 31;
         int result = 1;
         result = prime * result
-                + ((_leftSymbols == null) ? 0 : _leftSymbols.hashCode());
+                + ((_rightSymbols == null) ? 0 : _rightSymbols.hashCode());
         result = prime * result
-                + ((_rightSymbol == null) ? 0 : _rightSymbol.hashCode());
+                + ((_leftSymbol == null) ? 0 : _leftSymbol.hashCode());
         return result;
     }
 
@@ -107,21 +166,30 @@ public class Rule {
         if (o_.getClass() != this.getClass())
             return false;
         Rule rule = (Rule) o_;
-        return rule._rightSymbol.equals(this._rightSymbol)
-                && rule._leftSymbols.equals(this._leftSymbols);
+        return rule._leftSymbol.equals(this._leftSymbol)
+                && rule._rightSymbols.equals(this._rightSymbols);
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(_rightSymbol);
+        builder.append(_leftSymbol);
         builder.append(ASSIGNMENT_SYMBOL);
-        for (String leftSymbol : _leftSymbols) {
+        for (String leftSymbol : _rightSymbols) {
             builder.append(leftSymbol);
             builder.append(SYMBOL_SEPARATOR);
         }
         // remove the trailing SPACE
         builder.deleteCharAt(builder.length()-1);
         return builder.toString();
+    }
+    
+    /**
+     * Helper method. Get the following symbols for this rule.
+     */
+    @SuppressWarnings("unchecked")
+    public Set<String> getFollows() {
+        return (_parent != null)
+            ? _parent.getFollows(getLeftSymbol()) : Collections.EMPTY_SET;
     }
 }

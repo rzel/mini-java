@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.TestHelperV3;
 import mini.java.lex.DummyTokenizer;
-import mini.java.syntax.Helper;
 import mini.java.syntax.Symbol;
 
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class RegexParserTest {
     @Test
     public void testParse() {
         Symbol got = _parser.parse(Arrays.asList(new DummyTokenizer().tokenize(_symbols)));
-        Symbol expected = Helper.createSymbol(_symbol);
+        Symbol expected = TestHelperV3.createSymbol(_symbol);
         
         assertNotNull(expected);
         assertNotNull(got);        
