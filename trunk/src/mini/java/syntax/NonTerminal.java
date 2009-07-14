@@ -1,18 +1,56 @@
 package mini.java.syntax;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public final class NonTerminal extends Symbol {
     private List<Symbol> _children;
+    private Rule _rule;
     
     // Constructor.
     public NonTerminal(String type_, List<Symbol> children_) {
         super(type_);
         // NOTE: defensive copy
-        _children = new ArrayList<Symbol>(children_);
+        _children = new LinkedList<Symbol>(children_);
+        _rule = null;
     }
+    
+    
+    public NonTerminal(String type_, Rule rule_) {
+        super(type_);
+        _rule = rule_;
+        _children = new LinkedList<Symbol>();
+    }
+    
+    public NonTerminal(String type_) {
+        super(type_);
+        _children = new LinkedList<Symbol>();
+    }
+    
+    public NonTerminal setRule(Rule rule_) {
+        _rule = rule_;
+        return this;
+    }
+    
+    /**
+     * Helper method.
+     */
+    public NonTerminal addChildren(Symbol... children_) {
+        return addChildren(Arrays.asList(children_));
+    }
+    
+    public NonTerminal addChildren(Collection<Symbol> children_) {
+        _children.addAll(children_);
+        return this; // builder...
+    }
+    
+    public Rule getRule() {
+        return _rule;
+    }
+    
     
     public List<Symbol> getChildren() {
         return Collections.unmodifiableList(_children);
