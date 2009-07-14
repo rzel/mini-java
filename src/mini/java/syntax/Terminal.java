@@ -48,9 +48,9 @@ public final class Terminal extends Symbol {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "Terminal<" + getType() + ", " + _data + ">";
-    }
+//    @Override
+//    public String toString() {
+//        return "Terminal<" + getType() + ", " + _data + ">";
+//    }
 
 }

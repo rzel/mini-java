@@ -71,7 +71,7 @@ public abstract class ParserImpl implements Parser {
     // NOTE: this will also clear the _symbolStack and the _stateStack
     private NonTerminal reduce(Rule rule_) {
         // the expected left symbols
-        List<String> types = rule_.getLeftSymbols();
+        List<String> types = rule_.getRightSymbols();
 
         // the start index of the production rule in the symbol stack
         int idx = _symbolStack.size() - types.size();
@@ -94,7 +94,7 @@ public abstract class ParserImpl implements Parser {
             children.add(symbol);
         }
 
-        return new NonTerminal(rule_.getRightSymbol(), children);
+        return new NonTerminal(rule_.getLeftSymbol(), children);
     }
     
     /**

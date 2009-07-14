@@ -1,4 +1,4 @@
-package mini.java.syntax;
+package mini.java;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -6,22 +6,24 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.Collection;
 
+import mini.java.syntax.Symbol;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class HelperTestParameterized {
+public class TestHelperV3TestParameterized {
     private String _symbol;
     
-    public HelperTestParameterized(String symbol_) {
+    public TestHelperV3TestParameterized(String symbol_) {
         _symbol = symbol_;
     }
     
     @Test
     public void testCreateSymbol() {
-        Symbol symbol = Helper.createSymbol(_symbol);
+        Symbol symbol = TestHelperV3.createSymbol(_symbol);
 //        System.out.println(symbol.toString());
         
         assertNotNull(symbol);

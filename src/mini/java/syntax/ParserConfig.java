@@ -88,7 +88,7 @@ public class ParserConfig {
         
         for (Rule rule : _rules) {
             // 1. create NFA states for non-terminal symbols
-            String rightSymbol = rule.getRightSymbol();
+            String rightSymbol = rule.getLeftSymbol();
             if (!nfaStates.containsKey(rightSymbol)) {
                 // NOTE: START is a virtual symbol that serves as a start
                 // point for every syntax specifiation
@@ -101,7 +101,7 @@ public class ParserConfig {
                     rule.getItems().get(0));            
 
             // 2. walk through the left symbols; create transitions
-            List<String> symbols = rule.getLeftSymbols();
+            List<String> symbols = rule.getRightSymbols();
             List<State> items = rule.getItems();
             for (int i = 0; i < symbols.size(); ++i) {
                 nfaBuilder.addTransition(items.get(i),
@@ -111,7 +111,7 @@ public class ParserConfig {
         
         // 3. add epsilon transitions as alias for non-terminal symbols
         for (Rule rule : _rules) {
-            List<String> symbols = rule.getLeftSymbols();
+            List<String> symbols = rule.getRightSymbols();
             List<State> items = rule.getItems();
             for (int i = 0; i < symbols.size(); ++i) {
                 String symbol = symbols.get(i);
@@ -184,7 +184,7 @@ public class ParserConfig {
         // 2. build the mapping from the DFA states to the production rules
         DFASimulator dfaSimulator = new DFASimulatorImpl(_dfa);
         for (Rule rule : _rules) {
-            String rightSymbol = rule.getRightSymbol();
+            String rightSymbol = rule.getLeftSymbol();
             State targetState = null;
             Set<State> sourceStates = dfaStates.containsKey(rightSymbol)
                 ? dfaStates.get(rightSymbol)
@@ -195,7 +195,7 @@ public class ParserConfig {
                 // start from the source state
                 //dfaSimulator.reset();
                 dfaSimulator.setDFAState(sourceState);
-                for (String symbol : rule.getLeftSymbols()) {
+                for (String symbol : rule.getRightSymbols()) {
                     // walk through all the left symbols
                     dfaSimulator.step(symbol);
                     assert (dfaSimulator.isRunning());
