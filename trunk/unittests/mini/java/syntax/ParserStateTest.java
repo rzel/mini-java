@@ -1,5 +1,6 @@
 package mini.java.syntax;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -37,5 +38,25 @@ public class ParserStateTest {
                 root.getEpsilons());
         assertEquals(1, root.getEpsilons().size());
         assertEquals("0 =>(A) 1\n", Helper.dump(Helper.collapse(root)));
+    }
+    
+    @Test
+    public void testGetRules() {
+        
+        RuleSet rules = new RuleSet();
+        
+        rules.addRule(new Rule().left(RuleSet.START).right("A"));
+        rules.addRule(new Rule().left("A").right("B", "C"));
+        rules.addRule(new Rule().left("A").right("B", "D"));
+        Rule B = new Rule().left("B").right("E"); // has both "C" and "D" as follows
+        rules.addRule(B); 
+        
+        ParserState root = ParserState.createRoot();
+        root.addRule(B);
+        assertEquals(B, root.getRule("C"));
+        assertEquals(B, root.getRule("D"));
+        assertNull(root.getRule("E"));
+        // getRules() shouldn't return duplicate rules
+        assertArrayEquals(new Rule[] {B}, root.getRules());
     }
 }

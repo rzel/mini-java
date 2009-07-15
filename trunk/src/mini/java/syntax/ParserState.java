@@ -1,6 +1,7 @@
 package mini.java.syntax;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import mini.java.fa.NFAState;
@@ -31,7 +32,9 @@ public class ParserState extends NFAState {
         for (String lookahead : rule_.getFollows()) {
             Rule old = _rules.put(lookahead, rule_);
             if (old != null) {
-                throw new RuntimeException("The given rule set cannot be handled by LR(1)");
+                throw new RuntimeException(
+                        String.format("The given rule set cannot be handled by LR(1): " +
+                                "<%s> and <%s> have the same lookahead <%s>", old, rule_, lookahead));
             }
         }
         return this; // builder...
@@ -49,7 +52,8 @@ public class ParserState extends NFAState {
     }
     
     public Rule[] getRules() {
-        return _rules.values().toArray(new Rule[0]);
+        // getRules() shouldn't return duplicate rules
+        return new HashSet<Rule>(_rules.values()).toArray(new Rule[0]);
     }
     
     public NFAState getRoot() {
