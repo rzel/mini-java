@@ -8,7 +8,7 @@ import mini.java.fa.helper.Helper;
 import org.junit.Test;
 
 
-public class ParserConfigV2ImplTest {
+public class ParserConfigTest {
     
     @Test(expected=RuntimeException.class)
     public void testReduceReduceConflict() {
@@ -19,7 +19,7 @@ public class ParserConfigV2ImplTest {
         rules.addRule(new Rule().left("A").right("1"));
         rules.addRule(new Rule().left("B").right("1"));
         
-        new ParserConfigV2Impl(rules);        
+        new ParserConfig(rules);        
         fail("This grammar cannot be handled by LR(1); ParserConfig should be able to detect this.");
     }
     
@@ -34,7 +34,7 @@ public class ParserConfigV2ImplTest {
         rules.addRule(A);
         rules.addRule(B);
         
-        ParserConfigV2Impl conf = new ParserConfigV2Impl(rules);
+        ParserConfig conf = new ParserConfig(rules);
         ParserState engine = conf.getEngine();
         assertEquals(
                 "0 =>(1) 1\n" + 

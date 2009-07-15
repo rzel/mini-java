@@ -12,14 +12,14 @@ import mini.java.fa.helper.IFinderCallback;
 import mini.java.fa.helper.NFAClosureFinder;
 import mini.java.fa.helper.NFAStateFinder;
 
-public class ParserConfigV2Impl implements IParserConfigV2 {
+public class ParserConfig {
     private static boolean DEBUG = false;
     // fields
     private final RuleSet      _rules;
     private final ParserState  _engine;
     
     
-    public ParserConfigV2Impl(RuleSet rules_) {
+    public ParserConfig(RuleSet rules_) {
         if (rules_ == null || rules_.getRules().length <= 0) {
             throw new IllegalArgumentException("Invalid rule set: null/empty");
         }
@@ -113,12 +113,11 @@ public class ParserConfigV2Impl implements IParserConfigV2 {
     }
     
 
-    @Override
     public ParserState getEngine() {
         return _engine;
     }
 
-    @Override
+
     public RuleSet getRuleSet() {
         return _rules; 
     }
