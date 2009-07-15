@@ -4,17 +4,17 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ParserV2Impl {
+public class Parser {
     
-    private final IParserConfigV2 _conf;
+    private final ParserConfig _conf;
     private final static Terminal END = new Terminal(RuleSet.END);
     
-    public ParserV2Impl(IParserConfigV2 conf_) {
+    public Parser(ParserConfig conf_) {
         _conf = conf_;
     }
     
-    public ParserV2Impl(RuleSet rules_) {
-        _conf = new ParserConfigV2Impl(rules_);
+    public Parser(RuleSet rules_) {
+        _conf = new ParserConfig(rules_);
     }
 
     /**

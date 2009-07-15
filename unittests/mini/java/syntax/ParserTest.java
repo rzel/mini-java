@@ -9,7 +9,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
-public class ParserV2ImplTest {
+public class ParserTest {
     
     @Test
     public void testReduceShiftConflict() {
@@ -23,7 +23,7 @@ public class ParserV2ImplTest {
                 new Terminal("1", "1"),
                 new Terminal("1", "1"),
         };
-        NonTerminal got = new ParserV2Impl(rules).parse(tokens);
+        NonTerminal got = new Parser(rules).parse(tokens);
         
         SymbolDumper dumper = new SymbolDumper();
         got.accept(dumper);
@@ -65,7 +65,7 @@ public class ParserV2ImplTest {
             }
             
             final StringBuilder sb = new StringBuilder();
-            NonTerminal ret = new ParserV2Impl(rules).parse(tokens.toArray(new Terminal[0]));
+            NonTerminal ret = new Parser(rules).parse(tokens.toArray(new Terminal[0]));
             
             ret.accept(new SymbolVisitor() {
 
