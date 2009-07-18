@@ -1,10 +1,10 @@
 package mini.java.syntax;
 
 public final class Terminal extends Symbol {
-    private Object _data;
+    private String _data;
     
     // Constructor.
-    public Terminal(String type_, Object data_) {
+    public Terminal(String type_, String data_) {
         super(type_);
         _data = data_;
     }
@@ -14,7 +14,7 @@ public final class Terminal extends Symbol {
         this(type_, null);
     }
     
-    public Object getData() {
+    public String getData() {
         return _data;
     }
 

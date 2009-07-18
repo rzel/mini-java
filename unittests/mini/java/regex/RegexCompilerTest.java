@@ -3,6 +3,8 @@ package mini.java.regex;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +23,7 @@ import org.junit.Test;
 public class RegexCompilerTest {
 
     private static final Parser parser = new Parser(RegexCompiler.RULE_SET);
+    private static final Tokenizer tokenizer = RegexCompiler.TOKENIZER;
     
     @Test
     public void testTokenizer() {
@@ -67,6 +70,12 @@ public class RegexCompilerTest {
         __testSyntax("[*]",
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(star),rb))))");
         __testSyntax("[\\[]", "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ch),rb))))");
+        
+
+        
+        __testIllegalSyntax("[[]]");
+        __testIllegalSyntax("a?*");
+        __testIllegalSyntax("a*?");
     }
     
     @Test
@@ -97,19 +106,92 @@ public class RegexCompilerTest {
     
     @Test
     public void testRegexCh() {
-        NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize("a"));
-        NFAState head = new NFAState(),
-            tail = new AcceptableNFAState(); 
-        root.execute(new RegexContext(head, tail));
-        
-        assertEquals("0 =>(a) 1\n", Helper.dump(head));
+        __testRegex("a", "0 =>(a) 1\n");
     }
     
     @Test
     public void testRegexBar() {
         __testRegex("a|b",
                 "0 =>(a) 1\n" 
-              + "0 =>(b) 2\n");
+              + "0 =>(b) 1\n");
+    }
+    
+    @Test
+    public void testRegexSeq() {
+        __testRegex("ab",
+                "0 =>(a) 1\n" +
+                "1 =>(b) 2\n");
+    }
+    
+    @Test
+    public void testRegexClass() {
+        __testRegex("[a-b1-1*]",
+                "0 =>(*) 1\n" +
+                "0 =>(1) 1\n" +
+                "0 =>(a) 1\n" +
+                "0 =>(b) 1\n");
+        __testRegex("[b-a2-1]",
+                "0 =>(1) 1\n" +
+                "0 =>(2) 1\n" +
+                "0 =>(a) 1\n" +
+                "0 =>(b) 1\n");
+    }
+    
+    
+    
+    
+    @Test
+    public void testRegexStar() {
+        NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("a*"));
+        NFAState head = new NFAState(),
+            tail = new AcceptableNFAState(); 
+        root.execute(new NFAState[] {head, tail});
+        
+        NFAState dfa = Helper.collapse(head);
+//        assertEquals(
+//                "0 =>(a) 1\n" +
+//                "1 =>(a) 1\n", Helper.dump(dfa));
+        assertEquals("0 =>(a) 0\n", Helper.dump(dfa));
+        assertEquals(AcceptableNFAState.class, dfa.getClass());
+        assertNotNull(dfa.getState("a"));
+        assertEquals(AcceptableNFAState.class, dfa.getState("a").getClass());
+        
+    }
+    
+    
+    @Test
+    public void testRegexQM() {
+        NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("a?"));
+        NFAState head = new NFAState(),
+            tail = new AcceptableNFAState(); 
+        root.execute(new NFAState[] {head, tail});
+        
+        NFAState dfa = Helper.collapse(head);
+        assertEquals(
+                "0 =>(a) 1\n", Helper.dump(dfa));
+        assertEquals(AcceptableNFAState.class, dfa.getClass());
+        assertNotNull(dfa.getState("a"));
+        assertEquals(AcceptableNFAState.class, dfa.getState("a").getClass());
+        
+    }
+    
+    @Test
+    public void testRegexParenthesis() {
+        __testRegex("(((a|b)ab)*)?a",
+                "0 =>(a) 1\n" +
+                "0 =>(b) 2\n" +
+                "1 =>(a) 3\n" +
+                "2 =>(a) 3\n" +
+                "3 =>(b) 0\n");
+    }
+    
+    @Test
+    public void testRegexDot() {
+        StringBuilder sb = new StringBuilder();
+        for (char ch=0; ch<128; ++ch) {
+            sb.append("0 =>(" + ch + ") 1\n");
+        }
+        __testRegex("a|.", sb.toString());
     }
     
     
@@ -118,11 +200,23 @@ public class RegexCompilerTest {
         assertEquals(expected_, root.toString());
     }
     
+    private static void __testIllegalSyntax(String input_) {
+        try
+        {
+            parser.parse(tokenizer.tokenize(input_));
+            fail("Illegal syntax: " + input_);
+        }
+        catch (RuntimeException ex_)
+        {
+            //
+        }
+    }
+    
     private static void __testRegex(String input_, String expected_) {
         NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize(input_));
         NFAState head = new NFAState(),
             tail = new AcceptableNFAState(); 
-        root.execute(new RegexContext(head, tail));
+        root.execute(new NFAState[] {head, tail});
         
         NFAState dfa = Helper.collapse(head);
         assertEquals(expected_, Helper.dump(dfa));

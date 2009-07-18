@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import mini.java.syntax.Rule.IContext;
 import mini.java.syntax.Rule.IRuleHandler;
 
 public final class NonTerminal extends Symbol {
@@ -54,7 +53,7 @@ public final class NonTerminal extends Symbol {
         return _rule;
     }
     
-    public void execute(IContext ctx_) {
+    public void execute(Object ctx_) {
         IRuleHandler handler = getRule().getHandler();
         if (handler != null) {
             handler.handle(this, ctx_);

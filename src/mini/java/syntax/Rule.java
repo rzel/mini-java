@@ -25,13 +25,13 @@ public class Rule {
         /**
          * Handles the symbol(tree) based on the context obj.
          */
-        public void handle(Symbol sym_, IContext ctx_);
+        public void handle(Symbol sym_, Object ctx_);
     }
     
     
-    public interface IContext {
-        
-    }
+//    public interface IContext {
+//        
+//    }
     
     private static final String SYMBOL_SEPARATOR  = " ";
     private static final String ASSIGNMENT_SYMBOL = " ::= ";
