@@ -1,6 +1,6 @@
 package mini.java.fa.helper;
 
-import java.util.Queue;
+import java.util.List;
 
 
 /**
@@ -9,5 +9,5 @@ import java.util.Queue;
  * nodes of the current node.
  */
 public interface IFinder<T> {
-    public Queue<T> findNext(T node_);
+    public List<T> findNext(T node_);
 }

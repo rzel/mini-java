@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import mini.java.TestHelperV2;
@@ -76,5 +77,28 @@ public class HelperTest {
         NFAState root = new NFAState();
         assertEquals(
                 Collections.singleton(root), Helper.findAll(root));
+    }
+    
+    
+    @Test
+    public void testDupeNodes() {
+        final Object init = new Object();
+        final Set<Object> checked = new HashSet<Object>();
+        
+        Helper.visit(init, new IFinder<Object>() {
+
+            @Override
+            public List<Object> findNext(Object node_) {
+                assertTrue("Helper.visit() shouldn't pass dupe nodes to the IFinder", checked.add(node_));
+                
+                if (node_ == init) {
+                    return Collections.nCopies(2, new Object());                   
+                }
+                else {
+                    return Collections.emptyList();
+                }
+            }
+            
+        });
     }
 }

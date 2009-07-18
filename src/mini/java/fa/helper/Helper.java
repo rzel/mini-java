@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -48,16 +49,13 @@ public final class Helper {
      */
     public static <T> void visit(Collection<T> nodes_, IFinder<T> finder_) {
         Set<T> checkedNodes = new HashSet<T>();
-        Queue<T> uncheckedNodes = new LinkedList<T>(nodes_);
+        Queue<T> queue = new LinkedList<T>(nodes_);
         
-        while (!uncheckedNodes.isEmpty()) {
-            T node = uncheckedNodes.remove();
-            checkedNodes.add(node); // mark the node as checked
+        while (!queue.isEmpty()) {
+            T node = queue.remove();
             
-            for (T next : finder_.findNext(node)) {
-                if (!checkedNodes.contains(next)) {
-                    uncheckedNodes.add(next);
-                }
+            if (checkedNodes.add(node)) { // mark the node as checked
+                queue.addAll(finder_.findNext(node));
             }
         }
     }
@@ -78,11 +76,11 @@ public final class Helper {
         ids.put(init, 0);
         
         visit(init, new IFinder<State>() {
-            public Queue<State> findNext(State node_) {
+            public List<State> findNext(State node_) {
                 if (node_ == null) {
                     throw new IllegalArgumentException("State cannot be null!");
                 }
-                Queue<State> ret = new LinkedList<State>();
+                List<State> ret = new LinkedList<State>();
                 
                 Set<Object> inputs = new TreeSet<Object>(new Comparator<Object>() {
                     public int compare(Object o1, Object o2) {
