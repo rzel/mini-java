@@ -1,38 +1,19 @@
 package mini.java.lex;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
-import mini.java.regex.RegexConfig;
+import java.util.LinkedList;
+import java.util.List;
+
 import mini.java.syntax.Terminal;
 
 import org.junit.Test;
 
 
 public class TokenizerTest {
-    // fields
-//    private final Tokenizer _target = new Tokenizer(RegexConfig._instance);
-    // dummy tokenizer config, which supports nothing
-//    private final ITokenizerConfig _emptyConf = new ITokenizerConfig() {
-//        public IMatcher getMatcher(String type_) {
-//            return null;
-//        }
-//        public IMatcher[] getMatchers() {
-//            return new IMatcher[0]; // empty array
-//        }
-//        public String[] getTokenTypes() {
-//            return new String[0];
-//        }
-//    };
-    
-//    @Test
-//    public void testGetToken() {
-//        assertEquals(new Terminal(RegexConfig.STAR, "*"),
-//                _target.getToken("*"));
-//        assertEquals(new Terminal(RegexConfig.CH, "*"), // backslash is removed
-//                _target.getToken("\\*"));
-//        assertEquals(new Terminal(RegexConfig.NUM, "1"),
-//                _target.getToken("1"));
-//    }
     
     @Test
     public void testGetTokenNull() {        
@@ -77,5 +58,47 @@ public class TokenizerTest {
         target.tokenize("input");
         
         fail("tokenize() should throw on invalid tokens");
+    }
+    
+    
+    @Test
+    public void testTokenize() {
+        Tokenizer target = new Tokenizer();
+        target.addMatcher(new IMatcher() {
+
+            @Override
+            public String getType() {
+                return "A";
+            }
+
+            @Override
+            public String match(String input_) {
+                return input_.startsWith("A")
+                    ? "A" : null;
+            }
+            
+        });
+        
+        target.addMatcher(new IMatcher() {
+
+            @Override
+            public String getType() {
+                return "BB";
+            }
+
+            @Override
+            public String match(String input_) {
+                return input_.startsWith("BB")
+                    ? "BB" : null;
+            }
+            
+        });
+        
+        List<Terminal> tokens = new LinkedList<Terminal>();
+        for (String str : new String[] { "A", "BB", "A", "A", "BB" }) {
+            tokens.add(new Terminal(str, str));
+        }
+        assertArrayEquals(tokens.toArray(new Terminal[0]),
+                target.tokenize("ABBAABB"));
     }
 }

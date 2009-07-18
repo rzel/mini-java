@@ -321,16 +321,7 @@ public class RegexCompiler {
     
     static
     {
-        Map<String, String> tokenSpecs = new HashMap<String, String>();
-        tokenSpecs.put(DOT, ".");
-        tokenSpecs.put(STAR, "*");
-        tokenSpecs.put(BAR, "|");
-        tokenSpecs.put(HYPHEN, "-");
-        tokenSpecs.put(LP, "(");
-        tokenSpecs.put(RP, ")");
-        tokenSpecs.put(LB, "[");
-        tokenSpecs.put(RB, "]");
-        tokenSpecs.put(QM, "?");
+
         
         TOKENIZER = new Tokenizer();
         TOKENIZER.addMatcher(new IMatcher() {
@@ -388,6 +379,16 @@ public class RegexCompiler {
         });
         
         
+        Map<String, String> tokenSpecs = new HashMap<String, String>();
+        tokenSpecs.put(DOT, ".");
+        tokenSpecs.put(STAR, "*");
+        tokenSpecs.put(BAR, "|");
+        tokenSpecs.put(HYPHEN, "-");
+        tokenSpecs.put(LP, "(");
+        tokenSpecs.put(RP, ")");
+        tokenSpecs.put(LB, "[");
+        tokenSpecs.put(RB, "]");
+        tokenSpecs.put(QM, "?");
         for (Map.Entry<String, String> tokenSpec : tokenSpecs.entrySet()) {
             final String type = tokenSpec.getKey();
             final String spec = tokenSpec.getValue();
@@ -408,19 +409,16 @@ public class RegexCompiler {
                 if (input_.length() <= 0) {
                     return null;
                 }
-                
-                char ch = '\0';                
+                            
                 if (input_.length() > 1
                         && input_.charAt(0) == '\\')
                 {
-                    // handle escaped characters
-                    ch = input_.charAt(1);
-                } else {
-                    ch = input_.charAt(0);
+                    return input_.substring(0, 2);
                 }
-                
-                // TODO - should return only supported characters
-                return "" + ch;
+                else
+                {
+                    return "" + input_.charAt(0);
+                }
             }
             public String getType() {
                 return CH;
