@@ -1,14 +1,10 @@
 package mini.java.regex;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import mini.java.lex.IMatcher;
-import mini.java.lex.ITokenizerConfig;
+import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
 import mini.java.syntax.Rule;
 import mini.java.syntax.RuleSet;
@@ -17,7 +13,7 @@ import mini.java.syntax.Terminal;
 import mini.java.syntax.Rule.IContext;
 import mini.java.syntax.Rule.IRuleHandler;
 
-public class RegexConfig implements ITokenizerConfig {
+public class RegexConfig {
     // terminals
     public static final String  QM        = "qm"; // question marker
     public static final String  RB        = "rb"; // right bracket
@@ -321,14 +317,11 @@ public class RegexConfig implements ITokenizerConfig {
     
     
     // singleton
-    public static final RegexConfig _instance = new RegexConfig();    
-    private final List<IMatcher> _matchers;
+    public static final Tokenizer TOKENIZER;
     
-    // private ctor.
-    private RegexConfig() {        
+    static
+    {
         Map<String, String> tokenSpecs = new HashMap<String, String>();
-//        tokenSpecs.put(NUM, "\\d");
-//        tokenSpecs.put(ALPHA, "\\w");
         tokenSpecs.put(DOT, ".");
         tokenSpecs.put(STAR, "*");
         tokenSpecs.put(BAR, "|");
@@ -339,8 +332,8 @@ public class RegexConfig implements ITokenizerConfig {
         tokenSpecs.put(RB, "]");
         tokenSpecs.put(QM, "?");
         
-        _matchers = new LinkedList<IMatcher>();
-        _matchers.add(new IMatcher() {
+        TOKENIZER = new Tokenizer();
+        TOKENIZER.addMatcher(new IMatcher() {
 
             @Override
             public String getType() {
@@ -365,7 +358,8 @@ public class RegexConfig implements ITokenizerConfig {
             }
             
         });
-        _matchers.add(new IMatcher() {
+        
+        TOKENIZER.addMatcher(new IMatcher() {
 
             @Override
             public String getType() {
@@ -392,11 +386,13 @@ public class RegexConfig implements ITokenizerConfig {
             }
             
         });
+        
+        
         for (Map.Entry<String, String> tokenSpec : tokenSpecs.entrySet()) {
             final String type = tokenSpec.getKey();
             final String spec = tokenSpec.getValue();
             
-            _matchers.add(new IMatcher() {
+            TOKENIZER.addMatcher(new IMatcher() {
                 public String match(String input_) {
                     return input_.startsWith(spec) ? spec : null;
                 }
@@ -407,7 +403,7 @@ public class RegexConfig implements ITokenizerConfig {
         }
         
         // the lowest precedence: CH
-        _matchers.add(new IMatcher() {
+        TOKENIZER.addMatcher(new IMatcher() {
             public String match(String input_) {
                 if (input_.length() <= 0) {
                     return null;
@@ -431,29 +427,4 @@ public class RegexConfig implements ITokenizerConfig {
             }
         });
     }
-
-    @Override
-    public IMatcher[] getMatchers() {
-        return _matchers.toArray(new IMatcher[0]);
-    }
-
-    @Override
-    public String[] getTokenTypes() {
-        Set<String> types = new HashSet<String>();
-        for (IMatcher matcher : _matchers) {
-            types.add(matcher.getType());
-        }
-        return types.toArray(new String[0]);
-    }
-
-    @Override
-    public IMatcher getMatcher(String type_) {
-        for (IMatcher matcher : _matchers) {
-            if (matcher.getType().equals(type_)) {
-                return matcher;
-            }
-        }
-        return null;
-    }
-
 }
