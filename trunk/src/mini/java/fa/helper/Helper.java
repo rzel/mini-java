@@ -6,24 +6,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
-import java.util.TreeSet;
 
-import mini.java.ComponentFactory;
 import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAClosure;
 import mini.java.fa.NFAState;
-import mini.java.fa.adapter.V3Adapter;
-import mini.java.fa.v3.AcceptableInitialState;
-import mini.java.fa.v3.AcceptableState;
-import mini.java.fa.v3.DFA;
-import mini.java.fa.v3.DFABuilder;
-import mini.java.fa.v3.InitialState;
-import mini.java.fa.v3.NFA;
-import mini.java.fa.v3.State;
 
 
 public final class Helper {
@@ -60,55 +49,7 @@ public final class Helper {
         }
     }
     
-   
-    /**
-     * dumpString() for V3 interface
-     */
-    public static String dumpString(DFA dfa_) {
-        final DFA dfa = dfa_;
-        final StringBuilder sb = new StringBuilder();
-        final Map<State, Integer> ids = new HashMap<State, Integer>();
-        
-        State init = dfa_.getInitialState();
-        if (init == null) {
-            throw new IllegalArgumentException("Invalid DFA: initial state is null!");
-        }
-        ids.put(init, 0);
-        
-        visit(init, new IFinder<State>() {
-            public List<State> findNext(State node_) {
-                if (node_ == null) {
-                    throw new IllegalArgumentException("State cannot be null!");
-                }
-                List<State> ret = new LinkedList<State>();
-                
-                Set<Object> inputs = new TreeSet<Object>(new Comparator<Object>() {
-                    public int compare(Object o1, Object o2) {
-                        return ("" + o1).compareTo("" + o2); //null
-                    }
-                });
-                inputs.addAll(dfa.getInputs(node_));
-                
-                for (Object input : inputs) {
-                    State target = dfa.getState(node_, input);
-                    if (target == null) {
-                        throw new IllegalArgumentException("Unable to find the corresponding target state for ("
-                                + node_ + ", " + input + ")");
-                    }
-                    if (!ids.containsKey(target)) {
-                        ids.put(target, ids.size());
-                    }
-                    ret.add(target);
-                    // XXX - is this method guaranteed to be called the same order
-                    // as the states in the final queue?
-                    sb.append(String.format("%s =>(%s) %s%n",
-                            ids.get(node_), input, ids.get(target)));
-                }
-                return ret;
-            }
-        });
-        return sb.toString();
-    }
+
     
     
     /**
@@ -197,47 +138,47 @@ public final class Helper {
         return dfa;
     }
     
-    /**
-     * Alternative implementation of NFAConvertor.
-     */
-    public static DFA collapse(NFA nfa_) {
-        if (nfa_ == null) {
-            throw new IllegalArgumentException("NFA cannot be null");
-        }
-        if (! (nfa_ instanceof V3Adapter)) {
-            throw new UnsupportedOperationException("Only V3Adapter impl is supported: " + nfa_.getClass());
-        }
-        
-        NFAState root = ((V3Adapter)nfa_).getUnderlying();
-        // NFA(v4) --> DFA(v4) --> DFA(v3)
-        return convert(collapse(root));
-    }
+//    /**
+//     * Alternative implementation of NFAConvertor.
+//     */
+//    public static DFA collapse(NFA nfa_) {
+//        if (nfa_ == null) {
+//            throw new IllegalArgumentException("NFA cannot be null");
+//        }
+//        if (! (nfa_ instanceof V3Adapter)) {
+//            throw new UnsupportedOperationException("Only V3Adapter impl is supported: " + nfa_.getClass());
+//        }
+//        
+//        NFAState root = ((V3Adapter)nfa_).getUnderlying();
+//        // NFA(v4) --> DFA(v4) --> DFA(v3)
+//        return convert(collapse(root));
+//    }
     
-    /**
-     * Helper method used to convert V4 back to V3
-     */
-    public static DFA convert(NFAState root_) {
-        final Map<NFAState, State> mapping = new HashMap<NFAState, State>();    
-        final DFABuilder builder = ComponentFactory.createDFABuilder();
-        
-        State init = (root_ instanceof AcceptableNFAState)
-            ? new AcceptableInitialState() : new InitialState();
-        mapping.put(root_, init);
-        
-        visit(root_, new NFAStateFinder(
-                new IFinderCallback<NFAState>() {
-                    public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
-                        if (!mapping.containsKey(dest_)) {
-                            mapping.put(dest_,
-                                    (dest_ instanceof AcceptableNFAState)
-                                        ? new AcceptableState() : new State());
-                        }
-                        builder.addTransition(mapping.get(src_), mapping.get(dest_), input_);
-                        return true;
-                    }
-                }));
-        return builder.buildDFA();
-    }
+//    /**
+//     * Helper method used to convert V4 back to V3
+//     */
+//    public static DFA convert(NFAState root_) {
+//        final Map<NFAState, State> mapping = new HashMap<NFAState, State>();    
+//        final DFABuilder builder = ComponentFactory.createDFABuilder();
+//        
+//        State init = (root_ instanceof AcceptableNFAState)
+//            ? new AcceptableInitialState() : new InitialState();
+//        mapping.put(root_, init);
+//        
+//        visit(root_, new NFAStateFinder(
+//                new IFinderCallback<NFAState>() {
+//                    public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
+//                        if (!mapping.containsKey(dest_)) {
+//                            mapping.put(dest_,
+//                                    (dest_ instanceof AcceptableNFAState)
+//                                        ? new AcceptableState() : new State());
+//                        }
+//                        builder.addTransition(mapping.get(src_), mapping.get(dest_), input_);
+//                        return true;
+//                    }
+//                }));
+//        return builder.buildDFA();
+//    }
     
     /**
      * Helper method used to find all states in the given NFA

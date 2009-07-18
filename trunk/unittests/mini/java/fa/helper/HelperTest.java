@@ -9,10 +9,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import mini.java.TestHelperV2;
 import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAState;
-import mini.java.fa.v3.DFA;
 
 import org.junit.Test;
 
@@ -42,17 +40,7 @@ public class HelperTest {
         NFAState got = Helper.collapse(A);
         assertTrue(got instanceof AcceptableNFAState);
     }
-    
-    @Test
-    public void testConvert() {
-        TestHelperV2 helper = new TestHelperV2();
-        helper.addNFAStates("AB");
-        helper.addTransitions("ABa,BAa");
-        
-        NFAState v4 = helper.getNFAState('A');
-        DFA v3 = Helper.convert(v4);
-        assertEquals(Helper.dump(v4), Helper.dumpString(v3));
-    }
+
     
     @Test
     public void testFindAll() {
