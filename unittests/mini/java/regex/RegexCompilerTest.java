@@ -15,10 +15,10 @@ import mini.java.syntax.Parser;
 import org.junit.Test;
 
 
-public class RegexConfigTest {
+public class RegexCompilerTest {
     // the target being tested
 //    private static final RegexConfig conf = RegexConfig._instance;    
-    private static final Parser parser = new Parser(RegexConfig.RULE_SET);
+    private static final Parser parser = new Parser(RegexCompiler.RULE_SET);
 //    private static final ITokenizer tokenizer = new Tokenizer(conf); 
 //
 //
@@ -48,7 +48,7 @@ public class RegexConfigTest {
     
     @Test
     public void testSyntax() {
-        NonTerminal root = (NonTerminal)parser.parse(RegexConfig.TOKENIZER.tokenize("a"));
+        NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize("a"));
         assertEquals("START(BarExpr(SeqExpr(Atom(alpha))))", root.toString());
         
         
@@ -67,7 +67,7 @@ public class RegexConfigTest {
     
     @Test
     public void testPrecedence() {
-        Tokenizer tokenizer = RegexConfig.TOKENIZER;
+        Tokenizer tokenizer = RegexCompiler.TOKENIZER;
         String alpha = "SeqExpr(Atom(alpha))";
         {
             NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("aa|a"));
@@ -93,7 +93,7 @@ public class RegexConfigTest {
     
     @Test
     public void testRegexCh() {
-        NonTerminal root = (NonTerminal)parser.parse(RegexConfig.TOKENIZER.tokenize("a"));
+        NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize("a"));
         NFAState head = new NFAState(),
             tail = new AcceptableNFAState(); 
         root.execute(new RegexContext(head, tail));
@@ -110,12 +110,12 @@ public class RegexConfigTest {
     
     
     private static void __testSyntax(String input_, String expected_) {
-        NonTerminal root = (NonTerminal)parser.parse(RegexConfig.TOKENIZER.tokenize(input_));
+        NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize(input_));
         assertEquals(expected_, root.toString());
     }
     
     private static void __testRegex(String input_, String expected_) {
-        NonTerminal root = (NonTerminal)parser.parse(RegexConfig.TOKENIZER.tokenize(input_));
+        NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize(input_));
         NFAState head = new NFAState(),
             tail = new AcceptableNFAState(); 
         root.execute(new RegexContext(head, tail));
