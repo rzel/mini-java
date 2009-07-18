@@ -2,14 +2,15 @@ package mini.java.lex;
 
 import static org.junit.Assert.*;
 
+import mini.java.regex.RegexConfig;
 import mini.java.syntax.Terminal;
 
 import org.junit.Test;
 
 
-public class TokenizerImplTest {
+public class TokenizerTest {
     // fields
-    private final TokenizerImpl _target = new TokenizerImpl(CharTokenizerConfig._instance);
+    private final Tokenizer _target = new Tokenizer(RegexConfig._instance);
     // dummy tokenizer config, which supports nothing
     private final ITokenizerConfig _emptyConf = new ITokenizerConfig() {
         public IMatcher getMatcher(String type_) {
@@ -25,17 +26,17 @@ public class TokenizerImplTest {
     
     @Test
     public void testGetToken() {
-        assertEquals(new Terminal(CharTokenizerConfig.STAR, "*"),
+        assertEquals(new Terminal(RegexConfig.STAR, "*"),
                 _target.getToken("*"));
-        assertEquals(new Terminal(CharTokenizerConfig.CH, "*"), // backslash is removed
+        assertEquals(new Terminal(RegexConfig.CH, "*"), // backslash is removed
                 _target.getToken("\\*"));
-        assertEquals(new Terminal(CharTokenizerConfig.NUM, "\\d"),
-                _target.getToken("\\d"));
+        assertEquals(new Terminal(RegexConfig.NUM, "1"),
+                _target.getToken("1"));
     }
     
     @Test
     public void testGetTokenNull() {        
-        TokenizerImpl target = new TokenizerImpl(_emptyConf);
+        Tokenizer target = new Tokenizer(_emptyConf);
         assertNull(target.getToken("input"));
     }
 
@@ -62,7 +63,7 @@ public class TokenizerImplTest {
             }
         };
         // dummy config
-        TokenizerImpl target = new TokenizerImpl(new ITokenizerConfig() {
+        Tokenizer target = new Tokenizer(new ITokenizerConfig() {
             public IMatcher getMatcher(String type_) {
                 throw new UnsupportedOperationException("Not implemented");
             }
@@ -84,7 +85,7 @@ public class TokenizerImplTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void testTokenizeInvalidToken() {
-        TokenizerImpl target = new TokenizerImpl(_emptyConf);
+        Tokenizer target = new Tokenizer(_emptyConf);
         target.tokenize("input");
         
         fail("tokenize() should throw on invalid tokens");

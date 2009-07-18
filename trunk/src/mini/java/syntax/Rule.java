@@ -21,11 +21,16 @@ public class Rule {
     /**
      * Used to process the symbol tree corresponding to the specific rule.
      */
-    public interface IRuleHandler<T> {
+    public interface IRuleHandler {
         /**
          * Handles the symbol(tree) based on the context obj.
          */
-        public void handle(Symbol sym_, T ctx_);
+        public void handle(Symbol sym_, IContext ctx_);
+    }
+    
+    
+    public interface IContext {
+        
     }
     
     private static final String SYMBOL_SEPARATOR  = " ";
@@ -33,7 +38,7 @@ public class Rule {
     private String              _leftSymbol;
     private List<String>        _rightSymbols;
     private List<State>         _items;
-    private IRuleHandler<?>     _handler;
+    private IRuleHandler        _handler;
     
     private RuleSet       _parent;
     
@@ -70,12 +75,12 @@ public class Rule {
     }
     
     
-    public Rule addHandler(IRuleHandler<?> handler_) {
+    public Rule addHandler(IRuleHandler handler_) {
         _handler = handler_;
         return this; // builder...
     }
     
-    public IRuleHandler<?> getHandler() {
+    public IRuleHandler getHandler() {
         return _handler;
     }
 
