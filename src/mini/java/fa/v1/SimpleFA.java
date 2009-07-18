@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mini.java.fa.v3.InitialState;
-import mini.java.fa.v3.State;
 
 public class SimpleFA {
     // private int stateId;

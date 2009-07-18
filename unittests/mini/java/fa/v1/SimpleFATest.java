@@ -1,56 +1,57 @@
 package mini.java.fa.v1;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import mini.java.fa.v3.State;
-
 import org.junit.Test;
 
 public class SimpleFATest {
-    @Test public void testAddTransitionBasic() {
+    @Test
+    public void testAddTransitionBasic() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
-        Set input = new HashSet();
+        Set<Character> input = new HashSet<Character>();
         input.add('a');
         input.add('b');
         input.add('c');
         fa.addTransition(frm, to, input);
 
-        //exactly the same input
+        // exactly the same input
         Set<State> s;
         s = fa.move(frm, input);
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
 
-        //a subset of the input
-        Set input0 = new HashSet();
+        // a subset of the input
+        Set<Character> input0 = new HashSet<Character>();
         input0.add('a');
         input0.add('b');
         s = fa.move(frm, input0);
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
 
-        //different input
-        Set input1 = new HashSet();
+        // different input
+        Set<Character> input1 = new HashSet<Character>();
         input1.add('a');
         input1.add('d');
         s = fa.move(frm, input1);
         assertTrue(s.isEmpty());
     }
 
-    @Test public void testAddTransitionTwice() {
+    @Test
+    public void testAddTransitionTwice() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
-        Set input = new HashSet();
+        Set<Character> input = new HashSet<Character>();
         input.add('a');
         input.add('b');
         input.add('c');
-        Set input0 = new HashSet();
+        Set<Character> input0 = new HashSet<Character>();
         input.add('a');
         input.add('d');
         fa.addTransition(frm, to, input);
@@ -65,7 +66,7 @@ public class SimpleFATest {
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
 
-        Set input1 = new HashSet();
+        Set<Character> input1 = new HashSet<Character>();
         input1.add('a');
         input1.add('b');
         input1.add('c');
@@ -74,23 +75,24 @@ public class SimpleFATest {
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
 
-        Set input2 = new HashSet();
+        Set<Character> input2 = new HashSet<Character>();
         input2.add('d');
         s = fa.move(frm, input);
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
     }
 
-    @Test public void testAddTransitionTwice0() {
+    @Test
+    public void testAddTransitionTwice0() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
         State to0 = fa.createState();
-        Set input = new HashSet();
+        Set<Character> input = new HashSet<Character>();
         input.add('a');
         input.add('b');
         input.add('c');
-        Set input0 = new HashSet();
+        Set<Character> input0 = new HashSet<Character>();
         input0.add('a');
         input0.add('d');
         fa.addTransition(frm, to, input);
@@ -98,41 +100,43 @@ public class SimpleFATest {
 
         Set<State> s;
         s = fa.move(frm, input);
-        //System.out.println("TO: " + s);
+        // System.out.println("TO: " + s);
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to));
 
         s = fa.move(frm, input0);
-        //System.out.println("TO0: " + s);
+        // System.out.println("TO0: " + s);
         assertTrue(s.size() == 1);
         assertTrue(s.contains(to0));
 
-        Set input1 = new HashSet();
+        Set<Character> input1 = new HashSet<Character>();
         input1.add('a');
         s = fa.move(frm, input1);
-        //System.out.println("BOTH: " + s);
+        // System.out.println("BOTH: " + s);
         assertTrue(s.size() == 2);
         assertTrue(s.contains(to));
         assertTrue(s.contains(to0));
     }
 
-    @Test public void testEClosureBasic() {
+    @Test
+    public void testEClosureBasic() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
-        Set input = new HashSet();
+        Set<Character> input = new HashSet<Character>();
         input.add('a');
         input.add('b');
         fa.addTransition(frm, to, input);
         fa.addTransition(frm, to);
         Set<State> s = fa.e_closure(frm);
-        //System.out.println(s);
+        // System.out.println(s);
         assertTrue(s.size() == 2);
         assertTrue(s.contains(to));
         assertTrue(s.contains(frm));
     }
 
-    @Test public void testEClosureMore() {
+    @Test
+    public void testEClosureMore() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
@@ -150,7 +154,8 @@ public class SimpleFATest {
         assertTrue(s.contains(to1));
     }
 
-    @Test public void testEClosureMutual() {
+    @Test
+    public void testEClosureMutual() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
@@ -163,7 +168,8 @@ public class SimpleFATest {
         assertTrue(s.contains(frm));
     }
 
-    @Test public void testEClosures() {
+    @Test
+    public void testEClosures() {
         SimpleFA fa = new SimpleFA();
         State frm = fa.createState();
         State to = fa.createState();
@@ -186,23 +192,24 @@ public class SimpleFATest {
         assertTrue(s0.contains(to1));
     }
 
-    @Test public void testPossibleInputs() {
+    @Test
+    public void testPossibleInputs() {
         SimpleFA fa = new SimpleFA();
         State s = fa.createState();
         State s0 = fa.createState();
         State s1 = fa.createState();
-        Set input = new HashSet();
+        Set<Character> input = new HashSet<Character>();
         input.add('a');
         input.add('c');
-        Set input0 = new HashSet();
+        Set<Character> input0 = new HashSet<Character>();
         input0.add('b');
         input0.add('a');
-        Set input1 = new HashSet();
+        Set<Character> input1 = new HashSet<Character>();
         input1.add('e');
         fa.addTransition(s, s0, input);
         fa.addTransition(s, s0, input0);
         fa.addTransition(s, s1, input1);
-        Set inputs = fa.getInputMixed(s);
+        Set<Character> inputs = fa.getInputMixed(s);
         assertTrue(inputs.size() == 4);
         assertTrue(inputs.contains('a'));
         assertTrue(inputs.contains('c'));
@@ -211,7 +218,7 @@ public class SimpleFATest {
         assertTrue(inputs.contains('e'));
     }
 
-    //Bug1: ".*" should accept empty string;
-    //@Test void testBug1 {
-    //}
+    // Bug1: ".*" should accept empty string;
+    // @Test void testBug1 {
+    // }
 }

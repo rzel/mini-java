@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import mini.java.fa.helper.Helper;
-import mini.java.fa.v3.Acceptable;
 
 public class NFAClosure {
     private Set<NFAState> _states;

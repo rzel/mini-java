@@ -7,8 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import mini.java.fa.v3.State;
-
 
 /**
  * Class Rule represents a production rule for a syntax specification. It
@@ -37,7 +35,7 @@ public class Rule {
     private static final String ASSIGNMENT_SYMBOL = " ::= ";
     private String              _leftSymbol;
     private List<String>        _rightSymbols;
-    private List<State>         _items;
+//    private List<State>         _items;
     private IRuleHandler        _handler;
     
     private RuleSet       _parent;
@@ -93,13 +91,13 @@ public class Rule {
         // defensive copy to protect the immutable object
         _rightSymbols = new ArrayList<String>(rightSymbols_);
         
-        // create the corresponding "items" for the left symbols;
-        // "items" are represented by the NFA states, and will be used
-        // to create the DFA of the syntax specification
-        _items = new LinkedList<State>();
-        for (int i=0; i<=_rightSymbols.size(); ++i) {
-            _items.add(new State());
-        }
+//        // create the corresponding "items" for the left symbols;
+//        // "items" are represented by the NFA states, and will be used
+//        // to create the DFA of the syntax specification
+//        _items = new LinkedList<State>();
+//        for (int i=0; i<=_rightSymbols.size(); ++i) {
+//            _items.add(new State());
+//        }
         
 //        // there should be an "END" item
 //        _items.add(new AcceptableState());
@@ -115,9 +113,9 @@ public class Rule {
         return _rightSymbols;
     }
     
-    public List<State> getItems() {
-        return _items;
-    }
+//    public List<State> getItems() {
+//        return _items;
+//    }
 
     /**
      * Factory method used to create Rule instances. This method accepts a line

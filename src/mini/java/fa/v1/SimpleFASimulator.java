@@ -3,7 +3,6 @@ package mini.java.fa.v1;
 import java.util.HashSet;
 import java.util.Set;
 
-import mini.java.fa.v3.State;
 
 // this is a "Matcher", not a simulator
 public class SimpleFASimulator {

@@ -3,7 +3,6 @@ package mini.java.syntax;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -72,13 +71,13 @@ public class RuleTest {
         assertEquals(rule.hashCode(), anotherRule.hashCode());
     }
     
-    @Test
-    public final void testGetItems() {
-        Rule rule = Rule.createRule("A ::= B");
-        
-        assertNotNull(rule);
-        assertNotNull(rule.getRightSymbols());
-        assertNotNull(rule.getItems());
-        assertTrue(rule.getRightSymbols().size() == (rule.getItems().size()-1));
-    }
+//    @Test
+//    public final void testGetItems() {
+//        Rule rule = Rule.createRule("A ::= B");
+//        
+//        assertNotNull(rule);
+//        assertNotNull(rule.getRightSymbols());
+//        assertNotNull(rule.getItems());
+//        assertTrue(rule.getRightSymbols().size() == (rule.getItems().size()-1));
+//    }
 }
