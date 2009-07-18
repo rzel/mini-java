@@ -1,16 +1,18 @@
 package mini.java.lex;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import mini.java.syntax.Terminal;
 
 public final class Tokenizer implements ITokenizer {
     // fields
-    private ITokenizerConfig _conf;
+    private final List<IMatcher> _matchers;
     
-    public Tokenizer(ITokenizerConfig conf_) {
-        _conf = conf_;
+    public Tokenizer() {
+        _matchers = new LinkedList<IMatcher>();
     }
 
     @Override
@@ -37,7 +39,7 @@ public final class Tokenizer implements ITokenizer {
     public Terminal getToken(String input_) {
         String longest = "";
         String type = null;
-        for (IMatcher matcher : _conf.getMatchers()) {
+        for (IMatcher matcher : getMatchers()) {
             String token = matcher.match(input_);
             if (token != null
                     && token.length() > longest.length())
@@ -49,6 +51,35 @@ public final class Tokenizer implements ITokenizer {
         
         return (type != null)
             ? new Terminal(type, longest) : null;
+    }
+
+    @Override
+    public void addMatcher(IMatcher matcher_) {
+        _matchers.add(matcher_);
+    }
+
+    @Override
+    public IMatcher getMatcher(String type_) {
+        for (IMatcher matcher : _matchers) {
+            if (matcher.getType().equals(type_)) {
+                return matcher;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public IMatcher[] getMatchers() {
+        return _matchers.toArray(new IMatcher[0]);
+    }
+
+    @Override
+    public String[] getTokenTypes() {
+        Set<String> types = new HashSet<String>();
+        for (IMatcher matcher : _matchers) {
+            types.add(matcher.getType());
+        }
+        return types.toArray(new String[0]);
     }
 
 }
