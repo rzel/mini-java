@@ -1,49 +1,53 @@
 package mini.java.regex;
 
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAState;
 import mini.java.fa.helper.Helper;
-import mini.java.lex.IMatcher;
-import mini.java.lex.ITokenizer;
 import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
 import mini.java.syntax.Parser;
+import mini.java.syntax.Terminal;
 
 import org.junit.Test;
 
 
 public class RegexCompilerTest {
-    // the target being tested
-//    private static final RegexConfig conf = RegexConfig._instance;    
+
     private static final Parser parser = new Parser(RegexCompiler.RULE_SET);
-//    private static final ITokenizer tokenizer = new Tokenizer(conf); 
-//
-//
-//    @Test
-//    public void testNumMatcher() {
-//        IMatcher numMatcher = conf.getMatcher(RegexConfig.NUM);
-//        
-//        assertEquals("1",numMatcher.match("1"));
-//        assertEquals("1",numMatcher.match("1*"));
-//        assertNull(numMatcher.match("abc"));
-//        assertNull(numMatcher.match("\\1")); // shouldn't match escaped
-//        assertNull(numMatcher.match(""));
-//    }
-//    
-//    @Test
-//    public void testChMatcher() {
-//        IMatcher chMatcher = conf.getMatcher(RegexConfig.CH);
-//        
-//        assertEquals("a",chMatcher.match("abc"));
-//        assertEquals("a",chMatcher.match("\\abc")); //backslash should be removed
-//        assertEquals("[",chMatcher.match("\\[["));
-//        assertEquals("\\",chMatcher.match("\\"));
-//        
-//        assertNull(chMatcher.match(""));
-//    }
+    
+    @Test
+    public void testTokenizer() {
+        Tokenizer target = RegexCompiler.TOKENIZER;
+        {
+            List<Terminal> tokens = new LinkedList<Terminal>();
+            tokens.add(new Terminal(RegexCompiler.NUM, "1"));
+            tokens.add(new Terminal(RegexCompiler.NUM, "2"));
+            tokens.add(new Terminal(RegexCompiler.NUM, "3"));
+            tokens.add(new Terminal(RegexCompiler.ALPHA, "a"));
+            tokens.add(new Terminal(RegexCompiler.STAR, "*"));
+            tokens.add(new Terminal(RegexCompiler.DOT, "."));
+            tokens.add(new Terminal(RegexCompiler.QM, "?"));
+            tokens.add(new Terminal(RegexCompiler.LP, "("));
+            tokens.add(new Terminal(RegexCompiler.RP, ")"));
+            tokens.add(new Terminal(RegexCompiler.LB, "["));
+            tokens.add(new Terminal(RegexCompiler.RB, "]"));
+            tokens.add(new Terminal(RegexCompiler.BAR, "|"));
+            tokens.add(new Terminal(RegexCompiler.HYPHEN, "-"));
+            tokens.add(new Terminal(RegexCompiler.CH, "\\*"));
+            tokens.add(new Terminal(RegexCompiler.CH, "\\"));
+            
+            assertArrayEquals(
+                    tokens.toArray(new Terminal[0]),
+                    target.tokenize("123a*.?()[]|-\\*\\"));
+        }
+    }
     
     
     @Test
@@ -62,7 +66,7 @@ public class RegexCompilerTest {
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ClassExpr(alpha)," + alphaRange + "),rb))))");
         __testSyntax("[*]",
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(star),rb))))");
-//        __testSyntax("[\\[]", "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ch),rb))))");
+        __testSyntax("[\\[]", "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ch),rb))))");
     }
     
     @Test
