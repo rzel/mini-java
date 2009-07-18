@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import mini.java.fa.v1.SimpleFA;
-import mini.java.fa.v3.State;
+import mini.java.fa.v1.State;
 
 import org.junit.Ignore;
 import org.junit.Test;

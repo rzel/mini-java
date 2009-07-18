@@ -1,4 +1,4 @@
-package mini.java.fa.v3;
+package mini.java.fa.v1;
 
 /**
  * Represents an initial state. Each finite automaton must have one and only one

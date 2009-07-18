@@ -1,4 +1,4 @@
-package mini.java.fa.v3;
+package mini.java.fa;
 
 /**
  * Tag interface.
