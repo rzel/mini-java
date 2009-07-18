@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import mini.java.syntax.Rule.IContext;
+import mini.java.syntax.Rule.IRuleHandler;
+
 public final class NonTerminal extends Symbol {
     private List<Symbol> _children;
     private Rule _rule;
@@ -49,6 +52,27 @@ public final class NonTerminal extends Symbol {
     
     public Rule getRule() {
         return _rule;
+    }
+    
+    public void execute(IContext ctx_) {
+        IRuleHandler handler = getRule().getHandler();
+        if (handler != null) {
+            handler.handle(this, ctx_);
+        } else {
+            //
+        }
+    }
+    
+    public Symbol first() {
+        return getChildren().get(0);
+    }
+    
+    public Symbol second() {
+        return getChildren().get(1);
+    }
+    
+    public Symbol third() {
+        return getChildren().get(2);
     }
     
     

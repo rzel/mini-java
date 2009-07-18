@@ -5,11 +5,11 @@ import java.util.List;
 
 import mini.java.syntax.Terminal;
 
-public final class TokenizerImpl implements ITokenizer {
+public final class Tokenizer implements ITokenizer {
     // fields
     private ITokenizerConfig _conf;
     
-    public TokenizerImpl(ITokenizerConfig conf_) {
+    public Tokenizer(ITokenizerConfig conf_) {
         _conf = conf_;
     }
 
