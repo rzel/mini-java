@@ -13,7 +13,7 @@ import mini.java.syntax.Terminal;
 import mini.java.syntax.Rule.IContext;
 import mini.java.syntax.Rule.IRuleHandler;
 
-public class RegexConfig {
+public class RegexCompiler {
     // terminals
     public static final String  QM        = "qm"; // question marker
     public static final String  RB        = "rb"; // right bracket
