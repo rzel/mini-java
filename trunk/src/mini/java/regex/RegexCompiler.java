@@ -3,6 +3,7 @@ package mini.java.regex;
 import java.util.HashMap;
 import java.util.Map;
 
+import mini.java.fa.NFAState;
 import mini.java.lex.IMatcher;
 import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
@@ -10,7 +11,6 @@ import mini.java.syntax.Rule;
 import mini.java.syntax.RuleSet;
 import mini.java.syntax.Symbol;
 import mini.java.syntax.Terminal;
-import mini.java.syntax.Rule.IContext;
 import mini.java.syntax.Rule.IRuleHandler;
 
 public class RegexCompiler {
@@ -41,7 +41,7 @@ public class RegexCompiler {
     public static final IRuleHandler DUMMY_HANDLER = new IRuleHandler() {
 
         @Override
-        public void handle(Symbol sym_, IContext ctx_) {
+        public void handle(Symbol sym_, Object ctx_) {
             NonTerminal sym = (NonTerminal)sym_;
             if (sym.getChildren().size() != 1) {
                 throw new UnsupportedOperationException(
@@ -66,11 +66,12 @@ public class RegexCompiler {
     public static final IRuleHandler LITERAL_HANDLER = new IRuleHandler() {
 
         @Override
-        public void handle(Symbol sym_, IContext ctx_) {
+        public void handle(Symbol sym_, Object ctx_) {
             Symbol first = ((NonTerminal)sym_).first();
-            RegexContext ctx = ((RegexContext)ctx_);
+//            RegexContext ctx = ((RegexContext)ctx_);
+            NFAState[] st = (NFAState[])ctx_;
             
-            ctx.getHead().addTransition(ctx.getTail(), ((Terminal)first).getData());
+            st[0].addTransition(st[1], ((Terminal)first).getData());
         }
         
     };
@@ -92,23 +93,27 @@ public class RegexCompiler {
                     .addHandler(new IRuleHandler() {
 
                         @Override
-                        public void handle(Symbol sym_, IContext ctx_) {
-                            RegexContext left = new RegexContext(),
-                                right = new RegexContext(),
-                                ctx = (RegexContext)ctx_;
-                            NonTerminal self = (NonTerminal)sym_,
-                                leftChild = (NonTerminal)self.getChildren().get(0),
-                                rightChild = (NonTerminal)self.getChildren().get(2);
-                            
-                            leftChild.execute(left);
-                            rightChild.execute(right);
-                            
-                            
-                            ctx.getHead().addTransition(left.getHead());
-                            ctx.getHead().addTransition(right.getHead());
-                            
-                            left.getTail().addTransition(ctx.getTail());
-                            right.getTail().addTransition(ctx.getTail());
+                        public void handle(Symbol sym_, Object ctx_) {
+//                            RegexContext ctx = (RegexContext)ctx_;
+//                            NFAState[] st = (NFAState[])ctx_;
+                            NonTerminal self = (NonTerminal)sym_;
+//                            RegexContext left = new RegexContext(),
+//                                right = new RegexContext();
+//                            NonTerminal self = (NonTerminal)sym_,
+//                                leftChild = (NonTerminal)self.getChildren().get(0),
+//                                rightChild = (NonTerminal)self.getChildren().get(2);
+//                            
+//                            leftChild.execute(left);
+//                            rightChild.execute(right);
+//                            
+//                            
+//                            ctx.getHead().addTransition(left.getHead());
+//                            ctx.getHead().addTransition(right.getHead());
+//                            
+//                            left.getTail().addTransition(ctx.getTail());
+//                            right.getTail().addTransition(ctx.getTail());
+                            ((NonTerminal)self.first()).execute(ctx_);
+                            ((NonTerminal)self.third()).execute(ctx_);
                         }
                     
                     }));
@@ -116,16 +121,25 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(SEQ_EXPR).right(SEQ_EXPR, SEQ_EXPR).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext first = new RegexContext(), second = new RegexContext(), ctx = (RegexContext) ctx_;
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = (RegexContext)ctx_;
+                NFAState[] st = (NFAState[])ctx_;
+                
+                NFAState middle = new NFAState();
+//                RegexContext first = new RegexContext(ctx.getHead(), middle),
+//                    second = new RegexContext(middle, ctx.getTail());
+                NFAState[] first = new NFAState[] {st[0], middle},
+                    second = new NFAState[] {middle, st[1]};
                 NonTerminal self = (NonTerminal) sym_;
-                ((NonTerminal) self.getChildren().get(0)).execute(first);
-                ((NonTerminal) self.getChildren().get(1)).execute(second);
+//                ((NonTerminal) self.getChildren().get(0)).execute(first);
+//                ((NonTerminal) self.getChildren().get(1)).execute(second);
 
-                // Head --> fist --> second --> Tail
-                ctx.linkHead(first.getHead());
-                first.linkTail(second.getHead());
-                second.linkTail(ctx.getTail());
+//                // Head --> fist --> second --> Tail
+//                ctx.linkHead(first.getHead());
+//                first.linkTail(second.getHead());
+//                second.linkTail(ctx.getTail());
+                ((NonTerminal)self.first()).execute(first);
+                ((NonTerminal)self.second()).execute(second);
             }
 
         }));
@@ -136,8 +150,9 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(ATOM).right(LB, CLASS_EXPR, RB).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                DUMMY_HANDLER.handle(((NonTerminal)sym_).second(), ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+                Symbol second = ((NonTerminal)sym_).second();
+                ((NonTerminal) second).execute(ctx_);
             }
             
         }));
@@ -146,8 +161,9 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(ATOM).right(LP, BAR_EXPR, RP).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                DUMMY_HANDLER.handle(((NonTerminal)sym_).second(), ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+                Symbol second = ((NonTerminal)sym_).second();
+                ((NonTerminal) second).execute(ctx_);
             }
             
         }));
@@ -155,12 +171,13 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(ATOM).right(DOT).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext ctx = ((RegexContext)ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = ((RegexContext)ctx_);
+                NFAState[] st = (NFAState[])ctx_;
                 
                 // XXX - the characters we recognize
                 for (char c=0; c<128; ++c) {
-                    ctx.getHead().addTransition(ctx.getTail(),
+                    st[0].addTransition(st[1],
                         new Character(c).toString()); // everything is a string
                 }
             }
@@ -182,28 +199,37 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(STAR_EXPR).right(ATOM, STAR).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext child = new RegexContext(), ctx = ((RegexContext)ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = (RegexContext)ctx_,
+//                    child = new RegexContext(ctx.getHead(), ctx.getHead());
+                NFAState[] st = (NFAState[])ctx_,
+                    child = new NFAState[] {st[0], st[0]};
+//                RegexContext child = new RegexContext(), ctx = ((RegexContext)ctx_);
                 Symbol first = ((NonTerminal)sym_).first();
-                ((NonTerminal)first).execute(ctx);
+                ((NonTerminal)first).execute(child);
                 
-                ctx.linkHead(child.getHead());
-                child.linkTail(ctx.getHead());
-                ctx.linkHead(ctx.getTail());
+//                ctx.linkHead(child.getHead());
+//                child.linkTail(ctx.getHead());
+//                ctx.linkHead(ctx.getTail());
+                st[0].addTransition(st[1]);
             }
             
         }));
         RULE_SET.addRule(new Rule().left(QM_EXPR).right(ATOM, QM).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext child = new RegexContext(), ctx = ((RegexContext)ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = (RegexContext)ctx_;
+                NFAState[] st = (NFAState[])ctx_;
+//                    child = new RegexContext(ctx.getHead(), ctx.getHead());
+//                RegexContext child = new RegexContext(), ctx = ((RegexContext)ctx_);
                 Symbol first = ((NonTerminal)sym_).first();
-                ((NonTerminal)first).execute(ctx);
+                ((NonTerminal)first).execute(st);
                 
-                ctx.linkHead(child.getHead());
-                child.linkTail(ctx.getTail());
-                ctx.linkHead(ctx.getTail());                
+//                ctx.linkHead(child.getHead());
+//                child.linkTail(ctx.getTail());
+//                ctx.linkHead(ctx.getTail());
+                st[0].addTransition(st[1]);
             }
             
         }));
@@ -233,8 +259,9 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(RANGE).right(NUM, HYPHEN, NUM).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext ctx = ((RegexContext)ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = ((RegexContext)ctx_);
+                NFAState[] st = (NFAState[])ctx_;
                 NonTerminal sym = (NonTerminal)sym_;
                 int from = Integer.parseInt((String)((Terminal)sym.first()).getData());
                 int to = Integer.parseInt((String)((Terminal)sym.third()).getData());
@@ -246,7 +273,7 @@ public class RegexCompiler {
                 // XXX - the characters we recognize
                 for (int i=from; i <= to; ++i) {
                     char c = Character.forDigit(i, 10);
-                    ctx.getHead().addTransition(ctx.getTail(),
+                    st[0].addTransition(st[1],
                         new Character(c).toString()); // everything is a string
                 }
             }
@@ -255,8 +282,9 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(RANGE).right(ALPHA, HYPHEN, ALPHA).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext ctx = ((RegexContext)ctx_);
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = ((RegexContext)ctx_);
+                NFAState[] st = (NFAState[])ctx_;
                 NonTerminal sym = (NonTerminal)sym_;
                 char from = ((String)((Terminal)sym.first()).getData()).charAt(0);
                 char to = ((String)((Terminal)sym.third()).getData()).charAt(0);
@@ -267,7 +295,7 @@ public class RegexCompiler {
                 }
                 // XXX - the characters we recognize
                 for (char c=from; c <= to; ++c) {
-                    ctx.getHead().addTransition(ctx.getTail(),
+                    st[0].addTransition(st[1],
                         new Character(c).toString()); // everything is a string
                 }
             }
@@ -295,19 +323,24 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(CLASS_EXPR, CLASS_EXPR).addHandler(new IRuleHandler() {
 
             @Override
-            public void handle(Symbol sym_, IContext ctx_) {
-                RegexContext left = new RegexContext(), right = new RegexContext(), ctx = (RegexContext) ctx_;
+            public void handle(Symbol sym_, Object ctx_) {
+//                RegexContext ctx = (RegexContext) ctx_;
+//                NFAState[] st = (NFAState[])ctx_;
+                
+//                NFAState middle = new NFAState();
+//                RegexContext left = new RegexContext(ctx.getHead(), middle),
+//                    right = new RegexContext(middle, ctx.getTail()); 
                 NonTerminal self = (NonTerminal) sym_;
 
-                ((NonTerminal)self.first()).execute(left);
-                ((NonTerminal)self.second()).execute(right);
+                ((NonTerminal)self.first()).execute(ctx_);
+                ((NonTerminal)self.second()).execute(ctx_);
 
-                // same as the BarExpr
-                ctx.linkHead(left.getHead());
-                ctx.linkHead(right.getHead());
-
-                left.getTail().addTransition(ctx.getTail());
-                right.getTail().addTransition(ctx.getTail());
+//                // same as the BarExpr
+//                ctx.linkHead(left.getHead());
+//                ctx.linkHead(right.getHead());
+//
+//                left.getTail().addTransition(ctx.getTail());
+//                right.getTail().addTransition(ctx.getTail());
             }
             
         }));

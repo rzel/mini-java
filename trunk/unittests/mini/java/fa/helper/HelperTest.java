@@ -81,7 +81,7 @@ public class HelperTest {
     
     
     @Test
-    public void testDupeNodes() {
+    public void testVisitDupeNodes() {
         final Object init = new Object();
         final Set<Object> checked = new HashSet<Object>();
         
@@ -100,5 +100,12 @@ public class HelperTest {
             }
             
         });
+    }
+    
+    @Test
+    public void testDumpSelfReference() {
+        NFAState root = new NFAState();
+        root.addTransition(root, "A");
+        assertEquals("0 =>(A) 0\n", Helper.dump(root));
     }
 }

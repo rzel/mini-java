@@ -1,12 +1,22 @@
 package mini.java.syntax;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import mini.java.fa.NFAState;
+import mini.java.fa.helper.Helper;
+import mini.java.fa.helper.IFinder;
+import mini.java.fa.helper.IFinderCallback;
+import mini.java.fa.helper.NFAStateFinder;
 
 public class ParserState extends NFAState {
+    
+    private final static boolean POC = false;
     // fields
     private final NFAState          _root;
     private final Map<String, Rule> _rules = new HashMap<String, Rule>();
@@ -48,6 +58,63 @@ public class ParserState extends NFAState {
     }
     
     public Rule getRule(String lookahead_) {
+        if (POC && canReduce()) {   
+            final RuleSet ruleSet = getRules()[0].getParent(); 
+            
+            
+            for (Rule rule : getRules()) {
+                
+                final Set<String> targets = new HashSet<String>(
+                        Collections.singleton(rule.getLeftSymbol()));
+                final Set<String> lookaheads = new HashSet<String>();
+                
+                Helper.visit(targets, new IFinder<String>() {
+        
+                    @Override
+                    public List<String> findNext(String node_) {
+                        for (Rule rule : ruleSet.getRules()) {
+                            List<String> rhs = rule.getRightSymbols();
+                            if (rhs.get(rhs.size() - 1).equals(node_)) {
+                                targets.add(rule.getLeftSymbol());
+                            }
+                        }
+                        return new LinkedList<String>(targets);
+                    }
+                    
+                });
+                
+                
+                Helper.visit(_root, new NFAStateFinder(new IFinderCallback<NFAState>() {
+    
+                    @Override
+                    public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
+                        if (targets.contains(input_)) {
+                            for (Object o : dest_.getInputs()) {
+                                lookaheads.add((String)o);
+                            }
+                        }
+                        return true;
+                    }
+    
+                }));
+                
+                lookaheads.removeAll(ruleSet.getNonTerminals());
+                if (targets.contains(RuleSet.START)) {
+                    lookaheads.add(RuleSet.END);
+                }
+                
+                for (String lookahead : lookaheads) {
+                    System.err.printf("POC: %s -> <%s>%n", rule, lookahead);
+                    
+                    Rule actual = _rules.get(lookahead),
+                        expected = rule;
+                    if (!expected.equals(actual)) {
+                        System.err.printf("lookahead<%s>: [%s] != [%s]%n",
+                                lookahead, expected, actual);
+                    }
+                }
+            }
+        }
         return _rules.get(lookahead_);
     }
     
