@@ -1,7 +1,7 @@
 package mini.java.fa.helper;
 
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,8 +18,8 @@ public class NFAClosureFinder implements IFinder<NFAClosure> {
     }
 
     @Override
-    public Queue<NFAClosure> findNext(NFAClosure node_) {
-        Queue<NFAClosure> ret = new LinkedList<NFAClosure>();
+    public List<NFAClosure> findNext(NFAClosure node_) {
+        List<NFAClosure> ret = new LinkedList<NFAClosure>();
         
         // sort the closures by inputs
         Set<Object> inputs = new TreeSet<Object>(Helper.STR_CMP);

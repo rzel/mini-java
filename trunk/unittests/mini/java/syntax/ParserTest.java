@@ -138,5 +138,29 @@ public class ParserTest {
         assertEquals(A, target.getRule("1"));
         assertEquals(B, target.getRule("2"));
     }
+    
+    
+    @Test
+    public void testBuildEngine() {
+        RuleSet rules = new RuleSet();
+        rules.addRule(new Rule().left(RuleSet.START).right("E"));
+        rules.addRule(new Rule().left("E").right("E", "*"));
+        rules.addRule(new Rule().left("E").right("E", "|", "E"));
+        rules.addRule(new Rule().left("E").right("(", "E", ")"));
+        rules.addRule(new Rule().left("E").right("E", "E"));
+        rules.addRule(new Rule().left("E").right("C"));
+        
+        ParserState engine = Parser.buildEngine(rules);
+        assertEquals(
+                "0 =>(() 1\n" + "0 =>(C) 2\n" + "0 =>(E) 3\n" +
+                "1 =>(() 1\n" + "1 =>(C) 2\n" + "1 =>(E) 4\n" +
+                "3 =>(() 1\n" + "3 =>(*) 5\n" + "3 =>(C) 2\n" + "3 =>(E) 6\n" + "3 =>(|) 7\n" +
+                "4 =>(() 1\n" + "4 =>()) 8\n" + "4 =>(*) 5\n" + "4 =>(C) 2\n" + "4 =>(E) 6\n" + "4 =>(|) 7\n" +
+                "6 =>(() 1\n" + "6 =>(*) 5\n" + "6 =>(C) 2\n" + "6 =>(E) 6\n" + "6 =>(|) 7\n" +
+                "7 =>(() 1\n" + "7 =>(C) 2\n" + "7 =>(E) 9\n" +
+                "9 =>(() 1\n" + "9 =>(*) 5\n" + "9 =>(C) 2\n" + "9 =>(E) 6\n" + "9 =>(|) 7\n",
+                Helper.dump(engine));
+        
+    }
 
 }

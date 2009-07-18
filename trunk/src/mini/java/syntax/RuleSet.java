@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 import mini.java.fa.helper.Helper;
@@ -139,7 +139,7 @@ public class RuleSet {
                 
                 Helper.visit(symbol, new IFinder<String>(){    
                     @Override
-                    public Queue<String> findNext(String node_) {
+                    public List<String> findNext(String node_) {
                         ret.addAll(__follows.get(node_)); // add direct follows
                         return
                             // we also need to check if it is a "tail"
@@ -162,7 +162,7 @@ public class RuleSet {
         
         Helper.visit(ret, new IFinder<String>(){
             @Override
-            public Queue<String> findNext(String node_) {
+            public List<String> findNext(String node_) {
                 ret.addAll( heads.get(node_));
                 return new LinkedList<String>(ret); // next...
             }

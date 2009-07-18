@@ -1,7 +1,7 @@
 package mini.java.fa.helper;
 
 import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,8 +18,8 @@ public class NFAStateFinder implements IFinder<NFAState> {
     }
 
     @Override
-    public Queue<NFAState> findNext(NFAState node_) {
-        Queue<NFAState> ret = new LinkedList<NFAState>();
+    public List<NFAState> findNext(NFAState node_) {
+        List<NFAState> ret = new LinkedList<NFAState>();
         // first the epsilons, ordered according to target states
         Set<NFAState> epsilons = new TreeSet<NFAState>(Helper.STR_CMP);
         epsilons.addAll(node_.getEpsilons());

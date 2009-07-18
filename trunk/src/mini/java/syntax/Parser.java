@@ -148,19 +148,8 @@ public class Parser {
             prev.addRule(rule); // add the rule to the final state
         }
         
-        if (DEBUG) {
-            final StringBuilder sb = new StringBuilder();
-            Helper.visit(nfaRoot, new NFAStateFinder(
-                    new IFinderCallback<NFAState>() {
-                        public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
-                            sb.append(String.format("%s => %s(%s)%n",
-                                    src_, dest_, input_));
-                            return true;
-                        }
-                    }));
-            System.err.print(sb);
-            System.err.println("----");
-        }
+        __dumpEngine(nfaRoot);
+        
         
         // **Generates the actual parser engine
         final Map<NFAClosure, NFAState> mapping = new HashMap<NFAClosure, NFAState>();
@@ -190,9 +179,30 @@ public class Parser {
                         src.addTransition(mapping.get(dest_), input_);
                         return true;
                     }
+                    
                 }));
         
+        
+        __dumpEngine(engine);
+        
         return engine;
+    }
+    
+    
+    private static void __dumpEngine(NFAState root_) {
+        if (DEBUG) {
+            final StringBuilder sb = new StringBuilder();
+            Helper.visit(root_, new NFAStateFinder(
+                    new IFinderCallback<NFAState>() {
+                        public boolean onNext(NFAState src_, NFAState dest_, Object input_) {
+                            sb.append(String.format("%s => %s(%s)%n",
+                                    src_, dest_, input_));
+                            return true;
+                        }
+                    }));
+            System.err.print(sb);
+            System.err.println("----__dumpEngine()\n");
+        }
     }
 
 }
