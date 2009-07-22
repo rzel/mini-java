@@ -33,7 +33,8 @@ public class RegexCompilerTest {
             tokens.add(new Terminal(RegexCompiler.NUM, "1"));
             tokens.add(new Terminal(RegexCompiler.NUM, "2"));
             tokens.add(new Terminal(RegexCompiler.NUM, "3"));
-            tokens.add(new Terminal(RegexCompiler.ALPHA, "a"));
+            tokens.add(new Terminal(RegexCompiler.LOWER, "a"));
+            tokens.add(new Terminal(RegexCompiler.UPPER, "A"));
             tokens.add(new Terminal(RegexCompiler.STAR, "*"));
             tokens.add(new Terminal(RegexCompiler.DOT, "."));
             tokens.add(new Terminal(RegexCompiler.QM, "?"));
@@ -48,7 +49,7 @@ public class RegexCompilerTest {
             
             assertArrayEquals(
                     tokens.toArray(new Terminal[0]),
-                    target.tokenize("123a*.?()[]|-\\*\\"));
+                    target.tokenize("123aA*.?()[]|-\\*\\"));
         }
     }
     
@@ -56,17 +57,17 @@ public class RegexCompilerTest {
     @Test
     public void testSyntax() {
         NonTerminal root = (NonTerminal)parser.parse(RegexCompiler.TOKENIZER.tokenize("a"));
-        assertEquals("START(BarExpr(SeqExpr(Atom(alpha))))", root.toString());
+        assertEquals("START(BarExpr(SeqExpr(Atom(lower))))", root.toString());
         
         
-        String alphaRange = "ClassExpr(Range(alpha,hyphen,alpha))";
+        String lowerRange = "ClassExpr(Range(lower,hyphen,lower))";
         String numRange = "ClassExpr(Range(num,hyphen,num))";
         __testSyntax("[a-b1-2]",
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr("
-                + alphaRange + "," + numRange + "),rb))))");
+                + lowerRange + "," + numRange + "),rb))))");
         
         __testSyntax("[aa-b]",
-                "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ClassExpr(alpha)," + alphaRange + "),rb))))");
+                "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ClassExpr(lower)," + lowerRange + "),rb))))");
         __testSyntax("[*]",
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(star),rb))))");
         __testSyntax("[\\[]", "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ch),rb))))");
@@ -76,30 +77,31 @@ public class RegexCompilerTest {
         __testIllegalSyntax("[[]]");
         __testIllegalSyntax("a?*");
         __testIllegalSyntax("a*?");
+        __testIllegalSyntax("[A-z]");
     }
     
     @Test
     public void testPrecedence() {
         Tokenizer tokenizer = RegexCompiler.TOKENIZER;
-        String alpha = "SeqExpr(Atom(alpha))";
+        String lower = "SeqExpr(Atom(lower))";
         {
             NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("aa|a"));
             assertEquals(
                     "START(BarExpr("
-                    + "BarExpr(SeqExpr(" + alpha + "," + alpha + ")),bar,BarExpr(" + alpha + ")))", root.toString());
+                    + "BarExpr(SeqExpr(" + lower + "," + lower + ")),bar,BarExpr(" + lower + ")))", root.toString());
         }
         
         {
             NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("a|aa"));
             assertEquals(
                     "START(BarExpr("
-                    + "BarExpr(" + alpha + "),bar,BarExpr(SeqExpr(" + alpha + "," + alpha + "))))", root.toString());
+                    + "BarExpr(" + lower + "),bar,BarExpr(SeqExpr(" + lower + "," + lower + "))))", root.toString());
         }
         
         {
             NonTerminal root = (NonTerminal)parser.parse(tokenizer.tokenize("aa*"));
             assertEquals(
-                    "START(BarExpr(SeqExpr(" + alpha + ",SeqExpr(StarExpr(Atom(alpha),star)))))", root.toString());
+                    "START(BarExpr(SeqExpr(" + lower + ",SeqExpr(StarExpr(Atom(lower),star)))))", root.toString());
         }
     }
     
@@ -137,7 +139,7 @@ public class RegexCompilerTest {
                 "0 =>(b) 1\n");
     }
     
-    
+
     
     
     @Test
@@ -204,7 +206,7 @@ public class RegexCompilerTest {
         try
         {
             parser.parse(tokenizer.tokenize(input_));
-            fail("Illegal syntax: " + input_);
+            fail("Illegal syntax cannot be detected: " + input_);
         }
         catch (RuntimeException ex_)
         {

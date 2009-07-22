@@ -53,12 +53,12 @@ public final class Tokenizer implements ITokenizer {
             ? new Terminal(type, longest) : null;
     }
 
-    @Override
+//    @Override
     public void addMatcher(IMatcher matcher_) {
         _matchers.add(matcher_);
     }
 
-    @Override
+//    @Override
     public IMatcher getMatcher(String type_) {
         for (IMatcher matcher : _matchers) {
             if (matcher.getType().equals(type_)) {
@@ -68,12 +68,12 @@ public final class Tokenizer implements ITokenizer {
         return null;
     }
 
-    @Override
+//    @Override
     public IMatcher[] getMatchers() {
         return _matchers.toArray(new IMatcher[0]);
     }
 
-    @Override
+//    @Override
     public String[] getTokenTypes() {
         Set<String> types = new HashSet<String>();
         for (IMatcher matcher : _matchers) {

@@ -8,25 +8,25 @@ public interface ITokenizer {
      */
     public Terminal[] tokenize(String input_);
     
-    /**
-     * Returns all token types supported.
-     */
-    public String[] getTokenTypes();
-    
-    /**
-     * Returns matchers for each of the token types.
-     */
-    public IMatcher[] getMatchers();
-    
-    
-    
-    /**
-     * Helper method: GetMatcherByType()
-     */
-    public IMatcher getMatcher(String type_);
-    
-    /**
-     * Adds a matcher into the tokenizer. Order matters.
-     */
-    public void addMatcher(IMatcher matcher_);
+//    /**
+//     * Returns all token types supported.
+//     */
+//    public String[] getTokenTypes();
+//    
+//    /**
+//     * Returns matchers for each of the token types.
+//     */
+//    public IMatcher[] getMatchers();
+//    
+//    
+//    
+//    /**
+//     * Helper method: GetMatcherByType()
+//     */
+//    public IMatcher getMatcher(String type_);
+//    
+//    /**
+//     * Adds a matcher into the tokenizer. Order matters.
+//     */
+//    public void addMatcher(IMatcher matcher_);
 }
