@@ -166,9 +166,12 @@ public class Parser {
                             ParserState engineState = new ParserState(engine);
                             // copy the rules from the NFA to the engine
                             for (NFAState state : dest_.getStates()) {
-                                ParserState st = (ParserState)state;
-                                if (st.canReduce()) {
-                                    engineState.addRules(st.getRules());
+                                // XXX - hack
+                                if (state instanceof ParserState) {
+                                    ParserState st = (ParserState)state;
+                                    if (st.canReduce()) {
+                                        engineState.addRules(st.getRules());
+                                    }
                                 }
                             }
                             mapping.put(dest_, engineState);
