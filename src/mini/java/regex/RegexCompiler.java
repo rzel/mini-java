@@ -1,10 +1,9 @@
 package mini.java.regex;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import mini.java.fa.NFAState;
 import mini.java.lex.IMatcher;
+import mini.java.lex.CharLiteralMatcher;
+import mini.java.lex.CharRangeMatcher;
 import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
 import mini.java.syntax.Rule;
@@ -23,7 +22,10 @@ public class RegexCompiler {
     public static final String  HYPHEN    = "hyphen";
     public static final String  BAR       = "bar";
     public static final String  STAR      = "star";    
-    public static final String  ALPHA     = "alpha";
+//    public static final String  ALPHA     = "alpha";
+    public static final String LOWER    = "lower";
+    public static final String UPPER    = "upper";
+    
     public static final String  NUM       = "num";
     public static final String  DOT       = "dot";    
     public static final String  CH        = "ch"; // any supported characters    
@@ -66,6 +68,28 @@ public class RegexCompiler {
             NFAState[] st = (NFAState[])ctx_;
             
             st[0].addTransition(st[1], ((Terminal)first).getData());
+        }
+        
+    };
+    
+    public static final IRuleHandler RANGE_HANDLER = new IRuleHandler() {
+
+        @Override
+        public void handle(Symbol sym_, Object ctx_) {
+            NFAState[] st = (NFAState[])ctx_;
+            NonTerminal sym = (NonTerminal)sym_;
+            char from = ((String)((Terminal)sym.first()).getData()).charAt(0);
+            char to = ((String)((Terminal)sym.third()).getData()).charAt(0);
+            {
+                if (from > to) {
+                    char t = to; to = from; from = t;
+                }
+            }
+            // XXX - the characters we recognize
+            for (char c=from; c <= to; ++c) {
+                st[0].addTransition(st[1],
+                    new Character(c).toString()); // everything is a string
+            }
         }
         
     };
@@ -144,7 +168,8 @@ public class RegexCompiler {
             }
             
         }));
-        RULE_SET.addRule(new Rule().left(ATOM).right(ALPHA).addHandler(LITERAL_HANDLER));
+        RULE_SET.addRule(new Rule().left(ATOM).right(LOWER).addHandler(LITERAL_HANDLER));
+        RULE_SET.addRule(new Rule().left(ATOM).right(UPPER).addHandler(LITERAL_HANDLER));
         RULE_SET.addRule(new Rule().left(ATOM).right(NUM).addHandler(LITERAL_HANDLER));
         RULE_SET.addRule(new Rule().left(ATOM).right(CH).addHandler(LITERAL_HANDLER));
         
@@ -200,31 +225,12 @@ public class RegexCompiler {
             }
 
         }));
-        RULE_SET.addRule(new Rule().left(RANGE).right(ALPHA, HYPHEN, ALPHA).addHandler(new IRuleHandler() {
-
-            @Override
-            public void handle(Symbol sym_, Object ctx_) {
-                NFAState[] st = (NFAState[])ctx_;
-                NonTerminal sym = (NonTerminal)sym_;
-                char from = ((String)((Terminal)sym.first()).getData()).charAt(0);
-                char to = ((String)((Terminal)sym.third()).getData()).charAt(0);
-                {
-                    if (from > to) {
-                        char t = to; to = from; from = t;
-                    }
-                }
-                // XXX - the characters we recognize
-                for (char c=from; c <= to; ++c) {
-                    st[0].addTransition(st[1],
-                        new Character(c).toString()); // everything is a string
-                }
-            }
-            
-        }));
+        RULE_SET.addRule(new Rule().left(RANGE).right(LOWER, HYPHEN, LOWER).addHandler(RANGE_HANDLER));
+        RULE_SET.addRule(new Rule().left(RANGE).right(UPPER, HYPHEN, UPPER).addHandler(RANGE_HANDLER));
         
         RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(RANGE).addHandler(DUMMY_HANDLER));
         
-        for (String s : new String[] {ALPHA, NUM, CH, STAR, QM, BAR, LP, RP, DOT}) {
+        for (String s : new String[] {LOWER, UPPER, NUM, CH, STAR, QM, BAR, LP, RP, DOT}) {
             RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(s).addHandler(LITERAL_HANDLER));
         }
         
@@ -253,84 +259,19 @@ public class RegexCompiler {
 
         
         TOKENIZER = new Tokenizer();
-        TOKENIZER.addMatcher(new IMatcher() {
-
-            @Override
-            public String getType() {
-                return NUM;
-            }
-
-            @Override
-            public String match(String input_) {
-                if (input_.length() <= 0) {
-                    return null;
-                }
-                
-                char ch = input_.charAt(0);
-                if (ch >= '0' && ch <= '9')
-                {
-                    return "" + ch;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            
-        });
+        TOKENIZER.addMatcher(new CharRangeMatcher(NUM, '0', '9'));        
+        TOKENIZER.addMatcher(new CharRangeMatcher(LOWER, 'a', 'z'));
+        TOKENIZER.addMatcher(new CharRangeMatcher(UPPER, 'A', 'Z'));
         
-        TOKENIZER.addMatcher(new IMatcher() {
-
-            @Override
-            public String getType() {
-                return ALPHA;
-            }
-
-            @Override
-            public String match(String input_) {
-                if (input_.length() <= 0) {
-                    return null;
-                }
-                
-                char ch = input_.charAt(0);
-                if ((ch >= 'A' && ch <= 'Z')
-                        || (ch >= 'a' && ch <= 'z')
-                        || (ch == '_'))
-                {
-                    return "" + ch;
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            
-        });
-        
-        
-        Map<String, String> tokenSpecs = new HashMap<String, String>();
-        tokenSpecs.put(DOT, ".");
-        tokenSpecs.put(STAR, "*");
-        tokenSpecs.put(BAR, "|");
-        tokenSpecs.put(HYPHEN, "-");
-        tokenSpecs.put(LP, "(");
-        tokenSpecs.put(RP, ")");
-        tokenSpecs.put(LB, "[");
-        tokenSpecs.put(RB, "]");
-        tokenSpecs.put(QM, "?");
-        for (Map.Entry<String, String> tokenSpec : tokenSpecs.entrySet()) {
-            final String type = tokenSpec.getKey();
-            final String spec = tokenSpec.getValue();
-            
-            TOKENIZER.addMatcher(new IMatcher() {
-                public String match(String input_) {
-                    return input_.startsWith(spec) ? spec : null;
-                }
-                public String getType() {
-                    return type;
-                }
-            });
-        }
+        TOKENIZER.addMatcher(new CharLiteralMatcher(DOT, '.'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(STAR, '*'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(BAR, '|'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(HYPHEN, '-'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(LP, '('));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(RP, ')'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(LB, '['));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(RB, ']'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(QM, '?'));
         
         // the lowest precedence: CH
         TOKENIZER.addMatcher(new IMatcher() {
