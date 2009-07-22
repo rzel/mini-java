@@ -2,9 +2,7 @@ package mini.java.syntax;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import mini.java.fa.helper.Helper;
 
 import org.junit.Test;
 
@@ -28,17 +26,17 @@ public class ParserStateTest {
         assertNull("NonTerminals should be considered as lookaheads", state.getRule("B"));
     }
 
-    @Test
-    public void testAddTransition() {
-        ParserState root = ParserState.createRoot();
-        root.addTransition(new ParserState(root), "A");
-        root.addTransition(new ParserState(root), "A"); // another with the same input
-        
-        assertNotNull("ParserState should be able to handle multiple transitions with the same input",
-                root.getEpsilons());
-        assertEquals(1, root.getEpsilons().size());
-        assertEquals("0 =>(A) 1\n", Helper.dump(Helper.collapse(root)));
-    }
+//    @Test
+//    public void testAddTransition() {
+//        ParserState root = ParserState.createRoot();
+//        root.addTransition(new ParserState(root), "A");
+//        root.addTransition(new ParserState(root), "A"); // another with the same input
+//        
+//        assertNotNull("ParserState should be able to handle multiple transitions with the same input",
+//                root.getEpsilons());
+//        assertEquals(1, root.getEpsilons().size());
+//        assertEquals("0 =>(A) 1\n", Helper.dump(Helper.collapse(root)));
+//    }
     
     @Test
     public void testGetRules() {

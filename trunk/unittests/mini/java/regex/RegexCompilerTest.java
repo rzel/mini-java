@@ -15,6 +15,7 @@ import mini.java.fa.helper.Helper;
 import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
 import mini.java.syntax.Parser;
+import mini.java.syntax.Symbol;
 import mini.java.syntax.Terminal;
 
 import org.junit.Test;
@@ -44,12 +45,13 @@ public class RegexCompilerTest {
             tokens.add(new Terminal(RegexCompiler.RB, "]"));
             tokens.add(new Terminal(RegexCompiler.BAR, "|"));
             tokens.add(new Terminal(RegexCompiler.HYPHEN, "-"));
+            tokens.add(new Terminal(RegexCompiler.CARET, "^"));
             tokens.add(new Terminal(RegexCompiler.CH, "\\*"));
             tokens.add(new Terminal(RegexCompiler.CH, "\\"));
             
             assertArrayEquals(
                     tokens.toArray(new Terminal[0]),
-                    target.tokenize("123aA*.?()[]|-\\*\\"));
+                    target.tokenize("123aA*.?()[]|-^\\*\\"));
         }
     }
     
@@ -71,13 +73,14 @@ public class RegexCompilerTest {
         __testSyntax("[*]",
                 "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(star),rb))))");
         __testSyntax("[\\[]", "START(BarExpr(SeqExpr(Atom(lb,ClassExpr(ch),rb))))");
-        
+        __testSyntax("[^a]", "START(BarExpr(SeqExpr(Atom(lb,caret,ClassExpr(lower),rb))))");
 
         
         __testIllegalSyntax("[[]]");
         __testIllegalSyntax("a?*");
         __testIllegalSyntax("a*?");
         __testIllegalSyntax("[A-z]");
+        __testIllegalSyntax("[a^b]");
     }
     
     @Test
@@ -137,6 +140,9 @@ public class RegexCompilerTest {
                 "0 =>(2) 1\n" +
                 "0 =>(a) 1\n" +
                 "0 =>(b) 1\n");
+        
+        __testRegex("[\\*]", "0 =>(*) 1\n");
+                
     }
     
 
@@ -195,6 +201,56 @@ public class RegexCompilerTest {
         }
         __testRegex("a|.", sb.toString());
     }
+    
+    @Test
+    public void testRegexCaret() {
+        StringBuilder sb = new StringBuilder();
+        for (char ch=RegexCompiler.CH_MIN; ch <= RegexCompiler.CH_MAX; ++ch) {
+            if ((ch >= 'a' && ch <= 'z')
+                    || (ch >= 'A' && ch <= 'Z')
+                    || (ch >= '0' && ch <= '9')
+                    || (ch == '_'))
+            {
+              // continue  
+            }
+            else
+            {
+              sb.append("0 =>(" + ch + ") 1\n");
+            }
+        }
+        __testRegex("[^0-9A-Za-z_]", sb.toString());
+    }
+    
+    @Test
+    public void testBug1() {
+        String regex = "(a|aa)b";
+        Symbol root = parser.parse(tokenizer.tokenize(regex));
+        assertEquals("START(BarExpr(SeqExpr(SeqExpr(Atom(lp," + 
+                "BarExpr(BarExpr(SeqExpr(Atom(lower))),bar," +
+                    "BarExpr(SeqExpr(SeqExpr(Atom(lower)),SeqExpr(Atom(lower))))),rp))," +
+                    "SeqExpr(Atom(lower)))))", root.toString());
+        
+        NFAState head = new NFAState(),
+            tail = new AcceptableNFAState(); 
+        ((NonTerminal)root).execute(new NFAState[] {head, tail});
+        assertEquals(
+                "0 =>(a) 1\n" +
+                "1 =>(a) 2\n" +
+                "1 =>(b) 3\n" +
+                "2 =>(b) 3\n", Helper.dump(Helper.collapse(head)));
+    }
+    
+    @Test
+    public void testBug2() {
+        __testRegex("-",
+                "0 =>(-) 1\n");
+    }
+    
+    @Test
+    public void testBug3() {
+        __testRegex("\\.", "0 =>(.) 1\n");
+    }
+    
     
     
     private static void __testSyntax(String input_, String expected_) {

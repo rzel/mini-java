@@ -1,11 +1,14 @@
 package mini.java.regex;
 
+import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAState;
-import mini.java.lex.IMatcher;
+import mini.java.fa.helper.Helper;
 import mini.java.lex.CharLiteralMatcher;
 import mini.java.lex.CharRangeMatcher;
+import mini.java.lex.IMatcher;
 import mini.java.lex.Tokenizer;
 import mini.java.syntax.NonTerminal;
+import mini.java.syntax.Parser;
 import mini.java.syntax.Rule;
 import mini.java.syntax.RuleSet;
 import mini.java.syntax.Symbol;
@@ -13,6 +16,9 @@ import mini.java.syntax.Terminal;
 import mini.java.syntax.Rule.IRuleHandler;
 
 public class RegexCompiler {
+    
+    public static final char CH_MIN = 0, CH_MAX = 127;
+    
     // terminals
     public static final String  QM        = "qm"; // question marker
     public static final String  RB        = "rb"; // right bracket
@@ -20,6 +26,7 @@ public class RegexCompiler {
     public static final String  RP        = "rp";
     public static final String  LP        = "lp";
     public static final String  HYPHEN    = "hyphen";
+    public static final String  CARET     = "caret";
     public static final String  BAR       = "bar";
     public static final String  STAR      = "star";    
 //    public static final String  ALPHA     = "alpha";
@@ -94,6 +101,22 @@ public class RegexCompiler {
         
     };
     
+    public static final IRuleHandler CH_HANDLER = new IRuleHandler() {
+
+        @Override
+        public void handle(Symbol sym_, Object ctx_) {
+            Symbol first = ((NonTerminal)sym_).first();
+            String data = ((Terminal)first).getData();
+            NFAState[] st = (NFAState[])ctx_;
+            
+            st[0].addTransition(st[1],
+                    (data.length() == 2 && data.charAt(0) == '\\')
+                        ? data.substring(1) : data);
+            
+        }
+        
+    };
+    
     
     
     
@@ -142,6 +165,27 @@ public class RegexCompiler {
             }
             
         }));
+        RULE_SET.addRule(new Rule().left(ATOM).right(LB, CARET, CLASS_EXPR, RB).addHandler(new IRuleHandler() {
+
+            @Override
+            public void handle(Symbol sym_, Object ctx_) {
+                Symbol third = ((NonTerminal)sym_).third();
+                NFAState head = new NFAState(),
+                    tail = new AcceptableNFAState();
+                ((NonTerminal) third).execute(new NFAState[] {head, tail});
+                
+                NFAState[] ctx = (NFAState[]) ctx_;
+                // XXX - HACK!
+                for (char c = CH_MIN; c <= CH_MAX; ++c) {
+                    if (head.getState("" + c) == tail) {
+                        // skipped
+                    } else {
+                        ctx[0].addTransition(ctx[1], "" + c);
+                    }
+                }
+            }
+            
+        }));
         
         
         RULE_SET.addRule(new Rule().left(ATOM).right(LP, BAR_EXPR, RP).addHandler(new IRuleHandler() {
@@ -161,7 +205,7 @@ public class RegexCompiler {
                 NFAState[] st = (NFAState[])ctx_;
                 
                 // XXX - the characters we recognize
-                for (char c=0; c<128; ++c) {
+                for (char c=CH_MIN; c<=CH_MAX; ++c) {
                     st[0].addTransition(st[1],
                         new Character(c).toString()); // everything is a string
                 }
@@ -171,7 +215,9 @@ public class RegexCompiler {
         RULE_SET.addRule(new Rule().left(ATOM).right(LOWER).addHandler(LITERAL_HANDLER));
         RULE_SET.addRule(new Rule().left(ATOM).right(UPPER).addHandler(LITERAL_HANDLER));
         RULE_SET.addRule(new Rule().left(ATOM).right(NUM).addHandler(LITERAL_HANDLER));
-        RULE_SET.addRule(new Rule().left(ATOM).right(CH).addHandler(LITERAL_HANDLER));
+        RULE_SET.addRule(new Rule().left(ATOM).right(CH).addHandler(CH_HANDLER));
+        RULE_SET.addRule(new Rule().left(ATOM).right(HYPHEN).addHandler(LITERAL_HANDLER));
+        RULE_SET.addRule(new Rule().left(ATOM).right(CARET).addHandler(LITERAL_HANDLER));
         
 
         RULE_SET.addRule(new Rule().left(SEQ_EXPR).right(STAR_EXPR).addHandler(DUMMY_HANDLER));
@@ -230,11 +276,13 @@ public class RegexCompiler {
         
         RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(RANGE).addHandler(DUMMY_HANDLER));
         
-        for (String s : new String[] {LOWER, UPPER, NUM, CH, STAR, QM, BAR, LP, RP, DOT}) {
+        // XXX - to avoid ambiguity, we prohibit HYPHEN alone in the class expr
+        for (String s : new String[] {LOWER, UPPER, NUM, STAR, QM, BAR, LP, RP, DOT}) {
             RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(s).addHandler(LITERAL_HANDLER));
         }
+        RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(CH).addHandler(CH_HANDLER));
         
-        // XXX - to avoid ambiguity, we prohibit HYPHEN in the class expr
+        
         RULE_SET.addRule(new Rule().left(CLASS_EXPR).right(CLASS_EXPR, CLASS_EXPR).addHandler(new IRuleHandler() {
 
             @Override
@@ -267,6 +315,7 @@ public class RegexCompiler {
         TOKENIZER.addMatcher(new CharLiteralMatcher(STAR, '*'));
         TOKENIZER.addMatcher(new CharLiteralMatcher(BAR, '|'));
         TOKENIZER.addMatcher(new CharLiteralMatcher(HYPHEN, '-'));
+        TOKENIZER.addMatcher(new CharLiteralMatcher(CARET, '^'));
         TOKENIZER.addMatcher(new CharLiteralMatcher(LP, '('));
         TOKENIZER.addMatcher(new CharLiteralMatcher(RP, ')'));
         TOKENIZER.addMatcher(new CharLiteralMatcher(LB, '['));
@@ -294,5 +343,16 @@ public class RegexCompiler {
                 return CH;
             }
         });
+    }
+    
+    
+    public static NFAState compile(String regex_) {
+        Symbol root = new Parser(RULE_SET).parse(
+                TOKENIZER.tokenize(regex_));
+        NFAState head = new NFAState(),
+            tail = new AcceptableNFAState();
+        ((NonTerminal)root).execute(new NFAState[] {head, tail});
+        
+        return Helper.collapse(head);
     }
 }

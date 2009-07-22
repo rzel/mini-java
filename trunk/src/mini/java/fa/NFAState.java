@@ -26,15 +26,24 @@ public class NFAState {
 
     /**
      * Creates a new transition from this NFAState to the target NFAState.
-     * Target state and input object cannot be null. <b>NOTE:</b> There will be
-     * only one target NFAState for a given input; new transitions will override
-     * existing one.
      */
     public void addTransition(NFAState state_, Object input_) {
-        assert (state_ != null);
-        assert (input_ != null);
-
-        _transitions.put(input_, state_);
+//        assert (state_ != null);
+//        assert (input_ != null);
+//
+//        _transitions.put(input_, state_);
+        
+        // add the ability to handle same inputs
+        if (getInputs().contains(input_)) {
+            // here we actually implement the trick: we create another
+            // state as an intermediate to walkaround the limitation
+            NFAState bridge = new NFAState();
+            bridge.addTransition(state_, input_);
+            addTransition(bridge);
+        }
+        else {
+            _transitions.put(input_, state_);
+        }
     }
 
     /**

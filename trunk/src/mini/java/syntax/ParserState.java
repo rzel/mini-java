@@ -132,21 +132,21 @@ public class ParserState extends NFAState {
         return !_rules.isEmpty();
     }
 
-    @Override
-    public void addTransition(NFAState state_, Object input_) {
-        
-        // add the ability to handle same inputs
-        if (getInputs().contains(input_)) {
-            // here we actually implement the trick: we create another
-            // state as an intermediate to walkaround the limitation
-            NFAState bridge = new ParserState(_root);
-            bridge.addTransition(state_, input_);
-            super.addTransition(bridge);
-        }
-        else {
-            super.addTransition(state_, input_);
-        }
-    }
+//    @Override
+//    public void addTransition(NFAState state_, Object input_) {
+//        
+//        // add the ability to handle same inputs
+//        if (getInputs().contains(input_)) {
+//            // here we actually implement the trick: we create another
+//            // state as an intermediate to walkaround the limitation
+//            NFAState bridge = new ParserState(_root);
+//            bridge.addTransition(state_, input_);
+//            super.addTransition(bridge);
+//        }
+//        else {
+//            super.addTransition(state_, input_);
+//        }
+//    }
 
     @Override
     public String toString() {
