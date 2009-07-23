@@ -11,9 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.TextLexConfig;
-import mini.java.lex.legacy.TokenType;
 
 public class SyntaxConfig {
     public static String defaultConfigFile = "syntax.txt";
@@ -28,7 +26,7 @@ public class SyntaxConfig {
     private SyntaxConfig(String filename)
         throws FileNotFoundException, IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
-        LexConfig lexConfig = TextLexConfig.getInstance();
+        TextLexConfig lexConfig = TextLexConfig.getInstance();
         //Set<TokenType> terminals = lexConfig.getTokenTypes();
         List<TokenType> terminals = lexConfig.getTokenTypes();
         //System.out.println(terminals);

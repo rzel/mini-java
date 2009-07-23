@@ -3,14 +3,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import mini.java.fa.v2.DFA;
-import mini.java.lex.legacy.LexConfig;
+//import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.TextLexConfig;
-import mini.java.lex.legacy.TokenRevamped;
-import mini.java.lex.legacy.TokenType;
 import mini.java.lex.legacy.Tokenizer;
-import mini.java.lex.legacy.TokenizerAdapter;
-import mini.java.lex.legacy.TokenizerIF;
+//import mini.java.lex.legacy.TokenizerAdapter;
+//import mini.java.lex.legacy.TokenizerIF;
 import mini.java.regex.legacy.RegexCompiler;
+import mini.java.syntax.legacy.TokenRevamped;
+import mini.java.syntax.legacy.TokenType;
 
 public class Test04 {
 //    public static void main(String[] args) throws Exception {
@@ -42,33 +42,33 @@ public class Test04 {
 //        JFrame frame = new MiniViewer(TreeView.fromNodeToTreeNode(root));
 //    }
 
-    public static List<TokenRevamped> getSampleTokens() throws Exception {
-        Tokenizer tokenizer = new Tokenizer();
-        LexConfig lexConfig = TextLexConfig.getInstance();
-        for (TokenType type : lexConfig.getTokenTypes()) {
-            String tokenSpec = lexConfig.getTokenSpec(type);
-            //try {
-                //DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
-                //tokenizer.addDFA(dfa, type.toString());
-            //} catch (Exception e) {
-            //    throw new RuntimeException(e);
-            //}
-        }
-        TokenizerIF newTokenizer = new TokenizerAdapter(tokenizer);
-        List<TokenRevamped> tokens = new LinkedList<TokenRevamped>();
-        // I can't believe this! WHY I MUST ADD AN EXTRA CHAR TO
-        // MAKE THIS TOKENIZER WORK?
-        for (TokenRevamped token : newTokenizer.tokenize("class Main { public static void main(String[] args) { System.out.println(123);}}END")) {
-            if (!token.getType().equals(new TokenType("WHITESPACE"))
-                && !token.getType().equals(new TokenType("COMMENT"))) {
-                tokens.add(token);
-            }
-        }
-        //for (TokenRevamped token : tokens) {
-        //    System.out.println(token);
-        //}
-        return tokens;
-    }
+//    public static List<TokenRevamped> getSampleTokens() throws Exception {
+//        Tokenizer tokenizer = new Tokenizer();
+//        LexConfig lexConfig = TextLexConfig.getInstance();
+//        for (TokenType type : lexConfig.getTokenTypes()) {
+//            String tokenSpec = lexConfig.getTokenSpec(type);
+//            //try {
+//                //DFA dfa = RegexCompiler.compile(tokenSpec).toDFA().toDFA0();
+//                //tokenizer.addDFA(dfa, type.toString());
+//            //} catch (Exception e) {
+//            //    throw new RuntimeException(e);
+//            //}
+//        }
+//        TokenizerIF newTokenizer = new TokenizerAdapter(tokenizer);
+//        List<TokenRevamped> tokens = new LinkedList<TokenRevamped>();
+//        // I can't believe this! WHY I MUST ADD AN EXTRA CHAR TO
+//        // MAKE THIS TOKENIZER WORK?
+//        for (TokenRevamped token : newTokenizer.tokenize("class Main { public static void main(String[] args) { System.out.println(123);}}END")) {
+//            if (!token.getType().equals(new TokenType("WHITESPACE"))
+//                && !token.getType().equals(new TokenType("COMMENT"))) {
+//                tokens.add(token);
+//            }
+//        }
+//        //for (TokenRevamped token : tokens) {
+//        //    System.out.println(token);
+//        //}
+//        return tokens;
+//    }
 }
 
 //class MiniViewer extends JFrame {

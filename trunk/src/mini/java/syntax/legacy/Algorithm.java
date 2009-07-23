@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import mini.java.lex.legacy.TokenRevamped;
-import mini.java.lex.legacy.TokenType;
 
 public class Algorithm {
     // XXX - this algorithm cannot handle rule sets with multiple "START" rules

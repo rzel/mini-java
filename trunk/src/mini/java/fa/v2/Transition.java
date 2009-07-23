@@ -32,4 +32,12 @@ public class Transition {
 	public Iterator<Character> getInputs() {
 		return inputs.iterator();
 	}
+
+    @Override
+    public String toString() {
+        return String.format("Tr:%d =>(%s) %d", curNode.getNodeId(),
+                inputs.toString(), nxtNode.getNodeId());
+    }
+	
+	
 }

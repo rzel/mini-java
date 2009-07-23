@@ -61,6 +61,16 @@ public class RegexTest {
         __testRegex("/\\*.*\\*/", "/*hello, world//*/");
     }
     
+    
+//    @Test
+//    public void testCStyleComments2() {
+//        String regex = "/\\*[^*]*\\*((\\**|/\\*[^*]*)\\*)*/";
+//        __testRegex(regex, "/*hello, world*/*/", "/*hello, world*/");
+//        __testRegex(regex, "/*/*/*hello, world*/");
+//        __testRegex(regex, "/**hello, world**/");
+//    }
+    
+    
     @Test
     public void testCppStyleComments() {
         __testRegex("//[^\n]*\n", "//hello, world\n");
