@@ -1,12 +1,14 @@
 package mini.java.syntax;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import mini.java.fa.NFAState;
 import mini.java.fa.helper.Helper;
 
 import org.junit.Test;
@@ -161,6 +163,26 @@ public class ParserTest {
                 "9 =>(() 1\n" + "9 =>(*) 5\n" + "9 =>(C) 2\n" + "9 =>(E) 6\n" + "9 =>(|) 7\n",
                 Helper.dump(engine));
         
+    }
+    
+    
+    @Test
+    public void testBug1() {
+        RuleSet rules = new RuleSet();
+        // "S" has two transitions with the same input, which is implemented by adding a
+        // bridge state. But the problem is this bridge state is an NFAState not a ParserState...
+        Rule A = new Rule().left("S").right("A");
+        Rule AS = new Rule().left("S").right("A", "S");
+        rules.addRule(new Rule().left(RuleSet.START).right("S"));
+        rules.addRule(A).addRule(AS);
+        
+        ParserState engine = Parser.buildEngine(rules);
+        assertNotNull(engine.getState("A"));
+        
+        NFAState state = engine.getState("A");
+        assertTrue(state instanceof ParserState);
+        assertTrue(((ParserState)state).canReduce());
+        assertEquals(A, ((ParserState)state).getRules()[0]);
     }
 
 }

@@ -49,8 +49,7 @@ public class Token {
 	}
 
 	public String toString(){
-		return "text:	"+text+"	type:	"+type+"	line:	"+lineNum+"	col:	"+column;
-//        return "<" + type + ", " + text + ">";	
+		return String.format("%s<%s>(%d,%d)", type, text, lineNum, column);
     }
 
     public int hashCode() {

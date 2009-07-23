@@ -1,6 +1,5 @@
 package mini.java.syntax.legacy;
 
-import mini.java.lex.legacy.TokenRevamped;
 //public class Symbol {
 //public interface Symbol {
 //public class Symbol extends Node<SymbolType> {

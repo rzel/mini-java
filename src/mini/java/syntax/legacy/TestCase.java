@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import mini.java.lex.legacy.DFASimulator;
-import mini.java.lex.legacy.GenericSimulator;
 import mini.java.lex.legacy.Token;
 import mini.java.lex.legacy.Tokenizer;
 
@@ -154,8 +152,9 @@ public class TestCase {
 	}
 	
 	public static List<Token> getTokens(String fileName) {		 
-		DFASimulator sim = new GenericSimulator("spec/MiniJava.spec");
-		Tokenizer t = sim.getTokenizer();
+//		DFASimulator sim = new GenericSimulator("spec/MiniJava.spec");
+//		Tokenizer t = sim.getTokenizer();
+	    Tokenizer t = new Tokenizer();
 		
 		BufferedReader br = null;
 		try{

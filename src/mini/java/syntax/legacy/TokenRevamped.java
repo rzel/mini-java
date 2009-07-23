@@ -1,4 +1,4 @@
-package mini.java.lex.legacy;
+package mini.java.syntax.legacy;
 
 class TokenRevampedWithGeneric<T> {
     private TokenType type;
