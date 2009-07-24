@@ -44,12 +44,11 @@ public class SimpleFA {
                 // merge the input
                 set.addAll(input);
             } else {
-                // won't reach here
-                map0.put(to, input);
+                map0.put(to, new HashSet<Character>(input));
             }
         } else {
             Map<State, Set<Character>> map0 = new HashMap<State, Set<Character>>();
-            map0.put(to, input);
+            map0.put(to, new HashSet<Character>(input));
             map.put(frm, map0);
         }
     }
