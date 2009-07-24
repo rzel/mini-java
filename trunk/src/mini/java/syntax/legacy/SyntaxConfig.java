@@ -137,7 +137,7 @@ public class SyntaxConfig {
 
             Rule rule = new Rule(new TokenSpec("NON_TERMINAL", leftHand.getRep()));
             for (String s : rightAfterSplit) {
-                SymbolType symbolType = terminals.contains(new TokenType(s)) ? 
+                SymbolType symbolType = terminals.contains(s) ? 
                     new Terminal(s) : new NonTerminal(s);
                 if (! types.contains(symbolType)) {
                     types.add(symbolType);

@@ -276,9 +276,7 @@ public class Algorithm {
 
             if (newTok) {
                 currentToken = (idx < input.size()) ? input.get(idx)
-                        : new TokenRevamped(new TokenType("END")); // virtual
-                                                                    // token,
-                                                                    // "END"
+                        : new TokenRevamped("END"); // virtual token,  "END"
                 currentSymbolType = new Terminal(
                         currentToken.getType().toString());
             }

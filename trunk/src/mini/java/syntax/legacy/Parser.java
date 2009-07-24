@@ -300,7 +300,7 @@ public class Parser {
 		stateStack.push(0);
 		for(Iterator<TokenRevamped> it = tokenStream.iterator();it.hasNext();){
 		    TokenRevamped current = it.next();
-			String currentType=current.getType().getRep();
+			String currentType=current.getType();
 			if(currentType.equals("UNKNOWN_TOKEN")){
 				//System.out.println("********************  UNKNOWN TOKEN");
 				continue;
@@ -331,7 +331,7 @@ public class Parser {
 						stateStack.add(state);
 						line = state;
 						
-						root.addChild(new Node<Symbol>(new Symbol(new Terminal(current.getType().getRep()),
+						root.addChild(new Node<Symbol>(new Symbol(new Terminal(current.getType()),
 						        current)));
 						flag = false;
 						//System.out.println("[shift]: "+ line);

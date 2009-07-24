@@ -38,13 +38,13 @@ public class TokenSpec {
     		return 17 * type.hashCode();
     	}    
     }
-    public boolean compareToken(TokenRevamped token){
-    	if(this.text.equals(token.getType())){
-    		return true;
-    	}else{
-    		return false;
-    	}
-    }
+//    public boolean compareToken(TokenRevamped token){
+//    	if(this.text.equals(token.getType())){
+//    		return true;
+//    	}else{
+//    		return false;
+//    	}
+//    }
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof TokenSpec)) {
             return false;

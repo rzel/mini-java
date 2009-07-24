@@ -1,22 +1,19 @@
 package mini.java.syntax.legacy;
 
-import misc.Type;
 
-public abstract class SymbolType extends Type {
-    public SymbolType(String rep) {
-        super(rep);
+public abstract class SymbolType {
+    
+    private final String _rep;
+    
+    public SymbolType(String rep_) {
+        _rep = rep_;
     }
     public SymbolType() {
+        _rep = null;
     }
-
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if ((o == null) || (o.getClass() != this.getClass())) return false;
-        return getRep().equals(((SymbolType) o).getRep());
-    }
-
-    public int hashCode() {
-        return getRep().hashCode();
+    
+    public String getRep() {
+        return _rep;
     }
 
     public String toString() {
@@ -37,5 +34,30 @@ public abstract class SymbolType extends Type {
             throw new IllegalArgumentException("Unknown token/symbol type: " + spec_.getType());
         }
     }
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_rep == null) ? 0 : _rep.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final SymbolType other = (SymbolType) obj;
+        if (_rep == null) {
+            if (other._rep != null)
+                return false;
+        } else if (!_rep.equals(other._rep))
+            return false;
+        return true;
+    }
 
+    
 }
