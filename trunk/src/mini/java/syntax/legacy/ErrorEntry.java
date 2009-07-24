@@ -1,5 +1,4 @@
 package mini.java.syntax.legacy;
-import mini.java.lex.legacy.Token;
 public class ErrorEntry {
 	public static String PRODUCTION_ERROR ="Production Parse Error";
 	public static String AMBIGUOUS_GRAMMAR = "Ambigous Grammar";
@@ -9,7 +8,9 @@ public class ErrorEntry {
 	private int line;
 	private Rule first ;
 	private Rule second;
-	private Token token;
+//	private Token token;
+	private TokenRevamped token;
+	
 	public ErrorEntry(String errorType, Rule first,Rule second) {
 		this.errorInfo = "Ambigous Grammar according to ";
 		this.errorType = errorType;
@@ -21,7 +22,7 @@ public class ErrorEntry {
 		this.errorType = errorType;
 		this.line = line;
 	}
-	public ErrorEntry(String errorType, Token token) {
+	public ErrorEntry(String errorType, TokenRevamped token) {
 		this.errorInfo = "There is a syntax error: Token is ";
 		this.errorType = errorType;
 		this.token=token;
@@ -44,7 +45,7 @@ public class ErrorEntry {
 		}else if(errorType.equals(ErrorEntry.AMBIGUOUS_GRAMMAR)){
 			return  errorType+"	"+errorInfo+first.toString()+" and  "+second.toString();
 		}else{
-			return  errorType+"	"+errorInfo+token.getText() +" line is "+	token.getLineNum()+" column is "+token.getColumn();
+			return  errorType+"	"+errorInfo+token.getData();
 		}
 		//return errorType+"	"+errorInfo;
 	}
@@ -61,7 +62,7 @@ public class ErrorEntry {
 		return second;
 	}
 	
-	public Token getErrorToken() {
+	public TokenRevamped getErrorToken() {
 		return token;
 	}
 	

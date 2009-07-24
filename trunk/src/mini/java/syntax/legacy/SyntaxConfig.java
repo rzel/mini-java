@@ -2,40 +2,120 @@ package mini.java.syntax.legacy;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mini.java.lex.legacy.LexConfig;
-
 public class SyntaxConfig {
-    public static String defaultConfigFile = "syntax.txt";
+//    public static String defaultConfigFile = "syntax.txt";
+    
+    public final static String spec =
+        "#Non Terminals\n" +
+        "Goal ::= MainClass\n" +
+        "#Goal ::= Goal ClassDeclaration\n" +
+        "#MainClass ::= class Identifier { public static void main ( String [ ] Identifier ) { Statement } }\n" +
+        "MainClass ::= class Identifier { public static void main ( String [ ] Identifier ) { Statement } }\n" +
+        "\n" +
+        "#ClassDeclaration ::= class Identifier { ClassBody }\n" +
+        "#ClassDeclaration ::= class Identifier extends Identifier { ClassBody }\n" +
+        "\n" +
+        "#ClassBody ::= VarDeclarations\n" +
+        "#ClassBody ::= MethodDeclarations\n" +
+        "#ClassBody ::= VarDeclarations MethodDeclarations\n" +
+        "#\n" +
+        "#VarDeclaratoins ::= VarDeclaration\n" +
+        "#VarDeclarations ::= VarDeclarations VarDeclaration\n" +
+        "#VarDeclaration ::= Type Identifier ;\n" +
+        "#\n" +
+        "#MethodDeclarations ::= MethodDeclaration\n" +
+        "#MethodDeclarations ::= MethodDeclarations MethodDeclaration\n" +
+        "#MethodDeclaration ::= public Type Identifier ( ) { Block return Expression ; }\n" +
+        "#MethodDeclaration ::= public Type Identifier ( ParameterDeclarations ) { Block return Expression ; }\n" +
+        "#\n" +
+        "#Block ::= VarDeclarations\n" +
+        "#Block ::= Statements\n" +
+        "#Block ::= VarDeclarations Statements\n" +
+        "#\n" +
+        "#ParameterDeclarations ::= ParameterDeclaration\n" +
+        "#ParameterDeclarations ::= ParameterDeclarations , ParameterDeclaration\n" +
+        "#ParameterDeclaration ::= Type Identifier\n" +
+        "#\n" +
+        "#Type ::= int\n" +
+        "#Type ::= int [ ]\n" +
+        "#Type ::= boolean\n" +
+        "#Type ::= Identifier\n" +
+
+        "#Statements ::= Statement\n" +
+        "#Statements ::= Statements Statement\n" +
+        "#Statement ::= { Statements }\n" +
+        "\n" +
+        "#Statement ::= { Statement }\n" +
+        "#Statement ::= Statement Statement\n" +
+        "#Statement ::= if ( Expression ) Statement else Statement\n" +
+        "#Statement ::= while ( Expression ) Statement\n" +
+        "Statement ::= System.out.println ( Expression ) ;\n" +
+        "Statement ::= Identifier = Expression ;\n" +
+        "Statement ::= Identifier [ Expression ] = Expression ;\n" +
+        "\n" +
+        "#Expression ::= Expression && Expression\n" +
+        "#Expression ::= Expression < Expression\n" +
+        "#Expression ::= Expression + Expression\n" +
+        "#Expression ::= Expression - Expression\n" +
+        "#Expression ::= Expression * Expression\n" +
+        "Expression ::= ! Expression\n" +
+        "Expression ::= ( Expression )\n" +
+        "Expression ::= Expression [ Expression ]\n" +
+        "Expression ::= Expression . length\n" +
+        "Expression ::= Expression . Identifier ( Parameters )\n" +
+        "\n" +
+        "Expression ::= Integer\n" +
+        "Expression ::= true\n" +
+        "Expression ::= false\n" +
+        "Expression ::= Identifier\n" +
+        "Expression ::= this\n" +
+        "Expression ::= new int [ Expression ]\n" +
+        "Expression ::= new Identifier ( )\n" +
+        "\n" +
+        "Parameters ::= Expression\n" +
+        "Parameters ::= Parameters , Expression\n";
+
 
     private static SyntaxConfig INSTANCE = null;
-        //new SyntaxConfig(defaultConfigFile);
-    //private Set<Rule> rules = new HashSet<Rule>();
+
     private Set<SymbolType> types = new HashSet<SymbolType>();
     private Map<NonTerminal, Set<Rule>> map =
         new HashMap<NonTerminal, Set<Rule>>();
 
     private SyntaxConfig(String filename)
         throws FileNotFoundException, IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filename));
-        LexConfig lexConfig = LexConfig.getInstance();
-        //Set<TokenType> terminals = lexConfig.getTokenTypes();
-        List<TokenType> terminals = lexConfig.getTokenTypes();
-        //System.out.println(terminals);
-        //System.out.println((new TokenType("LBRACKET")).equals(new TokenType("LBRACKET")));
-        //TokenType lbracket = new TokenType("LBRACKET");
-        //for (TokenType t : terminals) {
-        //    System.out.println("" + t + ": " + t.equals(lbracket));
-        //}
-        //System.out.println(terminals.contains(lbracket));
+        
+        Set<String> symbol = new HashSet<String>();
+        Set<String> nonTerminals = new HashSet<String>();
+        {
+            BufferedReader reader = new BufferedReader(new StringReader(spec));
+            String str;
+            while ((str = reader.readLine()) != null) {
+                if (!str.contains("::=")
+                        || str.charAt(0) == '#') //for comments;
+                          continue;
+                
+                String[] leftAndRight = str.split("\\s*::=\\s*");
+                String[] rightAfterSplit = leftAndRight[1].split(" ");
+                
+                nonTerminals.add(leftAndRight[0]); //left
+                symbol.add(leftAndRight[0]);
+                symbol.addAll(Arrays.asList(rightAfterSplit));
+            }
+        }
+        Set<String> terminals = new HashSet<String>(symbol);
+        terminals.removeAll(nonTerminals);
+        
+        
+        BufferedReader reader = new BufferedReader(new StringReader(spec));
 
         String str = null;
         while ((str = reader.readLine()) != null) {
@@ -47,36 +127,26 @@ public class SyntaxConfig {
             String[] rightAfterSplit = leftAndRight[1].split(" ");
 
             NonTerminal leftHand = new NonTerminal(leftAndRight[0]);
-            //if (! types.contains(leftHand)) {
-            //    types.add(leftHand);
-            //}
-            Set<Rule> rules = map.get(leftHand);
-            if (rules == null) {
-                rules = new HashSet<Rule>();
-                map.put(leftHand, rules);
+
+            
+            if (!map.containsKey(leftHand)) {
+                map.put(leftHand, new HashSet<Rule>());
             }
+            Set<Rule> rules = map.get(leftHand);
 
 
-            // FIXME convert SymbolType to TokenType
-            //Rule rule = new Rule(leftHand);
-            for (String s : Arrays.asList(rightAfterSplit)) {
+            Rule rule = new Rule(new TokenSpec("NON_TERMINAL", leftHand.getRep()));
+            for (String s : rightAfterSplit) {
                 SymbolType symbolType = terminals.contains(new TokenType(s)) ? 
                     new Terminal(s) : new NonTerminal(s);
                 if (! types.contains(symbolType)) {
                     types.add(symbolType);
                 }
-                //System.out.println("SymbolType " + symbolType + "[" +
-                //    ((symbolType instanceof Terminal) ?
-                //        "TERMINAL" :
-                //        "NONTERMINAL")
-                //    + "]");
-                // FIXME convert SymbolType to TokenType
-                //rule.addRhsToken(symbolType);
+                rule.addRhsTokenSpec(new TokenSpec((symbolType instanceof NonTerminal)
+                        ? "NON_TERMINAL" : "TERMINAL", symbolType.getRep()));
             }
 
-            //System.out.println(rule);
-            // FIXME convert SymbolType to TokenType
-            //rules.add(rule);
+            rules.add(rule);
         }
     }
 
@@ -88,21 +158,14 @@ public class SyntaxConfig {
         return map.keySet();
     }
 
-    //public Set<Rule> getRules(SymbolType lhs) {
     public Set<Rule> getRules(NonTerminal lhs) {
-        //Set<Rule> rulesFound = new HashSet<Rule>();
-        //for (Rule r : rules) {
-        //    if (r.getLhs().equals(lhs)) {
-        //        rulesFound.add(r);
-        //    }
-        //}
         return map.get(lhs);
     }
 
     public static SyntaxConfig getInstance() 
         throws FileNotFoundException, IOException {
         if (INSTANCE == null)
-            INSTANCE = new SyntaxConfig(defaultConfigFile);
+            INSTANCE = new SyntaxConfig(null);
         return INSTANCE;
     }
 }

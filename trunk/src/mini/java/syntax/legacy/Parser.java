@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
-
-import mini.java.lex.legacy.Token;
 public class Parser {
 	private  List<Rule> productions; 
 	private static Parser parser;
@@ -293,15 +291,16 @@ public class Parser {
 		return table;
 	}
 	
-	public Tree<Token> buildAST(List<Token> tokenStream){
+	public Tree<Symbol> buildAST(List<TokenRevamped> tokenStream){
 		//Stack<Token> tokenStack = new Stack<Token>();
 		Stack<Integer> stateStack = new Stack<Integer>();
-		Node<Token> root = new Node<Token>(new Token("Virtual","Root"));
+		Node<Symbol> root = new Node<Symbol>(new Symbol(new NonTerminal("Root")));
+		
 		int line= 0;
 		stateStack.push(0);
-		for(Iterator<Token> it = tokenStream.iterator();it.hasNext();){
-			Token current = it.next();
-			String currentType=current.getType();
+		for(Iterator<TokenRevamped> it = tokenStream.iterator();it.hasNext();){
+		    TokenRevamped current = it.next();
+			String currentType=current.getType().getRep();
 			if(currentType.equals("UNKNOWN_TOKEN")){
 				//System.out.println("********************  UNKNOWN TOKEN");
 				continue;
@@ -331,7 +330,9 @@ public class Parser {
 						//tokenStack.add(current);
 						stateStack.add(state);
 						line = state;
-						root.addChild(new Node<Token>(current));
+						
+						root.addChild(new Node<Symbol>(new Symbol(new Terminal(current.getType().getRep()),
+						        current)));
 						flag = false;
 						//System.out.println("[shift]: "+ line);
 						//System.out.println("[shift]: "+ currentType);
@@ -342,21 +343,23 @@ public class Parser {
 						//System.out.println("[reduce]: "+ currentType);
 						//remove some node from root to tmpNode
 						int numOfChildren = root.getNumberOfChildren();
-						Node<Token> tmpNode = new Node<Token>();
+						Node<Symbol> tmpNode = new Node<Symbol>();
 						
 						for(int i =0 ;i < rhLen;i++){
 							stateStack.pop();											
 							//tokenStack.pop();
-							Node<Token> toInsert = root.removeChildAt(numOfChildren- i - 1);
+							Node<Symbol> toInsert = root.removeChildAt(numOfChildren- i - 1);
 							tmpNode.insertChildAt(0, toInsert);
 						}
 						
 						//new a non terminal token and add the tmpNode to the root					
-						Token leftmost = tmpNode.getChildren().get(0).getData();
+						Symbol leftmost = tmpNode.getChildren().get(0).getData();
 						String leftTokenText = rule.getLhs().getText();
-						int lineNum = leftmost.getLineNum();
-						int column = leftmost.getColumn();
-						Token nonTerminal = new Token(Token.NON_TERMINAL_TYPE,leftTokenText,lineNum,column);
+//						int lineNum = leftmost.getLineNum();
+//						int column = leftmost.getColumn();
+//						TokenRevamped nonTerminal = new TokenRevamped(Token.NON_TERMINAL_TYPE,leftTokenText,lineNum,column);
+						Symbol nonTerminal = new Symbol(new NonTerminal("XXX"));
+						
 						//tokenStack.add(nonTerminal);
 						tmpNode.setData(nonTerminal);
 						root.addChild(tmpNode);
@@ -372,7 +375,7 @@ public class Parser {
 				}
 			}
 		}
-		Tree<Token> ast = new Tree<Token>(root);
+		Tree<Symbol> ast = new Tree<Symbol>(root);
 		return ast;
 	}
 	public AnalysisTable getAnalysisTable(){

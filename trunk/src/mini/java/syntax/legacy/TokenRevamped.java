@@ -29,6 +29,17 @@ public class TokenRevamped extends TokenRevampedWithGeneric<String> {
         //this.type = type;
         super.setType(new TokenType(type));
     }
+    
+    public TokenRevamped(String type_, String data_) {
+        setType(new TokenType(type_));
+        setData(data_);
+    }
+    
+    public TokenRevamped(String type_, String data_, int i_, int j_) {
+        this(type_, data_);
+    }
+    
+    
     public TokenRevamped(TokenType type) {
         super.setType(type);
     }

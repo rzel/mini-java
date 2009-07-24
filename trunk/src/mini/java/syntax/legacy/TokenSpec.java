@@ -1,5 +1,4 @@
 package mini.java.syntax.legacy;
-import mini.java.lex.legacy.Token;
 public class TokenSpec {
 	private String type;
 	private String text;
@@ -39,7 +38,7 @@ public class TokenSpec {
     		return 17 * type.hashCode();
     	}    
     }
-    public boolean compareToken(Token token){
+    public boolean compareToken(TokenRevamped token){
     	if(this.text.equals(token.getType())){
     		return true;
     	}else{
