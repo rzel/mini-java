@@ -75,7 +75,7 @@ public class NFAClosure {
      */
     public boolean isAcceptable() {
         for (NFAState state : _states) {
-            if (state instanceof Acceptable) {
+            if (state instanceof AcceptableNFAState) {
                 return true;
             }
         }

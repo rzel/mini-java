@@ -1,5 +1,5 @@
 package mini.java.fa;
 
-
-public class AcceptableNFAState extends NFAState implements Acceptable {
+public class AcceptableNFAState extends NFAState {
+    
 }

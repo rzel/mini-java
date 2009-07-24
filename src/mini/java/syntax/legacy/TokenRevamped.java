@@ -1,48 +1,66 @@
 package mini.java.syntax.legacy;
 
-class TokenRevampedWithGeneric<T> {
-    private TokenType type;
-    private T data;
-
-    public TokenType getType() {
-        return type;
-    }
-    public void setType(TokenType type) {
-        this.type = type;
-    }
-
-    public T getData() {
-        return data;
-    }
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public String toString() {
-        //return "TOKEN[" + type + "] ==> " + data.toString();
-        return "" + type + "{" + data + "}";
-    }
-}
-
-public class TokenRevamped extends TokenRevampedWithGeneric<String> {
-    public TokenRevamped(String type) {
-        //this.type = type;
-        super.setType(new TokenType(type));
+public class TokenRevamped {
+    
+    private final String _type;
+    private final String _data;
+    
+    public TokenRevamped(String type_) {
+        this(type_, null);
     }
     
     public TokenRevamped(String type_, String data_) {
-        setType(new TokenType(type_));
-        setData(data_);
+        _type = type_;
+        _data = data_;
     }
     
     public TokenRevamped(String type_, String data_, int i_, int j_) {
         this(type_, data_);
     }
     
+    public String getData() {
+        return _data;
+    }
     
-    public TokenRevamped(TokenType type) {
-        super.setType(type);
+    public String getType() {
+        return _type;
     }
-    public TokenRevamped() {
+
+    @Override
+    public String toString() {
+        return String.format("%s<%s>", _type, _data);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_data == null) ? 0 : _data.hashCode());
+        result = prime * result + ((_type == null) ? 0 : _type.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        final TokenRevamped other = (TokenRevamped) obj;
+        if (_data == null) {
+            if (other._data != null)
+                return false;
+        } else if (!_data.equals(other._data))
+            return false;
+        if (_type == null) {
+            if (other._type != null)
+                return false;
+        } else if (!_type.equals(other._type))
+            return false;
+        return true;
+    }
+    
+    
 }
