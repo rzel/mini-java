@@ -347,12 +347,22 @@ public class RegexCompiler {
     
     
     public static NFAState compile(String regex_) {
-        Symbol root = new Parser(RULE_SET).parse(
-                TOKENIZER.tokenize(regex_));
-        NFAState head = new NFAState(),
-            tail = new AcceptableNFAState();
-        ((NonTerminal)root).execute(new NFAState[] {head, tail});
+        NFAState ret = null;
         
-        return Helper.collapse(head);
+        try {
+            Symbol root = new Parser(RULE_SET).parse(
+                    TOKENIZER.tokenize(regex_));
+            NFAState head = new NFAState(),
+                tail = new AcceptableNFAState();
+            ((NonTerminal)root).execute(new NFAState[] {head, tail});
+            
+            ret = Helper.collapse(head);
+            
+            
+        } catch (RuntimeException ex_) {
+            throw new RuntimeException("Illegal regular expression: <" + regex_ + ">", ex_);
+        }
+        
+        return ret;
     }
 }

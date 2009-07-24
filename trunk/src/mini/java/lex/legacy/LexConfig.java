@@ -1,6 +1,5 @@
 package mini.java.lex.legacy;
 
-//import java.util.Set;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,8 +11,8 @@ import java.util.Map;
 
 import mini.java.syntax.legacy.TokenType;
 
-public class TextLexConfig {
-//    public static String defaultConfigFile = "lex.txt";
+public class LexConfig {
+
     public static final String spec =
         "; ::= ;\n" +
         ", ::= ,\n" +
@@ -53,12 +52,12 @@ public class TextLexConfig {
         "WHITESPACE ::= \\s\\s*\n" +
         "COMMENT ::= //.*\n";
 
-    private static TextLexConfig lexConfig = null;
+    private static LexConfig lexConfig = null;
     private Map<TokenType, String> tokenSpec = null;
     // for precedence we need to keep the order;
     private List<TokenType> tokenType = null;
 
-    private TextLexConfig(String filename)
+    private LexConfig(String filename)
         throws FileNotFoundException, IOException {
         tokenSpec = new HashMap<TokenType, String>();
         tokenType = new ArrayList<TokenType>();
@@ -70,22 +69,19 @@ public class TextLexConfig {
                     continue;
             String[] afterSplit = str.split("\\s*::=\\s*");
             TokenType type = new TokenType(afterSplit[0]);
-            //System.out.println(type);
             tokenType.add(type);
             tokenSpec.put(type, afterSplit[1]);
         }
     }
 
-    public static TextLexConfig getInstance()
+    public static LexConfig getInstance()
         throws FileNotFoundException, IOException {
         if (lexConfig == null)
-            lexConfig = new TextLexConfig(null);
+            lexConfig = new LexConfig(null);
         return lexConfig;
     }
 
-    //public Set<TokenType> getTokenTypes() {
     public List<TokenType> getTokenTypes() {
-        //return tokenSpec.keySet();
         return tokenType;
     }
 
