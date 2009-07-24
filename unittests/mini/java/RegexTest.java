@@ -1,6 +1,7 @@
-package mini.java.regex;
+package mini.java;
 
 import static org.junit.Assert.assertEquals;
+import mini.java.RegexCompiler;
 import mini.java.fa.NFAState;
 import mini.java.fa.helper.Helper;
 import mini.java.lex.FAMatcher;

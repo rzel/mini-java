@@ -1,6 +1,6 @@
 package mini.java.lex;
 
-import mini.java.regex.RegexCompiler;
+import mini.java.RegexCompiler;
 
 public class RegexMatcher extends FAMatcher {    
     private final String _regex;
