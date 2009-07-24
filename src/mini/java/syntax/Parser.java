@@ -69,7 +69,7 @@ public class Parser {
             ParserState nextState = (ParserState)currState.getState(nextSymbol.getType());
             
             if (nextState == null) {
-                throw new RuntimeException("Parsing error: Illegal syntax at " + nextSymbol);
+                throw new RuntimeException("Parsing error: Illegal syntax at <" + nextSymbol + ">");
             }
             
             out.add(nextSymbol);

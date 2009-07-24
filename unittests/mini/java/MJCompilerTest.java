@@ -6,6 +6,8 @@ import static mini.java.MJCompiler.ID;
 import static mini.java.MJCompiler.LEFT_BRACE;
 import static mini.java.MJCompiler.LEFT_BRACKET;
 import static mini.java.MJCompiler.LP;
+import static mini.java.MJCompiler.MAIN;
+import static mini.java.MJCompiler.PARSER;
 import static mini.java.MJCompiler.PUBLIC;
 import static mini.java.MJCompiler.RIGHT_BRACE;
 import static mini.java.MJCompiler.RIGHT_BRACKET;
@@ -16,6 +18,9 @@ import static mini.java.MJCompiler.TOKENIZER;
 import static mini.java.MJCompiler.VOID;
 import static mini.java.MJCompiler.WHITESPACE;
 import static org.junit.Assert.assertArrayEquals;
+
+import java.util.LinkedList;
+
 import mini.java.syntax.Terminal;
 
 import org.junit.Test;
@@ -46,7 +51,7 @@ public class MJCompilerTest {
                 new Terminal(WHITESPACE, " "),
                 new Terminal(VOID, "void"),
                 new Terminal(WHITESPACE, " "),
-                new Terminal(ID, "main"), // new Terminal(MAIN, "main")
+                new Terminal(MAIN, "main"),
                 new Terminal(LP, "("),
                 new Terminal(STRING, "String"),
                 new Terminal(LEFT_BRACKET, "["),
@@ -76,5 +81,32 @@ public class MJCompilerTest {
 //        }
         
         assertArrayEquals(expected, terminals);
+    }
+    
+    
+    @Test
+    public void testSyntax() {
+        Terminal[] terminals = null;
+        
+        {
+            java.util.List<Terminal> terms = new LinkedList<Terminal>();
+            for (Terminal term : TOKENIZER.tokenize(
+                "class Main { public static void main(String[] args) { System.out.println(123); } }"))
+            {
+                if (WHITESPACE.equals(term.getType())
+                        || COMMENT.equals(term.getType()))
+                {
+                    
+                }
+                else
+                {
+                    terms.add(term);
+                }
+            }
+            terminals = terms.toArray(new Terminal[0]);
+        }
+        
+        PARSER.parse(terminals);
+        
     }
 }

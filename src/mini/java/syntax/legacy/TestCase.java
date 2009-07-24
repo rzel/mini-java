@@ -3,14 +3,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import mini.java.lex.legacy.Token;
-import mini.java.lex.legacy.Tokenizer;
 
 public class TestCase {
 	public static void testcase1(){
@@ -42,32 +38,32 @@ public class TestCase {
 		
 	}
 	public static void testcase4(){
-		List<Token> stream = new ArrayList<Token>();
+		List<TokenRevamped> stream = new ArrayList<TokenRevamped>();
 		
-		stream.add(new Token("id","a",1,1));
-		stream.add( new Token("=","=",1,2));
-		stream.add( new Token("num","7",1,3));
-		stream.add( new Token(";",";",1,3));
+		stream.add(new TokenRevamped("id","a",1,1));
+		stream.add( new TokenRevamped("=","=",1,2));
+		stream.add( new TokenRevamped("num","7",1,3));
+		stream.add( new TokenRevamped(";",";",1,3));
 		
 		
 		
 		/**
 		 * b=c+(d = 5+6 ,d)
 		 */
-		stream.add(new Token("id","b",2,1));
-		stream.add( new Token("=","=",2,2));
-		stream.add( new Token("id","c",2,3));
-		stream.add( new Token("+","+",2,6));
-		stream.add(new Token("(","(",2,1));
-		stream.add( new Token("id","d",2,2));
-		stream.add( new Token("=","=",2,2));
-		stream.add( new Token("num","5",2,6));		
-		stream.add(new Token("*","*",2,1));
-		stream.add( new Token("num","6",2,2));
-		stream.add( new Token(",",",",2,3));
-		stream.add( new Token("id","d",2,6));
-		stream.add( new Token(")",")",2,6));
-		stream.add( new Token("$","$",3,6));
+		stream.add(new TokenRevamped("id","b",2,1));
+		stream.add( new TokenRevamped("=","=",2,2));
+		stream.add( new TokenRevamped("id","c",2,3));
+		stream.add( new TokenRevamped("+","+",2,6));
+		stream.add(new TokenRevamped("(","(",2,1));
+		stream.add( new TokenRevamped("id","d",2,2));
+		stream.add( new TokenRevamped("=","=",2,2));
+		stream.add( new TokenRevamped("num","5",2,6));		
+		stream.add(new TokenRevamped("*","*",2,1));
+		stream.add( new TokenRevamped("num","6",2,2));
+		stream.add( new TokenRevamped(",",",",2,3));
+		stream.add( new TokenRevamped("id","d",2,6));
+		stream.add( new TokenRevamped(")",")",2,6));
+		stream.add( new TokenRevamped("$","$",3,6));
 		
 		
 		Parser parser = Parser.getInstance();
@@ -151,10 +147,10 @@ public class TestCase {
 		System.out.println(state);
 	}
 	
-	public static List<Token> getTokens(String fileName) {		 
+	public static List<TokenRevamped> getTokens(String fileName) {		 
 //		DFASimulator sim = new GenericSimulator("spec/MiniJava.spec");
 //		Tokenizer t = sim.getTokenizer();
-	    Tokenizer t = new Tokenizer();
+//	    Tokenizer t = new Tokenizer();
 		
 		BufferedReader br = null;
 		try{
@@ -166,42 +162,43 @@ public class TestCase {
 		String line = "";
 		int count = 0;
 
-		while(true) {
-			try{
-				line = br.readLine();
-			}catch(IOException ioe){
-				ioe.printStackTrace();
-				System.exit(-1);
-			}
-			if(line==null){
-				break;
-			}
-			
-			t.analyze(line + "\n");
-			if(count==0)count++;
-		}
-		t.analyze("\0");
+//		while(true) {
+//			try{
+//				line = br.readLine();
+//			}catch(IOException ioe){
+//				ioe.printStackTrace();
+//				System.exit(-1);
+//			}
+//			if(line==null){
+//				break;
+//			}
+//			
+//			t.analyze(line + "\n");
+//			if(count==0)count++;
+//		}
+//		t.analyze("\0");
 		
 		//System.out.println("\n===== Token Stream =====");
-		List<Token> tokens = t.getTokens();
+//		List<Token> tokens = t.getTokens();
 		/* size - 1 since EOF is in it */
 		/* TODO: need to provide a better way! */
-		for(int i = 0; i < tokens.size() - 1; i++) {
-			Token tok = tokens.get(i);
-		//	System.out.println("DEBUG type:" + tok.getType());
-			if(tok.getType().equals("SKIP") || tok.getType().equals("COMMENT")||tok.getType().equals("UNKNOWN_TOKEN")) 
-				tokens.remove(i--);
-			//else System.out.println(tok);
-		}
-		/* EOF token */
-		tokens.add(Token.END_TOKEN);
+//		for(int i = 0; i < tokens.size() - 1; i++) {
+//			Token tok = tokens.get(i);
+//		//	System.out.println("DEBUG type:" + tok.getType());
+//			if(tok.getType().equals("SKIP") || tok.getType().equals("COMMENT")||tok.getType().equals("UNKNOWN_TOKEN")) 
+//				tokens.remove(i--);
+//			//else System.out.println(tok);
+//		}
+//		/* EOF token */
+//		tokens.add(Token.END_TOKEN);
 		//System.out.println(Token.END_TOKEN);
 		//System.out.println("======================\n");
 		
-		return tokens;
+//		return tokens;
+		return null;
 	}
 	public static void testMiniJava(){
-		List<Token> stream = getTokens("MiniJavaPrograms/test2.java");
+		List<TokenRevamped> stream = getTokens("MiniJavaPrograms/test2.java");
 		Parser parser = Parser.getInstance();
 		parser.initProductions("test5.spec");
 		parser.buildAnalysisTable();
