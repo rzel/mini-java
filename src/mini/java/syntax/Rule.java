@@ -1,6 +1,5 @@
 package mini.java.syntax;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -26,16 +25,10 @@ public class Rule {
         public void handle(Symbol sym_, Object ctx_);
     }
     
-    
-//    public interface IContext {
-//        
-//    }
-    
     private static final String SYMBOL_SEPARATOR  = " ";
     private static final String ASSIGNMENT_SYMBOL = " ::= ";
     private String              _leftSymbol;
     private List<String>        _rightSymbols;
-//    private List<State>         _items;
     private IRuleHandler        _handler;
     
     private RuleSet       _parent;
@@ -82,29 +75,6 @@ public class Rule {
         return _handler;
     }
 
-    // private constructor
-    private Rule(String leftSymbol_, List<String> rightSymbols_) {
-        assert (leftSymbol_ != null && !leftSymbol_.isEmpty());
-        assert (rightSymbols_ != null && rightSymbols_.size() > 0);
-
-        _leftSymbol = leftSymbol_;
-        // defensive copy to protect the immutable object
-        _rightSymbols = new ArrayList<String>(rightSymbols_);
-        
-//        // create the corresponding "items" for the left symbols;
-//        // "items" are represented by the NFA states, and will be used
-//        // to create the DFA of the syntax specification
-//        _items = new LinkedList<State>();
-//        for (int i=0; i<=_rightSymbols.size(); ++i) {
-//            _items.add(new State());
-//        }
-        
-//        // there should be an "END" item
-//        _items.add(new AcceptableState());
-        
-        _parent = null;
-    }
-
     public String getLeftSymbol() {
         return _leftSymbol;
     }
@@ -112,42 +82,7 @@ public class Rule {
     public List<String> getRightSymbols() {
         return _rightSymbols;
     }
-    
-//    public List<State> getItems() {
-//        return _items;
-//    }
 
-    /**
-     * Factory method used to create Rule instances. This method accepts a line
-     * of string and returns the corresponding Rule instance represented by the
-     * string.
-     * 
-     * Rule specification should look like this: RightSymbol ::= LeftSymbolA
-     * LeftSymbolB LeftSymbolC ... NOTE: left symbols should be seperated by
-     * single spaces.
-     */
-    public static Rule createRule(String spec_) {
-        if (spec_ == null || spec_.isEmpty())
-            return null;
-        if (spec_.indexOf(ASSIGNMENT_SYMBOL) < 0)
-            return null;
-
-        // split the rule spec into right and left
-        String[] parts = spec_.split(ASSIGNMENT_SYMBOL);
-        if (parts.length != 2)
-            return null;
-
-        // check symbols
-        String rightSymbol = parts[0];
-        String[] leftSymbols = parts[1].split(SYMBOL_SEPARATOR);
-        if (rightSymbol.isEmpty())
-            return null;
-        if (leftSymbols.length < 1)
-            return null;
-
-        // create and return the new rule instance
-        return new Rule(rightSymbol, Arrays.asList(leftSymbols));
-    }
 
     @Override
     public int hashCode() {
@@ -190,9 +125,12 @@ public class Rule {
     /**
      * Helper method. Get the following symbols for this rule.
      */
-    @SuppressWarnings("unchecked")
     public Set<String> getFollows() {
-        return (_parent != null)
-            ? _parent.getFollows(getLeftSymbol()) : Collections.EMPTY_SET;
+        Set<String> ret = Collections.emptySet();
+        if (_parent != null) {
+            ret = _parent.getFollows(getLeftSymbol());
+        }
+
+        return ret;
     }
 }
