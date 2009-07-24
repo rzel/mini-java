@@ -28,7 +28,7 @@ public class RegexTest {
     }
 
     @Parameters
-    public static List data() {
+    public static List<?> data() {
         return Arrays.asList(new Object[][] {
             {"(a|aa)b", "a", false}, //test[0]
             {"(a|aa)b", "ab", true},
