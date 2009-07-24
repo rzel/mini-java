@@ -1,8 +1,11 @@
 package mini.java.fa.v1;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -218,7 +221,40 @@ public class SimpleFATest {
         assertTrue(inputs.contains('e'));
     }
 
-    // Bug1: ".*" should accept empty string;
-    // @Test void testBug1 {
-    // }
+
+    @Test
+    public void testBug1() {
+        // need to do defensive copy
+        SimpleFA fa = new SimpleFA();
+        Set<Character> input = new HashSet<Character>(
+                Arrays.asList('a', 'b', 'c'));
+        
+        State A = fa.createState(),
+            B = fa.createState();
+        fa.addTransition(A, B, input);
+        
+        input.clear(); // this shouldn't affect the FA
+        
+        assertEquals(Collections.singleton(B),
+                fa.move(A, Collections.singleton('a')));
+    }
+    
+    
+    @Test
+    public void testBug2() {
+        // need to do defensive copy
+        SimpleFA fa = new SimpleFA();
+        Set<Character> input = new HashSet<Character>(
+                Arrays.asList('a', 'b', 'c'));
+        
+        State A = fa.createState(),
+            B = fa.createState(), C = fa.createState();
+        fa.addTransition(A, B, Collections.singleton('a'));
+        fa.addTransition(A, C, input);
+        
+        input.clear(); // this shouldn't affect the FA
+        
+        assertEquals(new HashSet<State>(Arrays.asList(B, C)),
+                fa.move(A, Collections.singleton('a')));
+    }
 }
