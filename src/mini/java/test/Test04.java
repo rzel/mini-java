@@ -4,7 +4,7 @@ import java.util.List;
 
 import mini.java.fa.v2.DFA;
 //import mini.java.lex.legacy.LexConfig;
-import mini.java.lex.legacy.TextLexConfig;
+import mini.java.lex.legacy.LexConfig;
 import mini.java.lex.legacy.Tokenizer;
 //import mini.java.lex.legacy.TokenizerAdapter;
 //import mini.java.lex.legacy.TokenizerIF;

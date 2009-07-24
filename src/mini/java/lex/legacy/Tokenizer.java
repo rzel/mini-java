@@ -60,28 +60,27 @@ public class Tokenizer {
             for (cur = beg; cur < _input.length(); cur++) {
                 char obj = _input.charAt(cur);
 
-                int sIdx = 0; // state index
-                for (DFA tmp : dfaWithOrder) {
-                    if (alive == 0)
+                ; // state index
+                for (int sIdx = 0; sIdx < dfaSize; ++sIdx) {
+                    DFA tmp = dfaWithOrder.get(sIdx);
+                    if (alive == 0) {                        
                         break;
+                    }
+                    
                     if (states[sIdx] != DFAState.DEAD && states[sIdx] != DFAState.ACCT_DEAD) {
                         states[sIdx] = tmp.feed(obj);
 
                         if (states[sIdx] == DFAState.DEAD || states[sIdx] == DFAState.ACCT_DEAD) {
                             alive--;
                         }
-                    } else {
-                        ++sIdx;
-                        continue;
-                    }
-
-                    if (states[sIdx] == DFAState.ACCEPTED) {
-                        if (maxLen < cur - beg + 1) {
+                        
+                        if ((states[sIdx] == DFAState.ACCEPTED)
+                            && (maxLen < cur - beg + 1))
+                        {
                             maxLen = cur - beg + 1;
                             matchDFA = tmp;
-                        }
+                        }                        
                     }
-                    ++sIdx;
                 }
 
                 

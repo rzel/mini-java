@@ -182,7 +182,7 @@ public class TokenizerTest {
     private static Tokenizer __createTokenizer() {
         Tokenizer tokenizer = new Tokenizer();
         try {
-            TextLexConfig lexConfig = TextLexConfig.getInstance();
+            LexConfig lexConfig = LexConfig.getInstance();
 
             for (TokenType type : lexConfig.getTokenTypes()) {
                 String tokenSpec = lexConfig.getTokenSpec(type);
