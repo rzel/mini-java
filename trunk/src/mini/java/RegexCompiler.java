@@ -1,4 +1,4 @@
-package mini.java.regex;
+package mini.java;
 
 import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAState;

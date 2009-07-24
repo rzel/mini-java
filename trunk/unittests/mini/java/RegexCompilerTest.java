@@ -1,4 +1,4 @@
-package mini.java.regex;
+package mini.java;
 
 
 import static org.junit.Assert.assertArrayEquals;
@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.LinkedList;
 import java.util.List;
 
+import mini.java.RegexCompiler;
 import mini.java.fa.AcceptableNFAState;
 import mini.java.fa.NFAState;
 import mini.java.fa.helper.Helper;
