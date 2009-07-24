@@ -1,20 +1,20 @@
 package mini.java.syntax.legacy;
 
-public class TokenRevamped {
+public class Token {
     
     private final String _type;
     private final String _data;
     
-    public TokenRevamped(String type_) {
+    public Token(String type_) {
         this(type_, null);
     }
     
-    public TokenRevamped(String type_, String data_) {
+    public Token(String type_, String data_) {
         _type = type_;
         _data = data_;
     }
     
-    public TokenRevamped(String type_, String data_, int i_, int j_) {
+    public Token(String type_, String data_, int i_, int j_) {
         this(type_, data_);
     }
     
@@ -48,7 +48,7 @@ public class TokenRevamped {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        final TokenRevamped other = (TokenRevamped) obj;
+        final Token other = (Token) obj;
         if (_data == null) {
             if (other._data != null)
                 return false;
@@ -60,6 +60,14 @@ public class TokenRevamped {
         } else if (!_type.equals(other._type))
             return false;
         return true;
+    }
+
+    public String getText() {
+        return getData();
+    }
+
+    public int getLineNum() {
+        throw new UnsupportedOperationException();
     }
     
     

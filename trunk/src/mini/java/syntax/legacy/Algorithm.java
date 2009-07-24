@@ -254,13 +254,13 @@ public class Algorithm {
         return result;
     }
 
-    public static Node<Pair<SymbolType, TokenRevamped>> parse(
+    public static Node<Pair<SymbolType, Token>> parse(
             Map<Pair<State, SymbolType>, Action> analysisTbl, State initState,
-            List<TokenRevamped> input) {
+            List<Token> input) {
         int idx = 0;
 
-        Node<Pair<SymbolType, TokenRevamped>> root = new Node<Pair<SymbolType, TokenRevamped>>(
-                new Pair<SymbolType, TokenRevamped>(new NonTerminal("ROOT"),
+        Node<Pair<SymbolType, Token>> root = new Node<Pair<SymbolType, Token>>(
+                new Pair<SymbolType, Token>(new NonTerminal("ROOT"),
                         null));
         Stack<State> stack = new Stack<State>();
 
@@ -270,13 +270,13 @@ public class Algorithm {
         boolean newTok = true; // indicate we need to get a new token from the
                                 // queue
         SymbolType currentSymbolType = null;
-        TokenRevamped currentToken = null;
+        Token currentToken = null;
         while (true) {
             State tos = stack.peek();
 
             if (newTok) {
                 currentToken = (idx < input.size()) ? input.get(idx)
-                        : new TokenRevamped("END"); // virtual token,  "END"
+                        : new Token("END"); // virtual token,  "END"
                 currentSymbolType = new Terminal(
                         currentToken.getType().toString());
             }
@@ -297,11 +297,11 @@ public class Algorithm {
                     break; // we are done
 
                 } else if (actType == Action.ACTION_SHIFT) {
-                    Pair<SymbolType, TokenRevamped> nodeData = new Pair<SymbolType, TokenRevamped>(
+                    Pair<SymbolType, Token> nodeData = new Pair<SymbolType, Token>(
                             new Terminal(currentToken.getType().toString()),
                             currentToken);
                     // XXX - here root is used as a temporary store
-                    root.addChild(new Node<Pair<SymbolType, TokenRevamped>>(
+                    root.addChild(new Node<Pair<SymbolType, Token>>(
                             nodeData));
                     stack.push(state);
                     // this will cause a new token being read from the queue
@@ -313,8 +313,8 @@ public class Algorithm {
                     SymbolType symbol = SymbolType.createSymbol(lhs);
                     List<TokenSpec> rhs = rule.getRhs();
 
-                    Node<Pair<SymbolType, TokenRevamped>> tmpNode = new Node<Pair<SymbolType, TokenRevamped>>(
-                            new Pair<SymbolType, TokenRevamped>(symbol, null)); // non-terminals don't have data token
+                    Node<Pair<SymbolType, Token>> tmpNode = new Node<Pair<SymbolType, Token>>(
+                            new Pair<SymbolType, Token>(symbol, null)); // non-terminals don't have data token
 
                     // create a subtree with the nodes previously added as children of the root
                     int numOfChildren = root.getNumberOfChildren();
@@ -322,7 +322,7 @@ public class Algorithm {
                         stack.pop();
                         TokenSpec t = rhs.get(i);
 
-                        Node<Pair<SymbolType, TokenRevamped>> toInsert = root.removeChildAt(numOfChildren
+                        Node<Pair<SymbolType, Token>> toInsert = root.removeChildAt(numOfChildren
                                 - i - 1);
                         tmpNode.insertChildAt(0, toInsert);
                     }

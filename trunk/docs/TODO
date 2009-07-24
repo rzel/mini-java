@@ -1,0 +1,15 @@
+gui.*
+	1. 将选择源码的默认目录设为sample（已完成）
+	2. 将选择spec文件的默认目录设为spec（已完成），选择过后是不是可以加上一些响应
+	3. 在选择好源码和spec文件前analyze应为disable状态
+	4. skip的高亮问题，参照vi，在左侧列表中可以进行翻译，
+		比如一个回车就在列表中显示`\n'
+	5. 响应时间出奇地慢？！
+		
+model.*
+	1.  spec中对`\n'等特殊字符的支持
+	
+spec
+	1. 将MiniJava.spec补充完整，把MiniJavaKeywordModifier.java中的表格补充完整
+	2. 再定义一种其他的语言
+	

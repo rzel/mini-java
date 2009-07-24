@@ -1,0 +1,116 @@
+标准测试文件：
+binarysearch.java PASS
+binarytree.java Line 197 !a.f()问题
+bubblesort.java PASS
+factorial.java PASS
+linearsearch.java PASS
+linkedlist.java Line 42,25,28 !a.f()问题
+quicksort.java PASS
+treevisitor.java Line 205: !a.f()问题
+
+
+MiniJava的语义：
+	* 一个类内部，方法不允许重载，方法名和成员变量名允许重复
+	* 继承语义：单继承，没有super关键字，子类可以覆盖父类的方法，父类的方法和成员变量对子类都是可见的。
+
+-------------------------------------------------------------------------------------------------
+试图加入对method overloading的支持，但是没有成功，可能跟之前的设计存在缺陷
+有关系，所以还是决定放弃了，在文档中说明清楚就好。 <- 课本上明确说明不支持重载！
+
+“!id.method()”的错误，由语法分析不当所引起，暂时无法解决，估计要对代码做较大
+的改动，暂时不再处理。
+
+@unused
+符号设计：
+	类名前缀 c:	<- 暂时不需要
+	字段/变量前缀 v:
+	方法前缀 m:
+	形参前缀 p:
+	
+测试用例(以bubblesort.java为基础)：
+	1. new一个不存在的类
+		修改第3行：new BB().Start(10);
+		DEBUG: no class named BB
+		PASS
+	2. 调用不存在的方法
+		修改第3行：new BB().Star(10);
+		DEBUG: method Star not found in BBS
+		PASS
+	3. 入参类型错误
+		修改第3行：new BB().Start(true);
+		DEBUG: parameter 1 unmatched: ExpType=boolean, but is int
+		PASS
+	4. 入参个数错误
+		修改第3行：new BB().Start();
+		DEBUG: #ExpPara=1, but is 0
+		PASS
+		
+	5. 重复定义类成员变量
+		第16行加入：int number;
+		DEBUG: number is already defined
+		PASS
+	6. 重复定义类成员函数
+		加入: public int Start() {return 0;}
+		DEBUG: Start is already defined
+		PASS
+	7. 重复定义局部变量
+		在Start里加入：int aux01;
+		DEBUG: aux01 is already defined
+		PASS
+		
+	8. 返回类型不配对
+		在文件末尾加入：
+		class A {
+			public boolean a() { return true; }
+		}
+		在BBS中加入：
+		public int f() { return a.a(); }
+		DEBUG: f should return int, but is boolean
+		PASS
+		
+		在BBS中加入:
+		public BBS g() { return a; }
+		DEBUG: g should return BBS, but is A
+
+	细分测试：
+		1) Print语句（尝试各种Exp）
+			Plus/Minus/Times/ArrayLookup/ArrayLength
+		2) If/While
+			1.
+			加入：
+			public int h() {
+	    		int a;
+	    		if(a) return 0;
+	    		else return 1;
+	    	}
+			DEBUG: expecting boolean-expression in if-statement, but is int
+			PASS
+			
+			2.
+			加入：
+			public int i() {    	
+    			int i;
+    			while(i) i=i+1;
+    	
+    			return i;
+   			}
+			DEBUG: expecting boolean-expression in while-statement, but is int
+			PASS
+			
+TODO:
+	1. 调试信息的截取，现在是通过Exception的方式，一旦出错就会停止 <- 解决，Error List
+	2. 出错信息不够user-friendly  <- 解决，模仿Java
+	3. 精确定位错误，暂缺  <- 定位到行
+	4. 对于词法分析、语法分析有错的文件是否要进行type check呢? <- 不再继续
+	5. main方法中允许有多少个statement?上次的定义似乎与官网上有所出入 <-只允许一条
+	6. 是否允许重载函数？	<- 暂时不允许
+	7. 只允许默认构造函数吗？  <- 是的
+	8. 方法名和变量名可以重复吗？	<- 可以
+	9. 类的继承比较难处理？？？ <- added already!
+	10. change exception to ErrorType!! <- 放弃这种做法
+	11. 错误信息的输出顺序？  <- 未解决，但无伤大雅
+	12. 是否允许任意类型的数组？  <- 根据语法定义文件，不允许
+	13. E4问题，要加括号！！   <- 根据课本上的语法定义是这样的，是为了防止冲突问题
+	
+	*** Subtype check to be done!!! -> DONE!
+!!! return null problem!!!
