@@ -3,7 +3,7 @@ package mini.java.syntax.legacy;
 //public class Symbol {
 //public interface Symbol {
 //public class Symbol extends Node<SymbolType> {
-public class Symbol extends Node<TokenRevamped> {
+public class Symbol extends Node<Token> {
     private SymbolType type;
 
     //public SymbolType getType() {
@@ -15,7 +15,7 @@ public class Symbol extends Node<TokenRevamped> {
     //public SymbolType getSymbolType();
     //public void setSymbolType(SymbolType type);
     //
-    public Symbol(SymbolType type, TokenRevamped token) {
+    public Symbol(SymbolType type, Token token) {
         super(token);
         setSymbolType(type);
     }
@@ -35,10 +35,10 @@ public class Symbol extends Node<TokenRevamped> {
         this.type = type;
     }
 
-    public TokenRevamped getToken() {
+    public Token getToken() {
         return data;
     }
-    public void setToken(TokenRevamped token) {
+    public void setToken(Token token) {
         data = token;
     }
 

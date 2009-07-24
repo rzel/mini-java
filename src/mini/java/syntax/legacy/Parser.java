@@ -291,15 +291,15 @@ public class Parser {
 		return table;
 	}
 	
-	public Tree<Symbol> buildAST(List<TokenRevamped> tokenStream){
+	public Tree<Symbol> buildAST(List<Token> tokenStream){
 		//Stack<Token> tokenStack = new Stack<Token>();
 		Stack<Integer> stateStack = new Stack<Integer>();
 		Node<Symbol> root = new Node<Symbol>(new Symbol(new NonTerminal("Root")));
 		
 		int line= 0;
 		stateStack.push(0);
-		for(Iterator<TokenRevamped> it = tokenStream.iterator();it.hasNext();){
-		    TokenRevamped current = it.next();
+		for(Iterator<Token> it = tokenStream.iterator();it.hasNext();){
+		    Token current = it.next();
 			String currentType=current.getType();
 			if(currentType.equals("UNKNOWN_TOKEN")){
 				//System.out.println("********************  UNKNOWN TOKEN");

@@ -38,32 +38,32 @@ public class TestCase {
 		
 	}
 	public static void testcase4(){
-		List<TokenRevamped> stream = new ArrayList<TokenRevamped>();
+		List<Token> stream = new ArrayList<Token>();
 		
-		stream.add(new TokenRevamped("id","a",1,1));
-		stream.add( new TokenRevamped("=","=",1,2));
-		stream.add( new TokenRevamped("num","7",1,3));
-		stream.add( new TokenRevamped(";",";",1,3));
+		stream.add(new Token("id","a",1,1));
+		stream.add( new Token("=","=",1,2));
+		stream.add( new Token("num","7",1,3));
+		stream.add( new Token(";",";",1,3));
 		
 		
 		
 		/**
 		 * b=c+(d = 5+6 ,d)
 		 */
-		stream.add(new TokenRevamped("id","b",2,1));
-		stream.add( new TokenRevamped("=","=",2,2));
-		stream.add( new TokenRevamped("id","c",2,3));
-		stream.add( new TokenRevamped("+","+",2,6));
-		stream.add(new TokenRevamped("(","(",2,1));
-		stream.add( new TokenRevamped("id","d",2,2));
-		stream.add( new TokenRevamped("=","=",2,2));
-		stream.add( new TokenRevamped("num","5",2,6));		
-		stream.add(new TokenRevamped("*","*",2,1));
-		stream.add( new TokenRevamped("num","6",2,2));
-		stream.add( new TokenRevamped(",",",",2,3));
-		stream.add( new TokenRevamped("id","d",2,6));
-		stream.add( new TokenRevamped(")",")",2,6));
-		stream.add( new TokenRevamped("$","$",3,6));
+		stream.add(new Token("id","b",2,1));
+		stream.add( new Token("=","=",2,2));
+		stream.add( new Token("id","c",2,3));
+		stream.add( new Token("+","+",2,6));
+		stream.add(new Token("(","(",2,1));
+		stream.add( new Token("id","d",2,2));
+		stream.add( new Token("=","=",2,2));
+		stream.add( new Token("num","5",2,6));		
+		stream.add(new Token("*","*",2,1));
+		stream.add( new Token("num","6",2,2));
+		stream.add( new Token(",",",",2,3));
+		stream.add( new Token("id","d",2,6));
+		stream.add( new Token(")",")",2,6));
+		stream.add( new Token("$","$",3,6));
 		
 		
 		Parser parser = Parser.getInstance();
@@ -147,7 +147,7 @@ public class TestCase {
 		System.out.println(state);
 	}
 	
-	public static List<TokenRevamped> getTokens(String fileName) {		 
+	public static List<Token> getTokens(String fileName) {		 
 //		DFASimulator sim = new GenericSimulator("spec/MiniJava.spec");
 //		Tokenizer t = sim.getTokenizer();
 //	    Tokenizer t = new Tokenizer();
@@ -198,7 +198,7 @@ public class TestCase {
 		return null;
 	}
 	public static void testMiniJava(){
-		List<TokenRevamped> stream = getTokens("MiniJavaPrograms/test2.java");
+		List<Token> stream = getTokens("MiniJavaPrograms/test2.java");
 		Parser parser = Parser.getInstance();
 		parser.initProductions("test5.spec");
 		parser.buildAnalysisTable();

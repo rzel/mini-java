@@ -9,7 +9,7 @@ public class ErrorEntry {
 	private Rule first ;
 	private Rule second;
 //	private Token token;
-	private TokenRevamped token;
+	private Token token;
 	
 	public ErrorEntry(String errorType, Rule first,Rule second) {
 		this.errorInfo = "Ambigous Grammar according to ";
@@ -22,7 +22,7 @@ public class ErrorEntry {
 		this.errorType = errorType;
 		this.line = line;
 	}
-	public ErrorEntry(String errorType, TokenRevamped token) {
+	public ErrorEntry(String errorType, Token token) {
 		this.errorInfo = "There is a syntax error: Token is ";
 		this.errorType = errorType;
 		this.token=token;
@@ -62,7 +62,7 @@ public class ErrorEntry {
 		return second;
 	}
 	
-	public TokenRevamped getErrorToken() {
+	public Token getErrorToken() {
 		return token;
 	}
 	
